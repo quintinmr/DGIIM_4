@@ -1,3 +1,6 @@
 [submodule "opengl3-minimo"]
 	path = opengl3-minimo
 	url = https://github.com/carlos-urena/opengl3-minimo
+[submodule "C1/INFORMÁTICA/opengl3-minimo"]
+	path = C1/INFORMÁTICA/opengl3-minimo
+	url = https://github.com/carlos-urena/opengl3-minimo.git
