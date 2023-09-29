@@ -152,7 +152,7 @@ void DescrVBOAtribs::crearVBO()
 
    glBufferData(GL_ARRAY_BUFFER, tot_size, own_data, GL_STATIC_DRAW);  // transferir datos desde app al VBO en CPU (2)
 
-   glVertexAttribPointer(index, size, type, GL_FALSE, stride, offset); // (registrar formatos de datos y dirección de inic. mem 3)
+   glVertexAttribPointer(index, size, type, GL_FALSE, stride, nullptr); // (registrar formatos de datos y dirección de inic. mem 3)
 
    glBindBuffer(GL_ARRAY_BUFFER, 0);  // desactivar VBO (5)
    glEnableVertexAttribArray(index);  //  habilitar uso de tabla de atributos (6)
@@ -264,9 +264,9 @@ void DescrVBOInds::crearVBO( )
    GLuint name_ind;
    glGenBuffers(1, &name_ind);  // buffer > 0 (1)
 
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, name_ind); // activar VBO de indices (2)
+   glBindBuffer(GL_ARRAY_BUFFER, name_ind); // activar VBO de indices (2)
 
-   glBufferData( GL_ELEMENT_ARRAY_BUFFER, tot_size, own_indices, GL_STATIC_DRAW); // (3)
+   glBufferData( GL_ARRAY_BUFFER, tot_size, own_indices, GL_STATIC_DRAW); // (3)
       
    // comprueba que no ha habido error al crear el VBO 
    CError();

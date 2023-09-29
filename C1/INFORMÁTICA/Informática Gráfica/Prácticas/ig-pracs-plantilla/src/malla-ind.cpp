@@ -113,8 +113,7 @@ void MallaInd::visualizarGL( )
    if (tieneColor()){
 
       cauce->pushColor();
-      glm::vec3 color = leerColor();
-      cauce->fijarColor(color);
+      cauce->fijarColor(leerColor());
 
    }
 
@@ -127,23 +126,24 @@ void MallaInd::visualizarGL( )
    //     que no estén vacías
    //  Si el VAO ya está creado, (dvao no nulo), no hay que hacer nada.
    //
-
-   DescrVAO * new_vao;
-   DescrVBOInds * new_vbo;
+   
 
     if (dvao == nullptr){
 
-      new_vao = new DescrVAO(numero_atributos_cauce,
+      dvao = new DescrVAO(numero_atributos_cauce,
                                         new DescrVBOAtribs(ind_atrib_posiciones, vertices));
+     
 
-      new_vbo = new DescrVBOInds(triangulos);
-      new_vao->agregar(new_vbo);
+      dvao->agregar(new DescrVBOInds(triangulos));
 
-      new_vao->crearVAO();
-   } 
+      if (!col_ver.empty()) dvao->agregar(new DescrVBOAtribs(ind_atrib_colores, col_ver));
+      if (!nor_ver.empty()) dvao->agregar(new DescrVBOAtribs(ind_atrib_normales, nor_ver));
+      if (!cc_tt_ver.empty()) dvao->agregar(new DescrVBOAtribs(ind_atrib_coord_text, cc_tt_ver));
+   }
+    
    // COMPLETAR: práctica 1: visualizar el VAO usando el método 'draw' de 'DescrVAO'
 
-   new_vao->draw(GL_TRIANGLES);
+   dvao->draw(GL_TRIANGLES);
 
    // COMPLETAR: práctica 1: restaurar color anterior del cauce 
    //
@@ -169,11 +169,25 @@ void MallaInd::visualizarGeomGL( )
    assert( dvao != nullptr );
 
    // COMPLETAR: práctica 1: visualizar únicamente la geometría del objeto 
-   // 
+  
+
    //    1. Desactivar todas las tablas de atributos del VAO (que no estén vacías)
+   std::vector<bool> tablas_vacias = {true,true,true};
+   if (!col_ver.empty()){ tablas_vacias[0] = false; dvao->habilitarAtrib(1,false);}
+   else tablas_vacias[0] = false;
+   if (!nor_ver.empty()){ tablas_vacias[1] = false; dvao->habilitarAtrib(2,false);}
+   else tablas_vacias[1] = false;
+   if (!cc_tt_ver.empty()){ tablas_vacias[2] = false; dvao->habilitarAtrib(3,false);}
+   else tablas_vacias[2] = false;
+  
    //    2. Dibujar la malla (únicamente visualizará los triángulos)
+   dvao->draw(GL_TRIANGLES);
+
    //    3. Volver a activar todos los atributos para los cuales la tabla no esté vacía
-   // ....
+   for (unsigned i = 0; i < tablas_vacias.size(); i++){
+      if (tablas_vacias[i] == false) dvao->habilitarAtrib(i+1, true);    //!!!!!!
+   }
+
 
 }
 
