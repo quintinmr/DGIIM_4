@@ -166,7 +166,7 @@ void Escena::visualizarGL( )
       //      - fijar el color a negro
       //      - fijar el modo de polígonos a modo 'lineas'
       // 
-      cauce->fijarColor(0.0f,0.0f,0.0f);
+      cauce->fijarColor(0.0,0.0,0.0);
       glPolygonMode( GL_FRONT_AND_BACK, GL_LINE);
 
       objeto->visualizarGeomGL();
@@ -307,7 +307,10 @@ Escena1::Escena1()
    // Añadir sentencias 'push_back' adicionales para agregar al 
    // array 'objetos' otros objetos de la práctica 1
    // 
-   // .......
+   
+   objetos.push_back( new Tetraedro());
+   objetos.push_back( new CuboColores());
+
 
 }
 
