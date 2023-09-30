@@ -146,13 +146,12 @@ void DescrVBOAtribs::crearVBO()
    // 6. habilitar el uso de esta tabla de atributos
    //
 
-   GLuint name;
-   glGenBuffers(1, &name);               // produce buffer > 0 (1)
-   glBindBuffer(GL_ARRAY_BUFFER,name);   // activar buffer (1)
+   glGenBuffers(1, &buffer);               // produce buffer > 0 (1)
+   glBindBuffer(GL_ARRAY_BUFFER,buffer);   // activar buffer (1)
 
-   glBufferData(GL_ARRAY_BUFFER, tot_size, own_data, GL_STATIC_DRAW);  // transferir datos desde app al VBO en CPU (2)
+   glBufferData(GL_ARRAY_BUFFER, tot_size, data, GL_STATIC_DRAW);  // transferir datos desde app al VBO en CPU (2)
 
-   glVertexAttribPointer(index, size, type, GL_FALSE, stride, nullptr); // (registrar formatos de datos y dirección de inic. mem 3)
+   glVertexAttribPointer(index, size, type, GL_FALSE, stride, offset); // (registrar formatos de datos y dirección de inic. mem 3)
 
    glBindBuffer(GL_ARRAY_BUFFER, 0);  // desactivar VBO (5)
    glEnableVertexAttribArray(index);  //  habilitar uso de tabla de atributos (6)
@@ -261,12 +260,11 @@ void DescrVBOInds::crearVBO( )
    // 3. transferir los datos desde la memoria de la aplicación al VBO en GPU
    //
 
-   GLuint name_ind;
-   glGenBuffers(1, &name_ind);  // buffer > 0 (1)
+   glGenBuffers(1, &buffer);  // buffer > 0 (1)
 
-   glBindBuffer(GL_ARRAY_BUFFER, name_ind); // activar VBO de indices (2)
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer); // activar VBO de indices (2)
 
-   glBufferData( GL_ARRAY_BUFFER, tot_size, own_indices, GL_STATIC_DRAW); // (3)
+   glBufferData( GL_ELEMENT_ARRAY_BUFFER, tot_size, indices, GL_STATIC_DRAW); // (3)
       
    // comprueba que no ha habido error al crear el VBO 
    CError();
@@ -384,20 +382,23 @@ void DescrVAO::crearVAO()
    //           Deshabilitarla en la GPU con 'glDisableVertexArray'
    //
 
-   GLenum name_vao = 0;
-   glGenVertexArrays(1, &name_vao);  // produce array >0 (1)
-   glBindVertexArray(name_vao);     // activar VAO
+   glGenVertexArrays(1, &array);  // produce array >0 (1)
+   glBindVertexArray(array);     // activar VAO
 
-   for (unsigned j = 0; j < dvbo_atributo.size(); j++){  // (2)
+   for (unsigned j = 0; j < dvbo_atributo.size(); j++)  // (2)
 
       if (dvbo_atributo[j] != nullptr) dvbo_atributo[j]->crearVBO();
-      if (atrib_habilitado[j] == false) glDisableVertexAttribArray(j);
    
-   }
+   
 
    if (dvbo_indices != nullptr)  // (3)
 
       dvbo_indices->crearVBO();
+
+   for (unsigned j = 0; j < dvbo_atributo.size(); j++)  // (4)
+
+      if (dvbo_atributo[j] != nullptr)
+        if (atrib_habilitado[j] == false) glDisableVertexAttribArray(dvbo_atributo[j]->index);
 
    
 
@@ -476,7 +477,7 @@ void DescrVAO::draw( const GLenum mode )
    
    if (dvbo_indices != nullptr)
 
-      glDrawElements( mode, idxs_count, idxs_type, dvbo_indices);
+      glDrawElements( mode, idxs_count, idxs_type, offset);
 
    else 
    

@@ -174,11 +174,8 @@ void MallaInd::visualizarGeomGL( )
    //    1. Desactivar todas las tablas de atributos del VAO (que no estén vacías)
    std::vector<bool> tablas_vacias = {true,true,true};
    if (!col_ver.empty()){ tablas_vacias[0] = false; dvao->habilitarAtrib(1,false);}
-   else tablas_vacias[0] = false;
    if (!nor_ver.empty()){ tablas_vacias[1] = false; dvao->habilitarAtrib(2,false);}
-   else tablas_vacias[1] = false;
    if (!cc_tt_ver.empty()){ tablas_vacias[2] = false; dvao->habilitarAtrib(3,false);}
-   else tablas_vacias[2] = false;
   
    //    2. Dibujar la malla (únicamente visualizará los triángulos)
    dvao->draw(GL_TRIANGLES);
