@@ -55,7 +55,7 @@ void MallaRevol::inicializar
    //
 
    // Partimos de la tabla de vértices vacía.
-   std::vector<glm::vec3> vertex;
+   vertices.clear();
    unsigned int m = perfil.size();
    unsigned int n = num_copias;
 
@@ -66,13 +66,12 @@ void MallaRevol::inicializar
 
    for (unsigned int i = 0; i < n; i++){
 
-      double angle = (2*M_PI*i)/(n-1);
-
       for (unsigned int j = 0; j < m; j++){
 
+         double angle = (2*M_PI*i)/(n-1);
          double ratio = perfil.at(j).x;
          glm::vec3 q = {ratio*cos(angle), perfil.at(j).y, -ratio*sin(angle)};
-         vertex.push_back(q);
+         vertices.push_back(q);
 
       }
    }
@@ -84,15 +83,16 @@ void MallaRevol::inicializar
    //         ◦ Añadir triángulo formado por los índices k, k + m y k + m + 1.
    //         ◦ Añadir triángulo formado por los índices k, k + m + 1 y k + 1.
 
-   std::vector<glm::uvec3> triangles;
-
+   triangulos.clear();
    for (unsigned int i = 0; i < n-1; i++){
       for (unsigned int j = 0; j < m-1; j++){
          unsigned int k = i*m+j;
-         glm::uvec3 t1 = {k,k+m,k+m+1};
-         glm::uvec3 t2 = {k,k+m+1,k+1};
-         triangles.push_back(t1);
-         triangles.push_back(t2);
+         glm::vec3 t1 = {k,k+m,k+m+1};
+         glm::vec3 t2 = {k,k+m+1,k+1};
+         //glm::uvec3 t1 = {vertices.at(k), vertices.at(k+m), vertices.at(k+m+1)};
+         //glm::uvec3 t2 = {vertices.at(k), vertices.at(k+m+1), vertices.at(k+1)};
+         triangulos.push_back(t1);
+         triangulos.push_back(t2);
       }
    }
 
@@ -111,10 +111,90 @@ MallaRevolPLY::MallaRevolPLY
    ponerNombre( std::string("malla por revolución del perfil en '"+ nombre_arch + "'" ));
    // COMPLETAR: práctica 2: crear la malla de revolución
    // Leer los vértice del perfil desde un PLY, después llamar a 'inicializar'
-   // LeerVerticesPLY(nombre_arch,);
+   LeerVerticesPLY(nombre_arch,vertices);
 
 
 }
+
+// -----------------------------------------------------------------------------
+Cilindro::Cilindro
+(
+   const int num_verts_per,   //m
+   const unsigned nperfiles   //n
+)
+{
+   // Cilindro de base con centro en el (0,0,0) y radio y altura 1. 
+   // 1. Creación del perfil a revolucionar
+   std::vector<glm::vec3>  perfil_cili;
+   glm::vec3 punto_inicial = {1.0,0.0,0.0};
+   perfil_cili.push_back(punto_inicial);
+
+   for (int i = 0; i < num_verts_per; i++){
+      
+      double angle = (2*i*M_PI)/num_verts_per;
+      glm::vec3 q  = {cos(angle), 1.0, sin(angle)};
+      perfil_cili.push_back(q);
+      glm::vec3 r  = {cos(angle), 0.0, sin(angle)};
+      perfil_cili.push_back(r);
+
+   }
+
+   inicializar(perfil_cili, nperfiles);
+
+}
+
+// -----------------------------------------------------------------------------
+Cono::Cono
+(
+   const int num_verts_per,   //m
+   const unsigned nperfiles   //n
+)
+{
+   // Cono de base con centro en el (0,0,0) y radio y altura 1. 
+   // 1. Creación del perfil a revolucionar
+   std::vector<glm::vec3>  perfil_cono;
+   glm::vec3 punto_inicial = {1.0,0.0,0.0};
+   perfil_cono.push_back(punto_inicial);
+   glm::vec3 punto_final   = {0.0,1.0,0.0};
+   perfil_cono.push_back(punto_final);
+
+   for (int i = 0; i < num_verts_per; i++){
+      
+      double angle = (2*i*M_PI)/num_verts_per;
+      glm::vec3 r  = {cos(angle), 0.0, sin(angle)};
+      perfil_cono.push_back(r);
+
+   }
+
+   inicializar(perfil_cono, nperfiles);
+
+}
+
+// -----------------------------------------------------------------------------
+Esfera::Esfera
+(
+   const int num_verts_per,   //m
+   const unsigned nperfiles   //n
+)
+{
+   // Esfera de base con centro en el (0,0,0) y radio y altura 1. 
+   // 1. Creación del perfil a revolucionar
+   std::vector<glm::vec3>  perfil_Esfera;
+   glm::vec3 punto_inicial = {1.0,0.0,0.0};
+   perfil_Esfera.push_back(punto_inicial);
+
+   for (int i = 0; i < num_verts_per; i++){
+      
+      double angle = (2*i*M_PI)/num_verts_per;
+      glm::vec3 q  = {cos(angle), -sin(angle),0.0 };
+      perfil_Esfera.push_back(q);
+
+   }
+
+   inicializar(perfil_Esfera, nperfiles);
+
+}
+
 
 
 

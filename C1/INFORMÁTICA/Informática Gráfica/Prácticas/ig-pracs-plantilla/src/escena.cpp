@@ -324,6 +324,10 @@ Escena2::Escena2()
    using namespace std;
 
    cout << "Creando objetos de la práctica  2." << endl;
+
+   objetos.push_back( new Cilindro(100,100));
+   objetos.push_back( new Cono(100,100));
+   objetos.push_back( new Esfera(100,100));
    
 }
 
