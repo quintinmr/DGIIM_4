@@ -128,6 +128,8 @@ Cilindro::Cilindro
    std::vector<glm::vec3>  perfil_cili;
    glm::vec3 punto_inicial = {1.0,0.0,0.0};
    perfil_cili.push_back(punto_inicial);
+   glm::vec3 punto_inicial2 = {1.0,1.0,0.0};
+   perfil_cili.push_back(punto_inicial2);
 
    for (int i = 0; i < num_verts_per; i++){
       
@@ -153,6 +155,8 @@ Cono::Cono
    // Cono de base con centro en el (0,0,0) y radio y altura 1. 
    // 1. Creación del perfil a revolucionar
    std::vector<glm::vec3>  perfil_cono;
+   glm::vec3 origen = {0.0,0.0,0.0};
+   perfil_cono.push_back(origen);
    glm::vec3 punto_inicial = {1.0,0.0,0.0};
    perfil_cono.push_back(punto_inicial);
    glm::vec3 punto_final   = {0.0,1.0,0.0};
@@ -180,13 +184,15 @@ Esfera::Esfera
    // Esfera de base con centro en el (0,0,0) y radio y altura 1. 
    // 1. Creación del perfil a revolucionar
    std::vector<glm::vec3>  perfil_Esfera;
+   glm::vec3 origen = {0.0,0.0,0.0};
+   perfil_Esfera.push_back(origen);
    glm::vec3 punto_inicial = {1.0,0.0,0.0};
    perfil_Esfera.push_back(punto_inicial);
 
    for (int i = 0; i < num_verts_per; i++){
       
       double angle = (2*i*M_PI)/num_verts_per;
-      glm::vec3 q  = {cos(angle), -sin(angle),0.0 };
+      glm::vec3 q  = {cos(angle), sin(angle), 0.0 };
       perfil_Esfera.push_back(q);
 
    }
@@ -196,6 +202,29 @@ Esfera::Esfera
 }
 
 
+// -----------------------------------------------------------------------------
+RelojArena::RelojArena
+(
+   const int num_verts_per,   //m
+   const unsigned nperfiles   //n
+)
+{
 
+   // 1. Creación del perfil a revolucionar
+   std::vector<glm::vec3>  perfil_ra;
+   glm::vec3 punto_inicial = {0.0,0.0,0.0};
+   perfil_ra.push_back(punto_inicial);
+   
+   for (int i = 0; i < num_verts_per; i++){
+      
+      double angle = (2*i*M_PI)/num_verts_per;
+      glm::vec3 q  = {sin(angle), cos(angle/2), 0.0 };
+      perfil_ra.push_back(q);
+
+   }
+
+   inicializar(perfil_ra, nperfiles);
+
+}
 
 

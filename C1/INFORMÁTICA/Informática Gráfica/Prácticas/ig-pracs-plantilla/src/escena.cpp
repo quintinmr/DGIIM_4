@@ -310,6 +310,13 @@ Escena1::Escena1()
    
    objetos.push_back( new Tetraedro());
    objetos.push_back( new CuboColores());
+   objetos.push_back( new EstrellaZ(8));
+   objetos.push_back( new CasaX());
+   objetos.push_back( new MallaTriangulo());
+   objetos.push_back( new MallaCuadrado());
+   objetos.push_back( new MallaPiramideL());
+   objetos.push_back( new PiramideEstrellaZ(8));
+   objetos.push_back( new RejillaY(10,30));
 
 
 }
@@ -325,9 +332,10 @@ Escena2::Escena2()
 
    cout << "Creando objetos de la práctica  2." << endl;
 
-   objetos.push_back( new Cilindro(100,100));
+   objetos.push_back( new Cilindro(10,10));
    objetos.push_back( new Cono(100,100));
    objetos.push_back( new Esfera(100,100));
+   objetos.push_back( new RelojArena(100,100));
    
 }
 

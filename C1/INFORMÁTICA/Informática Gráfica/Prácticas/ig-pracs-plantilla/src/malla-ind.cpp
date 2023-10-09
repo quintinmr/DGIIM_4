@@ -378,3 +378,212 @@ CuboColores::CuboColores()
       };
 
 }
+
+// ****************************************************************************
+// Clase 'CasaX'
+
+CasaX::CasaX()
+:  MallaInd( "Casa Colores" )
+{
+
+   vertices =
+      {  { 0.0, 0.0, 0.0 }, // 0
+         { 0.0, 0.0, +1.0 }, // 1
+         { +2.0, 0.0, +1.0 }, // 2
+         { +2.0, 0.0, 0.0 }, // 3
+         { 0.0, +1.0, +1.0 }, // 4
+         { 0.0, +1.0, 0.0 }, // 5
+         { +2.0, +1.0, 0.0 }, // 6
+         { +2.0, +1.0, +1.0 }, // 7
+         { +2.0, +1.5, +0.5 },  // 8
+         { 0.0,  +1.5, +0.5 },  // 9
+      } ;
+
+
+
+   triangulos =
+      {  {1,7,4}, {1,7,2},
+
+         {0,6,5}, {0,6,3},
+
+         {2,3,7}, {3,6,7},
+
+         {0,1,4}, {0,5,4},
+
+         {4,8,7}, {4,8,9},
+
+         {5,8,9}, {5,8,6},
+
+         {6,8,7}, {4,9,5}
+
+      } ;
+
+   col_ver = 
+      {
+         { 0.0, 0.0, 0.0 }, // 0
+         { 0.0, 0.0, +1.0 }, // 1
+         { +1.0, 0.0, +1.0 }, // 2
+         { +1.0, 0.0, 0.0 }, // 3
+         { 0.0, +1.0, +1.0 }, // 4
+         { 0.0, +1.0, 0.0 }, // 5
+         { +1.0, +1.0, 0.0 }, // 6
+         { +1.0, +1.0, +1.0 }, // 7
+         { +1.0, +1.0, 0.0}, //8
+         { 0.0, +1.0, 0.0 }  // 9
+
+      };
+
+}
+
+EstrellaZ::EstrellaZ(unsigned n)
+: MallaInd("Estrella Z")
+{
+
+   vertices.push_back({+0.5,+0.5,0.0});
+   
+   
+   for(unsigned i=0; i < 2*n; i+= 2 ){
+      vertices.push_back( {float(cos(i*M_PI/n)/2 + 0.5), float(sin(i*M_PI/n)/2 + 0.5), 0} );
+      vertices.push_back( {float(cos((i+1)*M_PI/n)/4 + 0.5), float(sin((i+1)*M_PI/n)/4 + 0.5), 0} );
+      
+   }
+   
+   for (unsigned j = 0; j < 2*n; j++){
+      triangulos.push_back({0,j,j+1});
+   }
+
+   triangulos.push_back({0,2*n,1});
+
+   col_ver.push_back({1.0,1.0,1.0}); //Color del centro
+
+   for(unsigned i=0; i < 2*n; i+= 2 ){
+      col_ver.push_back( {float(cos(i*M_PI/n)/2 + 0.5), float(sin(i*M_PI/n)/2 + 0.5), 0} );
+      col_ver.push_back( {float(cos((i+1)*M_PI/n)/4 + 0.5), float(sin((i+1)*M_PI/n)/4 + 0.5), 0} );
+      
+   }
+
+
+};
+
+MallaTriangulo::MallaTriangulo()
+:  MallaInd( "Malla Triangulo" )
+{
+   
+   vertices = 
+   {
+      {-0.5, sqrt(2), 0.0}, // 0
+      {+0.5, 0.0, 0.0},     // 1
+      {-0.5, 0.0, 0.0}      // 2
+   };
+
+   triangulos = 
+   {
+      {0,2,1}
+   };
+  
+};
+
+MallaCuadrado::MallaCuadrado()
+:  MallaInd( "Malla Cuadrado" )
+{
+   
+   vertices = 
+   {
+      {-1.0, +2.0, 0.0}, // 0
+      {+1.0, 0.0, 0.0},  // 1
+      {-1.0, 0.0, 0.0},   // 2
+      {+1.0, +2.0, 0.0}   // 3
+   };
+
+   triangulos = 
+   {
+      {2,3,0},
+      {2,1,3}
+
+   };
+  
+};
+
+MallaPiramideL::MallaPiramideL()
+:  MallaInd( "Malla PiramideL" )
+{
+   
+   vertices = 
+   {
+      {0.0, 0.0, 0.0},   // 0
+      {0.0, 0.0, +1.0},  // 1
+      {0.0, 0.0, +2.0},  // 2
+      {+1.0, 0.0, +1.0}, // 3
+      {+1.0, 0.0, +2.0}, // 4
+      {+2.0, 0.0, +1.0}, // 5
+      {+2.0, 0.0, 0.0},  // 6
+      {+1.0, +2.0, +1.0} // 7
+   };
+
+   triangulos = 
+   {
+      
+      {0,2,6}, {2,3,4}, {3,5,6},
+
+      {0,7,2}, {2,4,7},
+      {3,4,7}, {3,5,7},
+      {5,6,7}, {0,6,7} 
+      
+   };
+  
+};
+
+PiramideEstrellaZ::PiramideEstrellaZ(unsigned n)
+: MallaInd("PiramideEstrellaZ")
+{
+
+   vertices.push_back({+0.5,+0.5,+0.5});
+   
+   
+   for(unsigned i=0; i < 2*n; i+= 2 ){
+      vertices.push_back( {float(cos(i*M_PI/n)/2 + 0.5), float(sin(i*M_PI/n)/2 + 0.5), 0} );
+      vertices.push_back( {float(cos((i+1)*M_PI/n)/4 + 0.5), float(sin((i+1)*M_PI/n)/4 + 0.5), 0} );
+      
+   }
+   
+   for (unsigned j = 0; j < 2*n; j++){
+      triangulos.push_back({0,j,j+1});
+   }
+
+   triangulos.push_back({0,2*n,1});
+
+   col_ver.push_back({1.0,1.0,1.0}); //Color del centro
+
+   for(unsigned i=0; i < 2*n; i+= 2 ){
+      col_ver.push_back( {float(cos(i*M_PI/n)/2 + 0.5), float(sin(i*M_PI/n)/2 + 0.5), 0} );
+      col_ver.push_back( {float(cos((i+1)*M_PI/n)/4 + 0.5), float(sin((i+1)*M_PI/n)/4 + 0.5), 0} );
+      
+   }
+
+
+};
+
+RejillaY::RejillaY(unsigned m, unsigned n)
+: MallaInd("RejillaY")
+{
+
+   for (unsigned int i = 0; i < m; i++) {
+      for (unsigned int j = 0; j < n; j++) {
+            float x = static_cast<float>(i) / static_cast<float>(m - 1);
+            float z = static_cast<float>(j) / static_cast<float>(n - 1);
+            vertices.push_back(glm::vec3(x, 0.0f, z));
+            col_ver.push_back(glm::vec3(x, 0.0f, z));
+      }
+   }
+
+  
+
+   for (unsigned i = 0; i < m-1; i++ ){
+      for (unsigned j = 0; j < n-1; j++){
+         triangulos.push_back({j+i*n, j+(i+1)*n, (j+1)+i*n});
+         triangulos.push_back({(j+1)+i*n,j+(1+i)*n,(j+1)+(i+1)*n});
+      }
+   }
+   
+
+};
