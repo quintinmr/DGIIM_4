@@ -317,7 +317,7 @@ Escena1::Escena1()
    objetos.push_back( new MallaPiramideL());
    objetos.push_back( new PiramideEstrellaZ(8));
    objetos.push_back( new RejillaY(10,30));
-
+   objetos.push_back( new MallaTorre(1));
 
 }
 

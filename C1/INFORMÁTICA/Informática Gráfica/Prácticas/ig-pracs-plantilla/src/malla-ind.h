@@ -193,6 +193,14 @@ class RejillaY: public MallaInd
       RejillaY(unsigned m, unsigned n);
 };
 
+// ---------------------------------------------------------------------
+
+class MallaTorre: public MallaInd
+{
+   public:
+      MallaTorre(unsigned n);
+};
+
 
 
 

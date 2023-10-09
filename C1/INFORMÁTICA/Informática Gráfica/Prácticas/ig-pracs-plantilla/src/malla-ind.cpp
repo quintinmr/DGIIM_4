@@ -587,3 +587,29 @@ RejillaY::RejillaY(unsigned m, unsigned n)
    
 
 };
+
+
+MallaTorre::MallaTorre( unsigned n )
+: MallaInd("MallaTorre")
+{
+
+   for (unsigned i = 0; i < n+1; i++){
+
+      vertices.push_back(glm::vec3(-0.5,i,+0.5)); //0
+      vertices.push_back(glm::vec3(+0.5,i,+0.5)); //1
+      vertices.push_back(glm::vec3(+0.5,i,-0.5)); //2
+      vertices.push_back(glm::vec3(-0.5,i,-0.5)); //3
+      
+   }
+  
+   triangulos.push_back( {0,3,4} );
+
+   for (unsigned j = 0; j < 4*n; j++){
+
+         triangulos.push_back({j, j+1, 4+j });
+         triangulos.push_back({j+1, j+4, j+5});
+      
+   }
+
+   triangulos.push_back( {4*n,4*(n-1)+3,4*n+3} );
+};
