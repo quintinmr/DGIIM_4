@@ -318,6 +318,7 @@ Escena1::Escena1()
    objetos.push_back( new PiramideEstrellaZ(8));
    objetos.push_back( new RejillaY(10,30));
    objetos.push_back( new MallaTorre(1));
+   objetos.push_back( new MallaPLY("ant.ply"));
 
 }
 
@@ -332,10 +333,11 @@ Escena2::Escena2()
 
    cout << "Creando objetos de la práctica  2." << endl;
 
-   objetos.push_back( new Cilindro(10,10));
+   objetos.push_back( new Cilindro(10,50));
    objetos.push_back( new Cono(100,100));
    objetos.push_back( new Esfera(100,100));
    objetos.push_back( new RelojArena(100,100));
+   objetos.push_back( new MallaRevolPLY("peon.ply",100));
    
 }
 

@@ -272,7 +272,7 @@ MallaPLY::MallaPLY( const std::string & nombre_arch )
 
    // COMPLETAR: práctica 2: leer archivo PLY e inicializar la malla
    LeerPLY(nombre_arch, vertices, triangulos);
-
+   
 
    // COMPLETAR: práctica 4: invocar  a 'calcularNormales' para el cálculo de normales
    // .................
@@ -435,6 +435,9 @@ CasaX::CasaX()
 
 }
 
+// ****************************************************************************
+// Clase 'EstrellaZ'
+
 EstrellaZ::EstrellaZ(unsigned n)
 : MallaInd("Estrella Z")
 {
@@ -465,6 +468,9 @@ EstrellaZ::EstrellaZ(unsigned n)
 
 };
 
+// ****************************************************************************
+// Clase 'MallaTriangulo'
+
 MallaTriangulo::MallaTriangulo()
 :  MallaInd( "Malla Triangulo" )
 {
@@ -482,6 +488,9 @@ MallaTriangulo::MallaTriangulo()
    };
   
 };
+
+// ****************************************************************************
+// Clase 'MallaCuadrado'
 
 MallaCuadrado::MallaCuadrado()
 :  MallaInd( "Malla Cuadrado" )
@@ -503,6 +512,9 @@ MallaCuadrado::MallaCuadrado()
    };
   
 };
+
+// ****************************************************************************
+// Clase 'MallaPiramideL'
 
 MallaPiramideL::MallaPiramideL()
 :  MallaInd( "Malla PiramideL" )
@@ -532,6 +544,8 @@ MallaPiramideL::MallaPiramideL()
    };
   
 };
+// ****************************************************************************
+// Clase 'PiramideEstrellaZ'
 
 PiramideEstrellaZ::PiramideEstrellaZ(unsigned n)
 : MallaInd("PiramideEstrellaZ")
@@ -563,6 +577,9 @@ PiramideEstrellaZ::PiramideEstrellaZ(unsigned n)
 
 };
 
+// ****************************************************************************
+// Clase 'RejillaY'
+
 RejillaY::RejillaY(unsigned m, unsigned n)
 : MallaInd("RejillaY")
 {
@@ -588,6 +605,8 @@ RejillaY::RejillaY(unsigned m, unsigned n)
 
 };
 
+// ****************************************************************************
+// Clase 'MallaTorre'
 
 MallaTorre::MallaTorre( unsigned n )
 : MallaInd("MallaTorre")

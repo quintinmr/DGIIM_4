@@ -36,8 +36,6 @@ using namespace std ;
 // *****************************************************************************
 
 
-
-
 // Método que crea las tablas de vértices, triángulos, normales y cc.de.tt.
 // a partir de un perfil y el número de copias que queremos de dicho perfil.
 void MallaRevol::inicializar
@@ -111,8 +109,9 @@ MallaRevolPLY::MallaRevolPLY
    ponerNombre( std::string("malla por revolución del perfil en '"+ nombre_arch + "'" ));
    // COMPLETAR: práctica 2: crear la malla de revolución
    // Leer los vértice del perfil desde un PLY, después llamar a 'inicializar'
-   LeerVerticesPLY(nombre_arch,vertices);
-
+   std::vector<glm::vec3> vertices_perfil;
+   LeerVerticesPLY(nombre_arch,vertices_perfil);
+   inicializar(vertices_perfil, nperfiles);
 
 }
 
@@ -131,15 +130,10 @@ Cilindro::Cilindro
    glm::vec3 punto_inicial2 = {1.0,1.0,0.0};
    perfil_cili.push_back(punto_inicial2);
 
-   for (int i = 0; i < num_verts_per; i++){
-      
-      double angle = (2*i*M_PI)/num_verts_per;
-      glm::vec3 q  = {cos(angle), 1.0, sin(angle)};
-      perfil_cili.push_back(q);
-      glm::vec3 r  = {cos(angle), 0.0, sin(angle)};
-      perfil_cili.push_back(r);
+   const float c = float(1/(num_verts_per-1));
 
-   }
+   for (int i = 0; i < num_verts_per; i++)
+      perfil_cili.push_back({1.0,i*c,0.0});
 
    inicializar(perfil_cili, nperfiles);
 
@@ -162,14 +156,6 @@ Cono::Cono
    glm::vec3 punto_final   = {0.0,1.0,0.0};
    perfil_cono.push_back(punto_final);
 
-   for (int i = 0; i < num_verts_per; i++){
-      
-      double angle = (2*i*M_PI)/num_verts_per;
-      glm::vec3 r  = {cos(angle), 0.0, sin(angle)};
-      perfil_cono.push_back(r);
-
-   }
-
    inicializar(perfil_cono, nperfiles);
 
 }
@@ -184,18 +170,23 @@ Esfera::Esfera
    // Esfera de base con centro en el (0,0,0) y radio y altura 1. 
    // 1. Creación del perfil a revolucionar
    std::vector<glm::vec3>  perfil_Esfera;
-   glm::vec3 origen = {0.0,0.0,0.0};
+   /* glm::vec3 origen = {0.0,0.0,0.0};
    perfil_Esfera.push_back(origen);
    glm::vec3 punto_inicial = {1.0,0.0,0.0};
    perfil_Esfera.push_back(punto_inicial);
 
-   for (int i = 0; i < num_verts_per; i++){
+    for (int i = 0; i < num_verts_per; i++){
       
       double angle = (2*i*M_PI)/num_verts_per;
-      glm::vec3 q  = {cos(angle), sin(angle), 0.0 };
+      glm::vec3 q  = {abs(cos(angle)), (sin(angle)), 0.0 };
       perfil_Esfera.push_back(q);
 
+   }  */
+
+   for (int i = 0; i < num_verts_per; i++){
+      perfil_Esfera.push_back({cos(i*2*M_PI/(num_verts_per-1)), -sin(i*2*M_PI/(num_verts_per-1)),0.0});
    }
+   
 
    inicializar(perfil_Esfera, nperfiles);
 
