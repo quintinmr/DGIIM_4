@@ -108,16 +108,52 @@ void NodoGrafoEscena::visualizarGL(  )
    // Además, hay que hacer push/pop de la pila de modelado. 
    // Así que debemos de dar estos pasos:
    //
+
    // 1. Si el objeto tiene un color asignado (se comprueba con 'tieneColor')
    //     - hacer push del color actual del cauce (con 'pushColor') y después
    //     - fijar el color en el cauce (con 'fijarColor'), usando el color del objeto (se lee con 'leerColor()')
+   if (tieneColor()){
+
+      cauce->pushColor();
+      cauce->fijarColor(leerColor());
+   }
+
    // 2. Guardar copia de la matriz de modelado (con 'pushMM'), 
+
+   cauce->pushMM();
+
    // 3. Para cada entrada del vector de entradas:
    //     - si la entrada es de tipo objeto: llamar recursivamente a 'visualizarGL'
    //     - si la entrada es de tipo transformación: componer la matriz (con 'compMM')
+
+   for (unsigned i = 0; i < entradas.size(); i++)
+
+      switch( entradas[i].tipo )
+      {
+         case TipoEntNGE::objeto:
+            entradas[i].objeto->visualizarGL();  // 3.1
+            break;
+
+         case TipoEntNGE::transformacion:
+            cauce->compMM( *(entradas[i].matriz ) ); // 3.2
+            break;
+
+         default:
+            break;
+      
+      }
+
    // 4. Restaurar la copia guardada de la matriz de modelado (con 'popMM')
+   cauce->popMM();
+
+
    // 5. Si el objeto tiene color asignado:
    //     - restaurar el color original a la entrada (con 'popColor')
+   if (tieneColor()){
+
+      cauce->popColor();
+   }
+
 
 
    // COMPLETAR: práctica 4: añadir gestión de los materiales cuando la iluminación está activada    
@@ -148,13 +184,34 @@ void NodoGrafoEscena::visualizarGeomGL(  )
    // Este método hace un recorrido de las entradas del nodo, parecido a 'visualizarGL', pero más simple,
    // Se dan estos pasos:
    //
-   // 1. Guardar copia de la matriz de modelado (con 'pushMM'), 
-   // 2. Para cada entrada del vector de entradas:
+
+    // 1. Guardar copia de la matriz de modelado (con 'pushMM'),
+    cauce->pushMM();
+
+    // 2. Para cada entrada del vector de entradas:
    //         - Si la entrada es de tipo objeto: llamar recursivamente a 'visualizarGeomGL'.
    //         - Si la entrada es de tipo transformación: componer la matriz (con 'compMM').
+
+   for (unsigned i = 0; i < entradas.size(); i++)
+
+      switch (entradas[i].tipo)
+      {
+         case TipoEntNGE::objeto:
+            entradas[i].objeto->visualizarGeomGL();
+            break;
+         
+         case TipoEntNGE::transformacion:
+            cauce->compMM( *(entradas[i].matriz ) );
+            break;
+
+         default:
+            break;
+      }
+
    //   3. Restaurar la copia guardada de la matriz de modelado (con 'popMM')
 
-   // .......
+   cauce->popMM();
+
 
 }
 
@@ -219,8 +276,8 @@ void NodoGrafoEscena::visualizarModoSeleccionGL()
 unsigned NodoGrafoEscena::agregar( const EntradaNGE & entrada )
 {
    // COMPLETAR: práctica 3: agregar la entrada al nodo, devolver índice de la entrada agregada
-   // ........
-   return 0 ; // sustituir por lo que corresponda ....
+   entradas.push_back(entrada);
+   return (entradas.size()-1) ; 
 
 }
 // -----------------------------------------------------------------------------
@@ -259,7 +316,9 @@ glm::mat4 * NodoGrafoEscena::leerPtrMatriz( unsigned indice )
    //
    // Sustituir 'return nullptr' por lo que corresponda.
    //
-   return nullptr ;
+   assert(0<= indice < entradas.size() || entradas[indice].tipo != TipoEntNGE::transformacion || entradas[indice].matriz != nullptr);
+   
+   return entradas[indice].matriz;
 
 
 }
