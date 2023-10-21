@@ -125,15 +125,13 @@ Cilindro::Cilindro
    // Cilindro de base con centro en el (0,0,0) y radio y altura 1. 
    // 1. Creación del perfil a revolucionar
    std::vector<glm::vec3>  perfil_cili;
-   glm::vec3 punto_inicial = {1.0,0.0,0.0};
-   perfil_cili.push_back(punto_inicial);
-   glm::vec3 punto_inicial2 = {1.0,1.0,0.0};
-   perfil_cili.push_back(punto_inicial2);
 
-   const float c = float(1/(num_verts_per-1));
+   for(int i=0; i<num_verts_per; i++){
 
-   for (int i = 0; i < num_verts_per; i++)
-      perfil_cili.push_back({1.0,i*c,0.0});
+      float h = float(i)/(num_verts_per-1);
+      perfil_cili.push_back(glm::vec3(1.0,h,0.0));
+
+   }
 
    inicializar(perfil_cili, nperfiles);
 
@@ -149,12 +147,13 @@ Cono::Cono
    // Cono de base con centro en el (0,0,0) y radio y altura 1. 
    // 1. Creación del perfil a revolucionar
    std::vector<glm::vec3>  perfil_cono;
-   glm::vec3 origen = {0.0,0.0,0.0};
-   perfil_cono.push_back(origen);
-   glm::vec3 punto_inicial = {1.0,0.0,0.0};
-   perfil_cono.push_back(punto_inicial);
-   glm::vec3 punto_final   = {0.0,1.0,0.0};
-   perfil_cono.push_back(punto_final);
+   
+   for(int i=0; i<num_verts_per; i++){
+
+      float h = float(i)/(num_verts_per-1);
+      perfil_cono.push_back(glm::vec3(h,1-h,0.0));
+
+   }
 
    inicializar(perfil_cono, nperfiles);
 
@@ -184,7 +183,8 @@ Esfera::Esfera
    }  */
 
    for (int i = 0; i < num_verts_per; i++){
-      perfil_Esfera.push_back({cos(i*2*M_PI/(num_verts_per-1)), -sin(i*2*M_PI/(num_verts_per-1)),0.0});
+      double alpha = (-M_PI / 2.0 + float(i) / (num_verts_per -1) * M_PI);
+      perfil_Esfera.push_back(glm::vec3(cos(alpha), -sin(alpha),0.0));
    }
    
 
