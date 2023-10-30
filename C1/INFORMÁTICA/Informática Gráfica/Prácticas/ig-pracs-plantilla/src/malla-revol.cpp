@@ -126,12 +126,18 @@ Cilindro::Cilindro
    // 1. Creación del perfil a revolucionar
    std::vector<glm::vec3>  perfil_cili;
 
-   for(int i=0; i<num_verts_per; i++){
+   perfil_cili.push_back(glm::vec3(0.0, 0.0, 0.0));
 
-      float h = float(i)/(num_verts_per-1);
+   float h;
+
+   for(int i=0; i<num_verts_per-1; i++){
+
+       h = float(i)/(num_verts_per-1);
       perfil_cili.push_back(glm::vec3(1.0,h,0.0));
 
    }
+
+   perfil_cili.push_back(glm::vec3(0.0, h, 0.0));
 
    inicializar(perfil_cili, nperfiles);
 
@@ -215,6 +221,43 @@ RelojArena::RelojArena
    }
 
    inicializar(perfil_ra, nperfiles);
+
+}
+
+// -----------------------------------------------------------------------------
+Toro::Toro
+(
+   const int num_verts_per,   //m
+   const unsigned nperfiles,   //n
+   const float radio_mayor,
+   const float radio_menor
+)
+{
+
+   // 1. Creación del perfil a revolucionar
+   std::vector<glm::vec3>  perfil_to;
+   
+   /* for (int i = 0; i < num_verts_per; i++){
+      
+      double angle = (2*M_PI*i)/num_verts_per;
+      double x = (radio_mayor + radio_menor*cos(angle))*cos(angle);
+      double y = (radio_mayor + radio_menor*cos(angle))*sin(angle);
+      double z = radio_menor*sin(angle);
+      glm::vec3 q = {x,y,z};
+      perfil_to.push_back(q);
+   } */
+
+   for (int i = 0; i < num_verts_per; i++){
+       double angle = -M_PI + 2.0f * M_PI * i / num_verts_per;
+       double x = (radio_mayor+radio_menor*cos(angle))*cos(angle);
+       double y = (radio_mayor+radio_menor*cos(angle))*sin(angle);
+       double z = radio_menor*sin(angle);
+       glm::vec3 q = {x,y,z};
+       perfil_to.push_back(q);
+   }
+
+
+   inicializar(perfil_to, nperfiles);
 
 }
 

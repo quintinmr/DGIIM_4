@@ -41,6 +41,7 @@
 #include "camara.h"
 #include "materiales-luces.h"
 #include "escena.h"
+#include "modelo-jer.h"
 
 
 
@@ -334,13 +335,13 @@ Escena2::Escena2()
    cout << "Creando objetos de la práctica  2." << endl;
 
    objetos.push_back( new Cilindro(10,50));
-   objetos.push_back( new Cono(100,100));
+   objetos.push_back( new Cono(10,50));
    objetos.push_back( new Esfera(100,100));
    objetos.push_back( new RelojArena(100,100));
    objetos.push_back( new MallaRevolPLY("peon.ply",100));
-   
-}
+   objetos.push_back( new Toro(50,50,0.1,10));
 
+}
 
 
 // -------------------------------------------------------------------------
@@ -348,7 +349,14 @@ Escena2::Escena2()
 //
 // Añadir la implementación del constructor de la clase Escena3 para construir
 // los objetos que se indican en los guiones de las práctica 3
-// .......
+
+Escena3::Escena3()
+{
+   using namespace std;
+   cout << "Creando objetos de la práctica 3." << endl;
+
+   objetos.push_back( new MolinoAceite() );
+}
 
 
 
