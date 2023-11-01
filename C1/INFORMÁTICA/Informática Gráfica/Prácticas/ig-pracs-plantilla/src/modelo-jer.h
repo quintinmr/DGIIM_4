@@ -32,10 +32,10 @@ class Alfarje : public NodoGrafoEscena
        Alfarje( );
 };
 
-class CiliAljarfe : public MallaRevol
+class CiliMolino : public MallaRevol
 {
     public:
-      CiliAljarfe(const int num_verts_per,  const unsigned nperfiles);
+      CiliMolino(const int num_verts_per,  const unsigned nperfiles, glm::vec3 color);
 };
 
 class Rulo1 : public NodoGrafoEscena
@@ -56,6 +56,12 @@ class Rulo3 : public NodoGrafoEscena
        Rulo3();
 };
 
+class Rulo4 : public NodoGrafoEscena
+{
+    public:
+       Rulo4();
+};
+
 class ConoRulo : public MallaRevol
 {
     public:
@@ -68,6 +74,13 @@ class Tolva : public MallaInd
     public:
        Tolva();
 };
+
+class Palo : public MallaInd
+{
+    public:
+       Palo();
+};
+
 
 
 
