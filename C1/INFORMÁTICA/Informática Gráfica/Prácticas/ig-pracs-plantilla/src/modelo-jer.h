@@ -5,18 +5,29 @@
 #include "malla-ind.h"
 #include "malla-revol.h"
 #include "grafo-escena.h"
+#include <vector>
 
 using namespace glm;
+using namespace std;
+
+struct RotationPair {
+    float angle;
+    glm::vec3 axis;
+};
 
 class MolinoAceite : public NodoGrafoEscena
 {
  
+    protected:
+        unsigned num_param = 1;
+        unsigned rulo1,rulo2,rulo3,rulo4,palo;
+        //vector<mat4*> pm_rot_rulos{nullptr};
+    
     public:
 
         MolinoAceite();
         unsigned leerNumParametros() const;
-        void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
-
+        void actualizarEstadoParametro(const unsigned iParam, const float t_sec); 
     
 };
 
@@ -38,13 +49,33 @@ class CiliMolino : public MallaRevol
       CiliMolino(const int num_verts_per,  const unsigned nperfiles, glm::vec3 color);
 };
 
-class Rulo1 : public NodoGrafoEscena
+class Rulo : public NodoGrafoEscena
 {
+    protected:
+        unsigned num_param = 1;
+        mat4* pm_rulo = nullptr;
+    
     public:
-       Rulo1();
+        Rulo(const vec3 traslacion, const vec3 escalado, const vector<RotationPair> rotaciones);
+        void establecerRotacionRulos(float angle);
+        unsigned leerNumParametros() const;
+        void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
 };
 
-class Rulo2 : public NodoGrafoEscena
+/* class Rulo1 : public NodoGrafoEscena
+{
+    
+    protected:
+        unsigned num_param = 1;
+
+    
+    public:
+       Rulo1();
+       unsigned leerNumParametros() const;
+       void actualizarEstadoParametro(const unsigned iParam, const float t_sec); 
+}; */
+
+/* class Rulo2 : public NodoGrafoEscena
 {
     public:
        Rulo2();
@@ -60,7 +91,7 @@ class Rulo4 : public NodoGrafoEscena
 {
     public:
        Rulo4();
-};
+}; */
 
 class ConoRulo : public MallaRevol
 {
@@ -79,13 +110,25 @@ class Palo : public MallaInd
 {
     public:
        Palo();
+
+}; 
+
+class PaloMolino : public NodoGrafoEscena
+{
+    
+    protected:
+       unsigned num_param = 1;
+       unsigned palo;
+       vec3 posicion_inic = {-0.15,1.5,+0.15};
+       mat4x4* pos_palo = nullptr;
+
+    public:
+       PaloMolino(const glm::vec3 posPalo);
+       void establecerPosicionPalo(vec3 pos);
+       unsigned leerNumeroParametros() const;
+       void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
+
 };
-
-
-
-
-
-
 
 
 #endif // MODELO_JER_HPP

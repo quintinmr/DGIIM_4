@@ -6,27 +6,82 @@ using namespace glm;
 using namespace std;
 
 
+
 MolinoAceite::MolinoAceite()
 {
+    
+    //rulo1
+    //unsigned i_rot_r1 = agregar(rotate(radians(0.0f), vec3(0.0, 1.0, 0.0)));
+    vector<RotationPair> rots1 = {
+        {-90.0f, vec3(0.0, 0.0, 1.0)},
+        {-19.0f, vec3(0.0, 0.0, 1.0)},
+        {-47.5f, vec3(1.0, 0.0, 0.0)}
+    };
+
+    rulo1 = agregar( new Rulo(vec3(-2.87,1.7,+2.75), vec3(3.5,1.75,3.0),rots1));
+    //pm_rot_rulos.push_back(leerPtrMatriz(i_rot_r1));
+
+     //rulo2
+    vector<RotationPair> rots2 = {
+        {-90.0f, vec3(0.0, 0.0, 1.0)},
+        {-19.0f, vec3(0.0, 0.0, 1.0)},
+        {+47.5f, vec3(1.0, 0.0, 0.0)}
+    };
+
+    rulo2 = agregar( new Rulo(vec3(-2.87,1.7,-2.75), vec3(3.5,1.75,3.0),rots2));
+
+    //rulo3
+    vector<RotationPair> rots3 = {
+        {+90.0f, vec3(0.0, 0.0, 1.0)},
+        {+19.0f, vec3(0.0, 0.0, 1.0)},
+        {+47.5f, vec3(1.0, 0.0, 0.0)}
+    };
+
+    rulo3 = agregar( new Rulo(vec3(+2.87,1.7,-2.75), vec3(3.5,1.75,3.0),rots3));
+
+    //rulo4
+    vector<RotationPair> rots4 = {
+        {+90.0f, vec3(0.0, 0.0, 1.0)},
+        {+19.0f, vec3(0.0, 0.0, 1.0)},
+        {-47.5f, vec3(1.0, 0.0, 0.0)}
+    };
+
+    rulo4 = agregar( new Rulo(vec3(+2.87,1.7,+2.75), vec3(3.5,1.75,3.0),rots4));
+
+
+   //palo
+    
+    palo  = agregar( new PaloMolino(vec3(0.0,0.0,0.0)) ); 
+
     agregar( new Solera() );
     agregar( new Tolva()  );
     agregar( new Alfarje());
-    agregar( new Rulo1() );
-    agregar( new Rulo2() );
-    agregar( new Rulo3() );
-    agregar( new Rulo4() );
-    agregar( new Palo() );
     
 }
 
 unsigned int MolinoAceite::leerNumParametros() const
 {
-    return 0;
+    return num_param;
 }
 
 void MolinoAceite::actualizarEstadoParametro(unsigned int iParam, const float t_sec)
 {
-    cout << "Actualizado estado del parametro..." << endl;
+    assert(iParam <= leerNumParametros()-1);
+
+
+     switch (iParam)
+     {
+     case 0:
+        ((Rulo*)(entradas[rulo1].objeto))->actualizarEstadoParametro(iParam, t_sec);
+        ((Rulo*)(entradas[rulo2].objeto))->actualizarEstadoParametro(iParam, t_sec);
+        ((Rulo*)(entradas[rulo3].objeto))->actualizarEstadoParametro(iParam, t_sec);
+        ((Rulo*)(entradas[rulo4].objeto))->actualizarEstadoParametro(iParam, t_sec);
+        break;
+     /* case 1:
+        ((PaloMolino*)(entradas[palo].objeto))->actualizarEstadoParametro(iParam, t_sec);
+        break; */
+
+    }
 
 }
 
@@ -121,61 +176,103 @@ Tolva::Tolva()
 
 }
 
-Rulo1::Rulo1()
+Rulo::Rulo(const vec3 traslacion, const vec3 escalado, const vector<RotationPair> rotaciones)
+{
+    agregar( translate(traslacion) );
+    agregar( scale(escalado) );
+    for (long unsigned int i = 0; i < rotaciones.size(); i++){
+
+        float angulo = rotaciones[i].angle;
+        vec3 eje     = rotaciones[i].axis;
+
+        agregar(rotate(radians(angulo), eje));
+    }
+
+    unsigned ind_rot = agregar(rotate(radians(0.0f), vec3(0.0, 1.0, 0.0)));
+
+    agregar( new ConoRulo(50,50) ); 
+    
+    pm_rulo = leerPtrMatriz(ind_rot);
+}
+
+void Rulo::establecerRotacionRulos(float angle)
+{
+    *pm_rulo = rotate(radians(angle), vec3(0.0, 1.0, 0.0));
+}
+
+unsigned Rulo::leerNumParametros() const
+{
+    return num_param;
+}
+
+void Rulo::actualizarEstadoParametro(unsigned int iParam, const float t_sec)
+{
+    assert(iParam <= leerNumParametros() -1);
+
+    switch (iParam)
+    {
+    case 0:
+        establecerRotacionRulos(t_sec*360.0f); 
+        break;
+
+    }   
+}
+
+
+/* Rulo1::Rulo1()
 {
     
-    agregar( translate(vec3(-2.87,1.7,+2.0) ) );
-    agregar( scale(vec3(2.75,1.75,3.0)));
+    agregar( translate(vec3(-2.87,1.7,+2.75) ) );
+    agregar( scale(vec3(3.5,1.75,3.0)));
     agregar(rotate(radians(-90.0f), vec3(0.0, 0.0, 1.0))); 
     agregar(rotate(radians(-19.0f), vec3(0.0, 0.0, 1.0)));    
-    agregar(rotate(radians(-30.0f), vec3(1.0, 0.0, 0.0)));
+    agregar(rotate(radians(-47.5f), vec3(1.0, 0.0, 0.0)));
 
     agregar( new ConoRulo(50,50) );
 
-    
 
-}
+} */
 
-Rulo2::Rulo2()
+/* Rulo2::Rulo2()
 {
     
-    agregar( translate(vec3(-2.87,1.7,-2.0) ) );
-    agregar( scale(vec3(2.75,1.75,3.0)));
+    agregar( translate(vec3(-2.87,1.7,-2.75) ) );
+    agregar( scale(vec3(3.5,1.75,3.0)));
     agregar(rotate(radians(-90.0f), vec3(0.0, 0.0, 1.0))); 
     agregar(rotate(radians(-19.0f), vec3(0.0, 0.0, 1.0)));
-    agregar(rotate(radians(+30.0f), vec3(1.0, 0.0, 0.0)));
+    agregar(rotate(radians(+47.5f), vec3(1.0, 0.0, 0.0)));
     
     agregar( new ConoRulo(50,50) ); 
 
     
 
-}
+} */
 
-Rulo3::Rulo3()
+/* Rulo3::Rulo3()
 {
     
-    agregar( translate(vec3(+2.87,1.7,-2.0) ) );
-    agregar( scale(vec3(2.75,1.75,3.0)));
+    agregar( translate(vec3(+2.87,1.7,-2.75) ) );
+    agregar( scale(vec3(3.5,1.75,3.0)));
     agregar(rotate(radians(+90.0f), vec3(0.0, 0.0, 1.0))); 
     agregar(rotate(radians(+19.0f), vec3(0.0, 0.0, 1.0)));
-    agregar(rotate(radians(+30.0f), vec3(1.0, 0.0, 0.0)));
+    agregar(rotate(radians(+47.5f), vec3(1.0, 0.0, 0.0)));
     
     agregar( new ConoRulo(50,50) ); 
 
-}
+} */
 
-Rulo4::Rulo4()
+/* Rulo4::Rulo4()
 {
     
-    agregar( translate(vec3(+2.87,1.7,+2.0) ) );
-    agregar( scale(vec3(2.75,1.75,3.0)));
+    agregar( translate(vec3(+2.87,1.7,+2.75) ) );
+    agregar( scale(vec3(3.5,1.75,3.0)));
     agregar(rotate(radians(+90.0f), vec3(0.0, 0.0, 1.0))); 
     agregar(rotate(radians(+19.0f), vec3(0.0, 0.0, 1.0)));
-    agregar(rotate(radians(-30.0f), vec3(1.0, 0.0, 0.0)));
+    agregar(rotate(radians(-47.5f), vec3(1.0, 0.0, 0.0)));
     
     agregar( new ConoRulo(50,50) ); 
 
-}
+} */
 ConoRulo::ConoRulo
 (
     const int num_verts_per, const unsigned nperfiles
@@ -205,7 +302,10 @@ ConoRulo::ConoRulo
 
       for (unsigned int j = 0; j < nperfiles; j++){
 
-         col_ver.push_back(vec3(0.96, 0.87, 0.70));
+         if (i < int(num_verts_per/2))
+            col_ver.push_back(vec3(0.96, 0.87, 0.70));
+        else 
+            col_ver.push_back(vec3(0.85, 0.75, 0.60));
 
       }
    } 
@@ -249,4 +349,53 @@ Palo::Palo()
 
 
 
+}
+
+PaloMolino::PaloMolino(glm::vec3 posPalo)
+{
+    agregar( new Palo() );
+
+    posicion_inic = posPalo;
+    unsigned i = agregar( translate(vec3(posicion_inic)) );
+
+    pos_palo = leerPtrMatriz(i);
+
+}
+
+void PaloMolino::establecerPosicionPalo(const vec3 pos)
+{
+    *pos_palo = translate(pos);
+}
+
+unsigned PaloMolino::leerNumeroParametros() const
+{
+    return num_param;
+}
+
+void PaloMolino::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
+{
+    assert(leerNumeroParametros()-1 <= iParam);
+
+    switch (iParam)
+    {
+    case 0:
+    
+        // Radio del círculo en el que el palo se moverá
+        const float radio = 1.0f;
+
+        // Velocidad angular en radianes por segundo
+        const float velocidadAngular = 1.0f;
+
+        // Calcular la nueva posición del palo en función del tiempo
+        float nuevaPosX = radio * cos(velocidadAngular * t_sec);
+        float nuevaPosZ = radio * sin(velocidadAngular * t_sec);
+
+        // Construir la nueva posición en el espacio 3D
+        glm::vec3 nuevaPosicion = posicion_inic + glm::vec3(nuevaPosX, 0.0f, nuevaPosZ);
+
+        // Establecer la nueva posición del palo
+        establecerPosicionPalo(nuevaPosicion);
+        break;
+        
+    }
 }
