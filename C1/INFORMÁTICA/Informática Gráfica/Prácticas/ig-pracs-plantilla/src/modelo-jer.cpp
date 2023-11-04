@@ -50,8 +50,7 @@ MolinoAceite::MolinoAceite()
 
 
    //palo
-    
-    palo  = agregar( new PaloMolino(vec3(0.0,0.0,0.0)) ); 
+    palo  = agregar( new PaloMolino() ); 
 
     agregar( new Solera() );
     agregar( new Tolva()  );
@@ -68,18 +67,23 @@ void MolinoAceite::actualizarEstadoParametro(unsigned int iParam, const float t_
 {
     assert(iParam <= leerNumParametros()-1);
 
+    //cout << "iParam: " << iParam << " t_sec: " << t_sec << endl;
 
      switch (iParam)
      {
+     
      case 0:
         ((Rulo*)(entradas[rulo1].objeto))->actualizarEstadoParametro(iParam, t_sec);
         ((Rulo*)(entradas[rulo2].objeto))->actualizarEstadoParametro(iParam, t_sec);
         ((Rulo*)(entradas[rulo3].objeto))->actualizarEstadoParametro(iParam, t_sec);
-        ((Rulo*)(entradas[rulo4].objeto))->actualizarEstadoParametro(iParam, t_sec);
+        ((Rulo*)(entradas[rulo4].objeto))->actualizarEstadoParametro(iParam, t_sec); 
         break;
-     /* case 1:
+
+     case 1:
+        
         ((PaloMolino*)(entradas[palo].objeto))->actualizarEstadoParametro(iParam, t_sec);
-        break; */
+        break;
+     
 
     }
 
@@ -195,24 +199,27 @@ Rulo::Rulo(const vec3 traslacion, const vec3 escalado, const vector<RotationPair
     pm_rulo = leerPtrMatriz(ind_rot);
 }
 
-void Rulo::establecerRotacionRulos(float angle)
+void Rulo::establecerRotacionRulos(float v_angular, float time)
 {
-    *pm_rulo = rotate(radians(angle), vec3(0.0, 1.0, 0.0));
-}
+    // Calcular el ángulo de rotación en función del tiempo
+    float anguloRotacion = v_angular * time;
+    *pm_rulo = rotate(radians(anguloRotacion), vec3(0.0, 1.0, 0.0));;
+} 
 
-unsigned Rulo::leerNumParametros() const
+unsigned int Rulo::leerNumParametros() const
 {
     return num_param;
 }
 
 void Rulo::actualizarEstadoParametro(unsigned int iParam, const float t_sec)
 {
-    assert(iParam <= leerNumParametros() -1);
+    assert(iParam <= (leerNumParametros() -1));
 
     switch (iParam)
     {
     case 0:
-        establecerRotacionRulos(t_sec*360.0f); 
+        const float v_angular = 60.0f;
+        establecerRotacionRulos(v_angular,t_sec); 
         break;
 
     }   
@@ -282,7 +289,7 @@ ConoRulo::ConoRulo
 
     float h = 0;
 
-    // Agrega el vértice en el centro de la base
+    // Añadir el vértice en el centro de la base
 
     for(int i=0; i<int((num_verts_per-1)/3); i++){
 
@@ -321,10 +328,10 @@ Palo::Palo()
 {
     vertices=
     {
-        {-0.15,1.5,+0.15}, //0
-        {-0.15,1.5,-0.15}, //1
-        {+0.15,1.5,-0.15}, //2
-        {+0.15,1.5,+0.15}, //3
+        {-0.15,2,+0.15}, //0
+        {-0.15,2,-0.15}, //1
+        {+0.15,2,-0.15}, //2
+        {+0.15,2,+0.15}, //3
 
         {-0.15,4.5,+0.15}, //4
         {-0.15,4.5,-0.15}, //5
@@ -345,27 +352,41 @@ Palo::Palo()
 
     
     for (unsigned i = 0; i < vertices.size(); i++)
-        col_ver.push_back(vec3{0.0,0.0,0.0});
+        if (i%2==0)
+           col_ver.push_back(vec3{0.0,0.0,0.0});
+
+        else 
+           col_ver.push_back(vec3{0.5,0.5,0.5});
 
 
 
 }
 
-PaloMolino::PaloMolino(glm::vec3 posPalo)
+PaloMolino::PaloMolino()
 {
+    
+    
+    unsigned int i = agregar( translate(vec3(0.0,0.0,0.0)) );
+    unsigned int j = agregar( rotate(radians(0.0f), vec3(0.0,1.0,0.0)) );
+
     agregar( new Palo() );
 
-    posicion_inic = posPalo;
-    unsigned i = agregar( translate(vec3(posicion_inic)) );
+    rot_palo = leerPtrMatriz(j);
 
     pos_palo = leerPtrMatriz(i);
-
 }
 
 void PaloMolino::establecerPosicionPalo(const vec3 pos)
 {
     *pos_palo = translate(pos);
 }
+
+ void PaloMolino::establecerRotacionPalo(float v_angular, float time)
+{
+    // Calcular el ángulo de rotación en función del tiempo
+    float anguloRotacion = v_angular * time;
+    *rot_palo = rotate(radians(anguloRotacion), vec3(0.0, 1.0, 0.0));;
+} 
 
 unsigned PaloMolino::leerNumeroParametros() const
 {
@@ -374,14 +395,13 @@ unsigned PaloMolino::leerNumeroParametros() const
 
 void PaloMolino::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
 {
-    assert(leerNumeroParametros()-1 <= iParam);
+    assert(iParam <= leerNumeroParametros()-1);
 
     switch (iParam)
     {
-    case 0:
-    
-        // Radio del círculo en el que el palo se moverá
-        const float radio = 1.0f;
+    case 1:
+    {
+        const float radio = 0.5f;
 
         // Velocidad angular en radianes por segundo
         const float velocidadAngular = 1.0f;
@@ -391,11 +411,20 @@ void PaloMolino::actualizarEstadoParametro(const unsigned iParam, const float t_
         float nuevaPosZ = radio * sin(velocidadAngular * t_sec);
 
         // Construir la nueva posición en el espacio 3D
-        glm::vec3 nuevaPosicion = posicion_inic + glm::vec3(nuevaPosX, 0.0f, nuevaPosZ);
+        vec3 nuevaPosicion = vec3(0.0, 0.0, 0.0) + vec3(nuevaPosX, 0.0f, nuevaPosZ);
 
         // Establecer la nueva posición del palo
         establecerPosicionPalo(nuevaPosicion);
-        break;
-        
     }
+        break;
+    
+     case 0:
+    {
+        const float v_angular = 30.0f;
+        establecerRotacionPalo(v_angular,t_sec);
+    }
+        break;
+    }
+
+    
 }

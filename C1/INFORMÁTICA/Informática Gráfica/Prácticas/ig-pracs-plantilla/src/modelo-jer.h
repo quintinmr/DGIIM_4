@@ -19,7 +19,7 @@ class MolinoAceite : public NodoGrafoEscena
 {
  
     protected:
-        unsigned num_param = 1;
+        unsigned num_param = 2;
         unsigned rulo1,rulo2,rulo3,rulo4,palo;
         //vector<mat4*> pm_rot_rulos{nullptr};
     
@@ -52,14 +52,14 @@ class CiliMolino : public MallaRevol
 class Rulo : public NodoGrafoEscena
 {
     protected:
-        unsigned num_param = 1;
+        unsigned int num_param = 1;
         mat4* pm_rulo = nullptr;
     
     public:
         Rulo(const vec3 traslacion, const vec3 escalado, const vector<RotationPair> rotaciones);
-        void establecerRotacionRulos(float angle);
-        unsigned leerNumParametros() const;
-        void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
+        void establecerRotacionRulos(float v_angular, float time);
+        unsigned int leerNumParametros() const;
+        void actualizarEstadoParametro(const unsigned int iParam, const float t_sec);
 };
 
 /* class Rulo1 : public NodoGrafoEscena
@@ -117,16 +117,17 @@ class PaloMolino : public NodoGrafoEscena
 {
     
     protected:
-       unsigned num_param = 1;
+       unsigned int num_param = 2;
        unsigned palo;
-       vec3 posicion_inic = {-0.15,1.5,+0.15};
        mat4x4* pos_palo = nullptr;
+       mat4x4* rot_palo = nullptr;
 
     public:
-       PaloMolino(const glm::vec3 posPalo);
+       PaloMolino();
+       void establecerRotacionPalo(float v_angular, float time);
        void establecerPosicionPalo(vec3 pos);
-       unsigned leerNumeroParametros() const;
-       void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
+       unsigned int leerNumeroParametros() const;
+       void actualizarEstadoParametro(const unsigned int iParam, const float t_sec);
 
 };
 
