@@ -127,7 +127,10 @@ CiliMolino::CiliMolino
 
       for (unsigned int j = 0; j < nperfiles; j++){
 
-         col_ver.push_back(color);
+         if (i%2 ==0)
+          col_ver.push_back(color);
+         else 
+          col_ver.push_back(color+vec3(0.1,0.1,0.1));
 
       }
    }
@@ -292,10 +295,11 @@ ConoRulo::ConoRulo
 
       for (unsigned int j = 0; j < nperfiles; j++){
 
-         if (i < int(num_verts_per/2))
+         
+         if (i%2 == 0)
             col_ver.push_back(vec3(0.96, 0.87, 0.70));
         else 
-            col_ver.push_back(vec3(0.85, 0.75, 0.60));
+            col_ver.push_back(vec3(0.85, 0.75, 0.55));
 
       }
    } 
@@ -344,6 +348,7 @@ Palo::Palo()
 
 
 }
+
 
 PaloMolino::PaloMolino()
 {

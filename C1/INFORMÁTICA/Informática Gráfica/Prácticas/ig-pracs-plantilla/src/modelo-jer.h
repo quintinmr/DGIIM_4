@@ -87,6 +87,13 @@ class Palo : public MallaInd
     public:
        Palo();
 
+};
+
+class Hierro : public MallaInd
+{
+    public:
+       Hierro();
+
 }; 
 
 class PaloMolino : public NodoGrafoEscena
