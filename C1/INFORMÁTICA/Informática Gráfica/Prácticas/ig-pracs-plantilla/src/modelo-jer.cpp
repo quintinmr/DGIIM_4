@@ -52,9 +52,12 @@ MolinoAceite::MolinoAceite()
    //palo
     palo  = agregar( new PaloMolino() ); 
 
+   //alfarje
+   alfarje = agregar( new Alfarje());
+
     agregar( new Solera() );
     agregar( new Tolva()  );
-    agregar( new Alfarje());
+    
     
 }
 
@@ -79,10 +82,15 @@ void MolinoAceite::actualizarEstadoParametro(unsigned int iParam, const float t_
         ((Rulo*)(entradas[rulo4].objeto))->actualizarEstadoParametro(iParam, t_sec); 
         break;
 
-     case 1:
+     case 1: case 2:
         
-        ((PaloMolino*)(entradas[palo].objeto))->actualizarEstadoParametro(iParam, t_sec);
+        ((PaloMolino*)(entradas[palo].objeto))->actualizarEstadoParametro(iParam-1, t_sec);
         break;
+
+     case 3:
+        ((Alfarje*)(entradas[alfarje].objeto))->actualizarEstadoParametro(iParam-3, t_sec);
+        break;
+
      
 
     }
@@ -133,7 +141,36 @@ Alfarje::Alfarje()
 {
     agregar ( translate(vec3(0.0,1.0,0.0)));
     agregar ( scale(vec3(4.3,0.3,4.3)));
-    agregar ( new CiliMolino(50,50,vec3(0.3, 0.2, 0.1)) );
+    unsigned ind_rot = agregar(rotate(radians(0.0f), vec3(0.0, 1.0, 0.0)));
+    agregar ( new CiliMolino(200,200,vec3(0.3, 0.2, 0.1)) );
+    rot_alfarje = leerPtrMatriz(ind_rot);
+    
+}
+
+void Alfarje::establecerRotacionAlfarje(float v_angular, float time)
+{
+    // Calcular el ángulo de rotación en función del tiempo
+    float anguloRotacion = v_angular * time;
+    *rot_alfarje = rotate(radians(anguloRotacion), vec3(0.0, 1.0, 0.0));;
+} 
+
+unsigned Alfarje::leerNumParametros() const
+{
+    return num_param;
+}
+
+void Alfarje::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
+{
+    assert(iParam <= leerNumParametros()-1);
+
+    switch (iParam)
+    {
+    case 0:
+        const float v_angular = 60.0f;
+        establecerRotacionAlfarje(v_angular,t_sec);
+        break;
+    
+    }
 }
 
 
@@ -226,60 +263,6 @@ void Rulo::actualizarEstadoParametro(unsigned int iParam, const float t_sec)
 }
 
 
-/* Rulo1::Rulo1()
-{
-    
-    agregar( translate(vec3(-2.87,1.7,+2.75) ) );
-    agregar( scale(vec3(3.5,1.75,3.0)));
-    agregar(rotate(radians(-90.0f), vec3(0.0, 0.0, 1.0))); 
-    agregar(rotate(radians(-19.0f), vec3(0.0, 0.0, 1.0)));    
-    agregar(rotate(radians(-47.5f), vec3(1.0, 0.0, 0.0)));
-
-    agregar( new ConoRulo(50,50) );
-
-
-} */
-
-/* Rulo2::Rulo2()
-{
-    
-    agregar( translate(vec3(-2.87,1.7,-2.75) ) );
-    agregar( scale(vec3(3.5,1.75,3.0)));
-    agregar(rotate(radians(-90.0f), vec3(0.0, 0.0, 1.0))); 
-    agregar(rotate(radians(-19.0f), vec3(0.0, 0.0, 1.0)));
-    agregar(rotate(radians(+47.5f), vec3(1.0, 0.0, 0.0)));
-    
-    agregar( new ConoRulo(50,50) ); 
-
-    
-
-} */
-
-/* Rulo3::Rulo3()
-{
-    
-    agregar( translate(vec3(+2.87,1.7,-2.75) ) );
-    agregar( scale(vec3(3.5,1.75,3.0)));
-    agregar(rotate(radians(+90.0f), vec3(0.0, 0.0, 1.0))); 
-    agregar(rotate(radians(+19.0f), vec3(0.0, 0.0, 1.0)));
-    agregar(rotate(radians(+47.5f), vec3(1.0, 0.0, 0.0)));
-    
-    agregar( new ConoRulo(50,50) ); 
-
-} */
-
-/* Rulo4::Rulo4()
-{
-    
-    agregar( translate(vec3(+2.87,1.7,+2.75) ) );
-    agregar( scale(vec3(3.5,1.75,3.0)));
-    agregar(rotate(radians(+90.0f), vec3(0.0, 0.0, 1.0))); 
-    agregar(rotate(radians(+19.0f), vec3(0.0, 0.0, 1.0)));
-    agregar(rotate(radians(-47.5f), vec3(1.0, 0.0, 0.0)));
-    
-    agregar( new ConoRulo(50,50) ); 
-
-} */
 ConoRulo::ConoRulo
 (
     const int num_verts_per, const unsigned nperfiles
@@ -395,10 +378,19 @@ unsigned PaloMolino::leerNumeroParametros() const
 
 void PaloMolino::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
 {
+
     assert(iParam <= leerNumeroParametros()-1);
 
     switch (iParam)
     {
+    
+    case 0:
+    {
+        const float v_angular = 30.0f;
+        establecerRotacionPalo(v_angular,t_sec);
+    }
+        break;
+
     case 1:
     {
         const float radio = 0.5f;
@@ -418,12 +410,7 @@ void PaloMolino::actualizarEstadoParametro(const unsigned iParam, const float t_
     }
         break;
     
-     case 0:
-    {
-        const float v_angular = 30.0f;
-        establecerRotacionPalo(v_angular,t_sec);
-    }
-        break;
+
     }
 
     

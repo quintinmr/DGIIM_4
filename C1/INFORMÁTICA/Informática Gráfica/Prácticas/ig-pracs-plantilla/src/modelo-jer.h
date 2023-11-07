@@ -19,8 +19,8 @@ class MolinoAceite : public NodoGrafoEscena
 {
  
     protected:
-        unsigned num_param = 2;
-        unsigned rulo1,rulo2,rulo3,rulo4,palo;
+        unsigned num_param = 4;
+        unsigned rulo1,rulo2,rulo3,rulo4,palo,alfarje;
         //vector<mat4*> pm_rot_rulos{nullptr};
     
     public:
@@ -39,8 +39,15 @@ class Solera : public NodoGrafoEscena
 
 class Alfarje : public NodoGrafoEscena
 {
+    protected:
+        unsigned num_param = 1;
+        mat4* rot_alfarje = nullptr;
+
     public:
        Alfarje( );
+       void establecerRotacionAlfarje(float v_angular, float time);
+       unsigned leerNumParametros() const;
+       void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
 };
 
 class CiliMolino : public MallaRevol
@@ -61,37 +68,6 @@ class Rulo : public NodoGrafoEscena
         unsigned int leerNumParametros() const;
         void actualizarEstadoParametro(const unsigned int iParam, const float t_sec);
 };
-
-/* class Rulo1 : public NodoGrafoEscena
-{
-    
-    protected:
-        unsigned num_param = 1;
-
-    
-    public:
-       Rulo1();
-       unsigned leerNumParametros() const;
-       void actualizarEstadoParametro(const unsigned iParam, const float t_sec); 
-}; */
-
-/* class Rulo2 : public NodoGrafoEscena
-{
-    public:
-       Rulo2();
-};
-
-class Rulo3 : public NodoGrafoEscena
-{
-    public:
-       Rulo3();
-};
-
-class Rulo4 : public NodoGrafoEscena
-{
-    public:
-       Rulo4();
-}; */
 
 class ConoRulo : public MallaRevol
 {
