@@ -89,8 +89,7 @@ void MallaRevol::inicializar
          unsigned int k = i*m+j;
          glm::vec3 t1 = {k,k+m,k+m+1};
          glm::vec3 t2 = {k,k+m+1,k+1};
-         //glm::uvec3 t1 = {vertices.at(k), vertices.at(k+m), vertices.at(k+m+1)};
-         //glm::uvec3 t2 = {vertices.at(k), vertices.at(k+m+1), vertices.at(k+1)};
+
          triangulos.push_back(t1);
          triangulos.push_back(t2);
       }
@@ -175,21 +174,8 @@ Esfera::Esfera
 )
 {
    // Esfera de base con centro en el (0,0,0) y radio y altura 1. 
-   // 1. Creación del perfil a revolucionar
    std::vector<glm::vec3>  perfil_Esfera;
-   /* glm::vec3 origen = {0.0,0.0,0.0};
-   perfil_Esfera.push_back(origen);
-   glm::vec3 punto_inicial = {1.0,0.0,0.0};
-   perfil_Esfera.push_back(punto_inicial);
-
-    for (int i = 0; i < num_verts_per; i++){
-      
-      double angle = (2*i*M_PI)/num_verts_per;
-      glm::vec3 q  = {abs(cos(angle)), (sin(angle)), 0.0 };
-      perfil_Esfera.push_back(q);
-
-   }  */
-
+   
    for (int i = 0; i < num_verts_per; i++){
       double alpha = (-M_PI / 2.0 + float(i) / (num_verts_per -1) * M_PI);
       perfil_Esfera.push_back(glm::vec3(cos(alpha), -sin(alpha),0.0));
@@ -231,35 +217,106 @@ Toro::Toro
 (
    const int num_verts_per,   //m
    const unsigned nperfiles,   //n
-   const float radio_mayor,
+   const float x,
+   const float y,
    const float radio_menor
 )
 {
 
-   // 1. Creación del perfil a revolucionar
-   std::vector<glm::vec3>  perfil_to;
-   
-   /* for (int i = 0; i < num_verts_per; i++){
-      
-      double angle = (2*M_PI*i)/num_verts_per;
-      double x = (radio_mayor + radio_menor*cos(angle))*cos(angle);
-      double y = (radio_mayor + radio_menor*cos(angle))*sin(angle);
-      double z = radio_menor*sin(angle);
-      glm::vec3 q = {x,y,z};
-      perfil_to.push_back(q);
-   } */
+   ponerNombre( std::string("malla por revolución del perfil de un Toro") );
 
-   for (int i = 0; i < num_verts_per; i++){
-       double angle = -M_PI + 2.0f * M_PI * i / num_verts_per;
-       double x = (radio_mayor+radio_menor*cos(angle))*cos(angle);
-       double y = (radio_mayor+radio_menor*cos(angle))*sin(angle);
-       double z = radio_menor*sin(angle);
-       glm::vec3 q = {x,y,z};
-       perfil_to.push_back(q);
+   std::vector<glm::vec3> perfil;
+   
+   float distancia_ptos = 2*M_PI/num_verts_per;
+
+   for( int i = 0; i <= num_verts_per; ++i)
+      perfil.push_back( {(radio_menor)*cos(i*distancia_ptos)+x, (radio_menor)*sin(i*distancia_ptos)+y, 0} ); 
+
+   inicializar(perfil, nperfiles);
+
+}
+
+// -----------------------------------------------------------------------------
+Semiesfera::Semiesfera
+(
+   const int num_verts_per,   //m
+   const unsigned nperfiles,  //n  
+   const float radio          // radio 
+)
+{
+   std::vector<glm::vec3>  perfil_semiesfera;
+
+   
+
+   for (int i = 0; i < num_verts_per; i++)
+   {
+      float angle = (-M_PI + float(i) / (num_verts_per -1) * M_PI);
+      perfil_semiesfera.push_back({radio*cosf(angle), -radio*sin(angle),0.0f});
+   }
+
+   inicializar(perfil_semiesfera, nperfiles);
+
+}
+
+//------------------------------------------------------------------------------------
+// EJERCICIO REPASO PRÁCTICA 2
+//------------------------------------------------------------------------------------
+void MallaBarrido::inicializar
+(
+   const std::vector<glm::vec3> & perfil,     // tabla de vértices del perfil original
+   const unsigned               num_copias  // número de copias del perfil
+)
+{
+   // Partimos de la tabla de vértices vacía.
+   vertices.clear();
+   unsigned int m = perfil.size();
+   unsigned int n = num_copias;
+
+   // creamos la tabla de vértices trasladando el perfil 
+   // a lo largo del eje y tantas veces como copias del perfil tengamos
+   for (unsigned int i = 0; i < n; i++){
+
+      for (unsigned int j = 0; j < m; j++){
+
+         glm::vec3 q = {perfil.at(j).x, float(i)/5.0, perfil.at(j).z};
+         vertices.push_back(q);
+
+      }
+   }
+
+   // creación de la tabla de triángulos
+   triangulos.clear();
+   for (unsigned int i = 0; i < n-1; i++){
+      for (unsigned int j = 0; j < m-1; j++){
+         unsigned int k = i*m+j;
+         glm::vec3 t1 = {k,k+m,k+m+1};
+         glm::vec3 t2 = {k,k+m+1,k+1};
+
+         triangulos.push_back(t1);
+         triangulos.push_back(t2);
+      }
    }
 
 
-   inicializar(perfil_to, nperfiles);
+}
+
+SemiCilindroBarrido::SemiCilindroBarrido
+(
+   const int m, // número de vértices del perfil original
+   const unsigned n // número de perfiles
+)
+{
+
+   std::vector<glm::vec3>  perfil_semiesfera;
+   
+
+   for (int i = 0; i < m; i++)
+   {
+      float angle = (-M_PI + float(i) / (m -1) * M_PI);
+      perfil_semiesfera.push_back({cosf(angle), 0.0f, -sin(angle)});
+   }
+
+   inicializar(perfil_semiesfera, m);
 
 }
 

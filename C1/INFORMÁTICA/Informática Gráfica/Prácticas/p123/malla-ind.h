@@ -203,6 +203,21 @@ class MallaTorre: public MallaInd
       MallaTorre(unsigned n);
 };
 
+// ---------------------------------------------------------------------
+
+class EstrellaCubo: public MallaInd
+{
+   public:
+      EstrellaCubo();
+};
+
+// ---------------------------------------------------------------------
+
+class PoligonoNLados: public MallaInd
+{
+   public:
+      PoligonoNLados(unsigned n);
+};
 
 
 

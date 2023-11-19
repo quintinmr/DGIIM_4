@@ -148,14 +148,57 @@ class Toro: public MallaRevol
    (
       const int num_verts_per, // número de vértices del perfil original (m)
       const unsigned nperfiles, // número de perfiles (n)
-      const float radio_mayor,
+      const float x,
+      const float y,
       const float radio_menor
 
    ) ;
 
 };
 
+// --------------------------------------------------------------------- 
 
+class Semiesfera: public MallaRevol
+{
+   public:
+
+   // Constructor: crea el perfil original y llama a inicializar
+   // la base tiene el centro en el origen, el radio y la altura son 1
+   Semiesfera
+   (
+      const int num_verts_per, // número de vértices del perfil original (m)
+      const unsigned nperfiles, // número de perfiles (n)
+      const float radio        // radio de la esfera
+   ) ;
+
+};
+
+// --------------------------------------------------------------------
+// EJERCICIO REPASO P2
+// --------------------------------------------------------------------
+
+class MallaBarrido : public MallaInd
+{
+   public:
+      void inicializar
+      (
+         const std::vector<glm::vec3> & perfil,     // tabla de vértices del perfil original
+         const unsigned               num_copias  // número de copias del perfil
+      );
+};
+
+// --------------------------------------------------------------------
+
+class SemiCilindroBarrido : public MallaBarrido
+{
+   public:
+   // Constructor
+   SemiCilindroBarrido
+   (
+      const int m, // número de vértices del perfil original
+      const unsigned n // número de perfiles
+   );
+};
 
 
 

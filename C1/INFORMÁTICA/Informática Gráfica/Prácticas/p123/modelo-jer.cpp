@@ -269,7 +269,7 @@ void Rulo::establecerRotacionRulos(float time)
 {
     // Calcular el ángulo de rotación en función del tiempo
     float v_angular = angle_rulo_inic * time;
-    *rot_rulo = rotate(radians(v_angular), vec3(0.0, 1.0, 0.0));;
+    *rot_rulo = rotate(radians(v_angular), vec3(0.0, 1.0, 0.0));
 } 
 
 unsigned int Rulo::leerNumParametros() const
@@ -364,7 +364,7 @@ void PaloMolino::establecerPosicionPalo(const vec3 pos)
 {
     // Calcular el ángulo de rotación en función del tiempo
     float v_angular = (angle_palo_ini) * time;
-    *rot_palo = rotate(radians(v_angular), vec3(0.0, 1.0, 0.0));;
+    *rot_palo = rotate(radians(v_angular), vec3(0.0, 1.0, 0.0));
 } 
 
 unsigned PaloMolino::leerNumeroParametros() const

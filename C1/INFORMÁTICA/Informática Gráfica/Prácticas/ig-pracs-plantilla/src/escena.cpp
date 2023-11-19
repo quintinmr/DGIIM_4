@@ -44,6 +44,7 @@
 #include "materiales-luces.h"
 #include "escena.h"
 #include "modelo-jer.h"
+#include "grafo-escena.h"
 
 
 
@@ -316,6 +317,9 @@ Escena1::Escena1()
    objetos.push_back( new MallaTriangulo());
    objetos.push_back( new MallaCuadrado());
    objetos.push_back( new MallaPiramideL());
+   objetos.push_back( new EstrellaCubo());
+   objetos.push_back( new PoligonoNLados(7));
+
 
 }
 
@@ -337,10 +341,13 @@ Escena2::Escena2()
    objetos.push_back( new RejillaY(10,30));
    objetos.push_back( new MallaTorre(5));
    objetos.push_back( new MallaPLY("ant.ply"));
-   objetos.push_back( new Toro(50,50,0.1,10));
+   objetos.push_back( new Toro(32,64,3,0,1));
    objetos.push_back( new RelojArena(100,100));
    objetos.push_back( new MallaRevolPLY("peon.ply",100));
    objetos.push_back( new MallaRevolPLY("beethoven.ply",100));
+   objetos.push_back( new Semiesfera(10,30,2));
+   objetos.push_back( new SemiCilindroBarrido(10,30));
+
 
 
 
@@ -359,6 +366,10 @@ Escena3::Escena3()
    cout << "Creando objetos de la práctica 3." << endl;
 
    objetos.push_back( new MolinoAceite(60.0f,60.0f,30.0f,vec3(0.0,0.0,0.0)) );
+   objetos.push_back( new GrafoEstrellaX(8));
+   objetos.push_back( new GrafoCubos());
+   objetos.push_back( new Toros());
+   objetos.push_back( new Coche());
 }
 
 

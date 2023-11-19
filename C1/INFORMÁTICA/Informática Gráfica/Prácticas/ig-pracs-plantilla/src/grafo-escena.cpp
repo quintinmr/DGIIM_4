@@ -32,7 +32,7 @@
 #include "aplicacion-ig.h"
 #include "seleccion.h"   // para 'ColorDesdeIdent' 
 
-
+using namespace glm;
 
 // *********************************************************************
 // Entrada del nodo del Grafo de Escena
@@ -378,10 +378,279 @@ bool NodoGrafoEscena::buscarObjeto
 }
 
 
+//-----------------------------------------------------------------------------------
+// EJERCICIO 1 ADICIONAL - P3
+// --> GrafoEstrellaX
+//-----------------------------------------------------------------------------------
+GrafoEstrellaX::GrafoEstrellaX(unsigned n)
+{
+   NodoGrafoEscena * star = new NodoGrafoEscena();
+
+   unsigned i = agregar(rotate(radians(0.0f),vec3(0.0,0.0,1.0)));
+   
+   star->agregar(rotate(radians(float(90.0f)), vec3(0.0,1.0,0.0)));
+   star->agregar(scale(vec3(1.3/0.5,1.3/0.5,1)));
+   star->agregar(translate(vec3(-0.5,-0.5,0.0)));
+   
+   
+   // Estrella de n puntas
+   star->agregar(new EstrellaZ(n));
+   agregar(star);
+
+   NodoGrafoEscena * cono = new NodoGrafoEscena();
+
+   cono->agregar(translate(vec3(0.0,1.3,0.0)));
+   cono->agregar(scale(vec3(0.14,0.15,0.14)));
+   cono->agregar(new Cono(50,50));
+
+   for (unsigned i = 0; i < n; i++)
+   {
+      agregar(rotate(float(2*M_PI/n), vec3(1.0,0.0,0.0)));
+      agregar(cono);
+      
+   } 
+
+   pm_estrellaX = leerPtrMatriz(i);
+
+   
+}
+
+unsigned GrafoEstrellaX::leerNumParametros() const
+{
+   return num_params;
+}
+
+void GrafoEstrellaX::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
+{
+
+      switch (iParam)
+      {
+      case 0:
+         
+         *pm_estrellaX = rotate(radians(2.5f*360.0f*t_sec), vec3(1.0,0.0,0.0));
+         break;
+      
+      default:
+         break;
+      }
+}
+
+//-----------------------------------------------------------------------------------
+// EJERCICIO 2 ADICIONAL - P3
+// --> GrafoCubos
+//-----------------------------------------------------------------------------------
+GrafoCubos::GrafoCubos()
+{
+   
+   
+   NodoGrafoEscena * rejilla = new NodoGrafoEscena();
+
+   rejilla->agregar(translate(vec3(-0.5,-0.5,-0.5)));
+   rejilla->agregar(new RejillaY(10,10));
+
+   NodoGrafoEscena * cubos   = new NodoGrafoEscena();
+   unsigned i = cubos->agregar(rotate(radians(0.0f),vec3(0.0,1.0,0.0)));
+   cubos->agregar(scale(vec3(0.1,0.1,0.1)));
+   cubos->agregar(translate(vec3(0.0,-6.0,0.0)));
+   cubos->agregar(new Cubo());
+
+   
+
+   for (unsigned j = 0; j < 4; j++)
+   {
+      agregar(rotate(radians(90.0f),vec3(1.0,0.0,0.0)));
+      agregar(rejilla);
+      agregar(cubos);
+
+   }
+
+   agregar(rotate(radians(90.0f),vec3(0.0,0.0,1.0)));
+   agregar(rejilla);
+   agregar(cubos);
+
+   agregar(rotate(radians(180.0f),vec3(0.0,0.0,1.0)));
+   agregar(rejilla);
+   agregar(cubos);
 
 
 
+   pm_grafoCubos = cubos->leerPtrMatriz(i);
+
+   
+}
+
+unsigned GrafoCubos::leerNumParametros() const
+{
+   return num_params;
+}
+
+void GrafoCubos::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
+{
+
+      switch (iParam)
+      {
+      case 0:
+         *pm_grafoCubos = rotate(radians(2.5f*360.0f*t_sec), vec3(0.0,1.0,0.0));
+         break;
+      
+      default:
+         break;
+      }
+}
+
+//-----------------------------------------------------------------------------------
+// EJERCICIO TOROS
+// --> Toros
+//-----------------------------------------------------------------------------------
+Toros::Toros()
+{
 
 
+   NodoGrafoEscena * toro = new NodoGrafoEscena();
 
+   unsigned i = agregar(rotate(radians(0.0f),vec3(0.0,1.0,0.0)));
+   toro->agregar(new Toro(32,64,6.5,0,0.5));
+   agregar(toro);
+
+   
+   NodoGrafoEscena * toro1 = new NodoGrafoEscena();
+
+   unsigned j = toro1->agregar(rotate(radians(0.0f),vec3(1.0,0.0,0.0)));
+   toro1->agregar(translate(vec3(-3.0,0.0,0.0)));
+   toro1->agregar(new Toro(32,64,2.5,0,0.5));
+   agregar(toro1);
+
+   NodoGrafoEscena * toro2 = new NodoGrafoEscena();
+
+   unsigned k = toro2->agregar(rotate(radians(0.0f),vec3(1.0,0.0,0.0)));
+   toro2->agregar(translate(vec3(3.0,0.0,0.0)));
+   toro2->agregar(new Toro(32,64,2.5,0,0.5));
+   agregar(toro2);
+
+   pm_toro1 = leerPtrMatriz(i);
+   pm_toro2 = toro1->leerPtrMatriz(j);
+   pm_toro3 = toro2->leerPtrMatriz(k);
+
+}
+
+unsigned Toros::leerNumParametros() const
+{
+   return num_params;
+}
+
+void Toros::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
+{
+
+      switch (iParam)
+      {
+      case 0:
+         *pm_toro1 = rotate(radians(360.0f*t_sec), vec3(0.0,1.0,0.0));
+         *pm_toro2 = rotate(radians(360.0f*t_sec), vec3(1.0,0.0,0.0));
+         *pm_toro3 = rotate(radians(-360.0f*t_sec), vec3(1.0,0.0,0.0));
+         break;
+      
+      default:
+         break;
+      }
+}
+
+
+//-----------------------------------------------------------------------------------
+// EJERCICIO COCHE - P3
+// --> Coche
+//-----------------------------------------------------------------------------------
+Coche::Coche()
+{
+
+   NodoGrafoEscena * rueda = new NodoGrafoEscena();
+   unsigned i = rueda->agregar(rotate(0.0f,vec3(0.0,0.0,1.0)));
+   unsigned j = agregar(translate(vec3(0.0,0.0,0.0)));
+   unsigned k = agregar(rotate(0.0f,vec3(0.0,1.0,0.0)));
+   rueda->agregar(scale(vec3(0.25,0.25,0.15)));
+   rueda->agregar(rotate(radians(90.0f), vec3(1.0,0.0,0.0)));
+   rueda->agregar(new Cilindro(50,50));
+
+   NodoGrafoEscena * rueda1 = new NodoGrafoEscena();
+   rueda1->agregar(translate(vec3(1.25,0.0,1.15)));
+   rueda1->agregar(rueda);
+   agregar(rueda1);
+
+   NodoGrafoEscena * rueda2 = new NodoGrafoEscena();
+   rueda2->agregar(translate(vec3(1.25,0.0,-1.15)));
+   rueda2->agregar(rueda);
+   agregar(rueda2);
+
+   NodoGrafoEscena * rueda3 = new NodoGrafoEscena();
+   rueda3->agregar(translate(vec3(-1.25,0.0,1.15)));
+   rueda3->agregar(rueda);
+   agregar(rueda3);
+
+   NodoGrafoEscena * rueda4 = new NodoGrafoEscena();
+   rueda4->agregar(translate(vec3(-1.25,0.0,-1.15)));
+   rueda4->agregar(rueda);
+   agregar(rueda4);
+
+   pm_ruedas = rueda->leerPtrMatriz(i);
+
+   NodoGrafoEscena * coche = new NodoGrafoEscena();
+
+   coche->agregar(translate(vec3(0.0,0.5,0.0)));
+   coche->agregar(scale(vec3(1.5,0.5,1.0)));
+   coche->agregar(new Cubo());
+
+   coche->agregar(translate(vec3(0.0,1.5,0.0)));
+   coche->agregar(scale(vec3(0.5,0.5,0.25)));
+   coche->agregar(new Cubo());
+
+   agregar(coche); 
+
+   pm_coche = leerPtrMatriz(j);
+   pm_pos_coche = leerPtrMatriz(k);
+
+
+}
+
+unsigned Coche::leerNumParametros() const
+{
+   return num_params;
+}
+
+void Coche::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
+{
+
+      switch (iParam)
+      {
+      case 0:
+      
+         *pm_ruedas = rotate(float(5.0*360.0*t_sec),vec3(0.0,0.0,1.0));
+         break;
+
+      case 1:
+         establecerMovi(v_angu_coche,t_sec);
+         break;
+
+      case 2:
+         establecerGiroCoche(t_sec);
+         break;
+      
+      }
+}
+
+void Coche::establecerMovi(const float v_angular,const float t_sec )
+{
+   const float radio = 5.0f;
+   // Calcular la nueva posición del palo en función del tiempo
+   float nuevaPosX = radio * cos(v_angular * t_sec);
+   float nuevaPosZ = radio * sin(v_angular * t_sec);
+   // Construir la nueva posición en el espacio 3D
+   vec3 nuevaPosicion = vec3(0.0, 0.0, 0.0) + vec3(nuevaPosX, 0.0f, nuevaPosZ);
+
+   *pm_coche = translate(nuevaPosicion);
+
+}
+
+void Coche::establecerGiroCoche(const float t_sec)
+{
+   *pm_pos_coche = rotate(radians(-10.0f*t_sec), vec3(0.0, 1.0, 0.0));
+}
 

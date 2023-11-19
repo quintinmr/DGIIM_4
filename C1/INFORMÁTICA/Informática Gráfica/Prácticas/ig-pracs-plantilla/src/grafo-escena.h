@@ -35,6 +35,7 @@
 #include "objeto3d.h"
 #include "malla-ind.h" // para poder usar clase MallaInd
 #include "materiales-luces.h"
+#include "malla-revol.h"
 
 //using namespace tup_mat ;
 
@@ -119,7 +120,87 @@ class NodoGrafoEscena : public Objeto3D
 
 // *********************************************************************
 
+class GrafoEstrellaX : public NodoGrafoEscena
+{
 
+   protected:
+
+      unsigned num_params = 1;
+      glm::mat4 * pm_estrellaX = nullptr;
+
+   public:
+
+      GrafoEstrellaX(unsigned n);     //constructor
+      unsigned leerNumParametros() const;   //leer número de grados de libertad
+      void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
+
+};
+
+// *********************************************************************
+
+class GrafoCubos : public NodoGrafoEscena
+{
+
+   protected:
+
+      unsigned num_params = 1;
+      glm::mat4 * pm_grafoCubos = nullptr;
+
+   public:
+
+      GrafoCubos();     //constructor
+      unsigned leerNumParametros() const;   //leer número de grados de libertad
+      void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
+
+};
+
+// *********************************************************************
+// *********************************************************************
+// *********************************************************************
+
+/*
+// EJERCICIO TOROS
+*/
+class Toros : public NodoGrafoEscena
+{
+
+   protected:
+
+      unsigned num_params = 3;
+      glm::mat4 * pm_toro1 = nullptr;
+      glm::mat4 * pm_toro2 = nullptr;
+      glm::mat4 * pm_toro3 = nullptr;
+
+   public:
+
+      Toros();     //constructor
+      unsigned leerNumParametros() const;   //leer número de grados de libertad
+      void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
+
+};
+
+// *********************************************************************
+/*
+// EJERCICIO COCHE
+*/
+
+class Coche : public NodoGrafoEscena
+{
+   protected:
+      const unsigned num_params = 3;
+      glm::mat4 * pm_ruedas = nullptr;
+      glm::mat4 * pm_coche = nullptr;
+      glm::mat4 * pm_pos_coche = nullptr;
+      const float v_angu_rueda = 5.0f;
+      const float v_angu_coche = 0.5f;
+
+   public:
+      Coche();
+      unsigned leerNumParametros() const;   //leer número de grados de libertad
+      void actualizarEstadoParametro(const unsigned iParam, const float t_sec);
+      void establecerMovi(const float v_angular, const float t_sec);
+      void establecerGiroCoche(const float t_sec);
+};
 
 
 #endif // GRAFO_ESCENA_HPP
