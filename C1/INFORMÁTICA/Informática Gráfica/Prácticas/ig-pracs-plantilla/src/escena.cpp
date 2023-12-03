@@ -45,6 +45,7 @@
 #include "escena.h"
 #include "modelo-jer.h"
 #include "grafo-escena.h"
+#include "examen-ec-p123.h"
 
 
 
@@ -309,6 +310,13 @@ Escena1::Escena1()
    // Añadir sentencias 'push_back' adicionales para agregar al 
    // array 'objetos' otros objetos de la práctica 1
    // 
+
+   // EJERCICIO 1 EXAMEN 20/11/2023
+   objetos.push_back( new P1MallaCubo() );
+
+   // EJERCICIO 3 EXAMEN 20/11/2023
+   objetos.push_back( new P3Caja());
+
    objetos.push_back( new Cubo() );
    objetos.push_back( new Tetraedro());
    objetos.push_back( new CuboColores());
