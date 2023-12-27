@@ -202,6 +202,14 @@ class Coche : public NodoGrafoEscena
       void establecerGiroCoche(const float t_sec);
 };
 
+// *****************************************************************
+// NodoGrafoCubo24
+
+class NodoGrafoCubo24 : public NodoGrafoEscena{
+   public:
+      NodoGrafoCubo24();
+};
+
 
 #endif // GRAFO_ESCENA_HPP
 

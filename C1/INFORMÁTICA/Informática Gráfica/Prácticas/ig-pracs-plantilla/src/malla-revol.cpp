@@ -47,7 +47,73 @@ void MallaRevol::inicializar
 )
 {
    using namespace glm ;
+
+  // Práctica 4: Creación de tablas de normales
+   vector<vec3> nor_aritas,aristas;
+   vector<vec3> nor_vertices;
+   vector<float> long_aristas;
+
+  
+   // 1. Cálculo previo de las aristas
+   for (unsigned i = 0; i < perfil.size()-1; i++)
+   {
+      aristas.push_back(perfil[i+1]-perfil[i]);
+      long_aristas.push_back(aristas[i].length());
+   }
+
+
+    // 2. Cáculo de normales de las aristas
+
+   for (unsigned i = 0; i < aristas.size(); i++)
+   {
+      vec3 aux = vec3(aristas[i].y, -aristas[i].x,0);
+
+      if (aux.length() != 0.0)
+         aux = normalize(aux);
+      
+      else aux = vec3(0.0,0.0,0.0);
+
+      nor_aritas.push_back(aux);
+   }
    
+   // 3. Cálculo de las normales de los vértices
+   nor_vertices.push_back(nor_aritas[0]);
+
+   for (unsigned i = 1; i < perfil.size()-1; i++)
+   {
+      vec3 aux = nor_aritas[i-1] + nor_aritas[i];
+
+      if (aux.length() != 0.0)
+         aux = normalize(aux);
+      
+      else aux = vec3(0.0,0.0,0.0);
+
+      nor_vertices.push_back(aux);
+
+   }
+
+   nor_vertices.push_back(nor_aritas[perfil.size()-2]);
+
+   // 4. Cálculo de coordenadas de textura
+
+   vector<float> t;
+   float suma;
+   float long_total = 0.0;
+
+   for (unsigned i = 0; i < long_aristas.size(); i++)
+      long_total += long_aristas[i];
+
+   for (unsigned i = 0; i < perfil.size(); i++)
+   {
+      suma = 0.0;
+
+      for(unsigned j = 0; j < i; j++)
+         suma += long_aristas[i];
+      
+      t.push_back(suma / long_total);
+   } 
+      
+
    // COMPLETAR: práctica 2: implementar algoritmo de creación de malla de revolución
    //
    // Escribir el algoritmo de creación de una malla indexada por revolución de un 
@@ -68,10 +134,22 @@ void MallaRevol::inicializar
 
       for (unsigned int j = 0; j < m; j++){
 
-         double angle = (2*M_PI*i)/(n-1);
-         double ratio = perfil.at(j).x;
+         float angle = (2.0*M_PI*float(i))/(n-1.0);
+         float ratio = perfil.at(j).x;
          glm::vec3 q = {ratio*cos(angle), perfil.at(j).y, -ratio*sin(angle)};
          vertices.push_back(q);
+
+         // rotación de las normales
+         float ratio_n = nor_vertices[j].x;
+         vec3 rotation(ratio_n*cos(angle), nor_vertices[j].y, -ratio_n*sin(angle));
+         
+         if (rotation.length() != 0.0)
+            rotation = normalize(rotation);
+         else rotation = vec3(0.0,0.0,0.0);
+         
+         nor_ver.push_back(rotation);
+
+         cc_tt_ver.push_back(vec2(i/(n-1.0f),1-t[j]));
 
       }
    }
@@ -158,7 +236,7 @@ Cono::Cono
    for(int i=0; i<num_verts_per; i++){
 
       float h = float(i)/(num_verts_per-1);
-      perfil_cono.push_back(glm::vec3(h,1-h,0.0));
+      perfil_cono.push_back(glm::vec3(1-h,h,0.0));
 
    }
 
@@ -178,7 +256,7 @@ Esfera::Esfera
    
    for (int i = 0; i < num_verts_per; i++){
       double alpha = (-M_PI / 2.0 + float(i) / (num_verts_per -1) * M_PI);
-      perfil_Esfera.push_back(glm::vec3(cos(alpha), -sin(alpha),0.0));
+      perfil_Esfera.push_back(glm::vec3(cos(alpha), sin(alpha),0.0));
    }
    
 

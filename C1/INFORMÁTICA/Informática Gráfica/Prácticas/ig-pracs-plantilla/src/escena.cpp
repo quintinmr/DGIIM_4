@@ -46,6 +46,7 @@
 #include "modelo-jer.h"
 #include "grafo-escena.h"
 #include "examen-ec-p123.h"
+#include "latapeones.h"
 
 
 
@@ -60,7 +61,9 @@ Escena::Escena()
    // - Para 'col_fuentes', se usará una instancia de 'Col2Fuentes'
    // - Se deben de elegir los parámetros del material.
    //
-   // ...
+   
+   col_fuentes  = new Col2Fuentes();
+   material_ini = new Material(0.4f,0.8f,0.0f,2.0f);
 
 
    // COMPLETAR: práctica 5: añadir varias cámaras perspectiva y ortogonales al vector de cámaras de la escena
@@ -136,7 +139,9 @@ void Escena::visualizarGL( )
       // * habilitar evaluación del MIL en el cauce (fijarEvalMIL)
       // * activar la colección de fuentes de la escena
       // * activar el material inicial (usando 'pila_materiales')
-      // ....
+      cauce->fijarEvalMIL(true);
+      col_fuentes->activar();
+      apl->pila_materiales->activar(material_ini);
 
    }
    else // si la iluminación no está activada, deshabilitar MIL y texturas
@@ -242,8 +247,11 @@ void Escena::visualizarNormales(  )
    //      * fijar el color (con 'fijarColor') 
    // 2. Visualizar las normales del objeto actual de la escena (con el método 'visualizarNormalesGL')
 
-   // ......
+   cauce->fijarEvalMIL(false);
+   cauce->fijarEvalText(false);
+   cauce->fijarColor(vec4(1.0,1.0,1.0,1.0));
 
+   objetoActual()->visualizarNormalesGL();
 }
 
 
@@ -387,7 +395,15 @@ Escena3::Escena3()
 //
 // Añadir la implementación del constructor de la clase Escena4 para construir
 // los objetos que se indican en el guion de la práctica 4
-// .......
+
+Escena4::Escena4()
+{
+   using namespace std;
+   cout << "Creando objetos de la práctica 4." << endl;
+
+   objetos.push_back( new NodoGrafoCubo24());
+   objetos.push_back( new LataPeones());
+}
 
 
 
@@ -396,7 +412,14 @@ Escena3::Escena3()
 // 
 // Añadir la implementación del constructor de la clase Escena5 para construir
 // los objetos que se indican en el guion de la práctica 5
-// .......
+
+Escena5::Escena5()
+{
+   using namespace std;
+   cout << "Creando objetos de la práctica 5." << endl;
+
+  
+}
 
 
 

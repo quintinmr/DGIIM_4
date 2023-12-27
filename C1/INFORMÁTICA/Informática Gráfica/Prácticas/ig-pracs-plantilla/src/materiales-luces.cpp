@@ -44,7 +44,7 @@ Textura::Textura( const std::string & nombreArchivoJPG )
    // 'std::string'.
    // El nombre del archivo debe ir sin el 'path', la función 'LeerArchivoJPG' lo 
    // busca en 'materiales/imgs' y si no está se busca en 'archivos-alumno'
-   // .....
+   imagen = LeerArchivoJPEG(nombreArchivoJPG.c_str(), ancho, alto);
 
 }
 
@@ -56,7 +56,31 @@ void Textura::enviar()
 {
    // COMPLETAR: práctica 4: enviar la imagen de textura a la GPU
    // y configurar parámetros de la textura (glTexParameter)
-   // .......
+   glGenTextures(1, &ident_textura);
+
+   // Activación de textura
+   glActiveTexture(GL_TEXTURE0);
+
+   // Activación de textura en la ud.activa
+   glBindTexture(GL_TEXTURE_2D, ident_textura);
+
+   // Copiamos los texels
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, ancho, alto, 0, GL_RGB, GL_UNSIGNED_BYTE, imagen);
+
+   // Generamos los minmaps
+   glGenerateMipmap(GL_TEXTURE_2D);
+
+   // Interpolación bilineal entre los 4 texels con centros
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+   // Interpolación bilineal
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+
+   // Repetimos la textura en ambas coordenadas
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); 
+
+   enviada = true;
 
 }
 
@@ -83,9 +107,33 @@ void Textura::activar(  )
    Cauce * cauce = apl->cauce ; assert( cauce != nullptr );
 
    // COMPLETAR: práctica 4: enviar la textura a la GPU (solo la primera vez) y activarla
-   // .......
+   if (!enviada) enviar();
+
+   cauce->fijarEvalText(true, ident_textura);
+   cauce->fijarTipoGCT(modo_gen_ct,coefs_s,coefs_t);
 
 }
+
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
+TexturaXY::TexturaXY( const std::string & nom ):Textura(nom)
+{
+   modo_gen_ct = mgct_coords_objeto;
+}
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
+
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
+TexturaXZ::TexturaXZ( const std::string & nom ):Textura(nom)
+{
+   modo_gen_ct = mgct_coords_objeto;
+   coefs_t[1] = 0.0;
+   coefs_t[2] = 1.0;
+}
+//----------------------------------------------------------------------
+//----------------------------------------------------------------------
+
 // *********************************************************************
 // crea un material usando un color plano y los coeficientes de las componentes
 
@@ -141,7 +189,14 @@ void Material::activar( )
    Cauce * cauce = apl->cauce ; assert( cauce != nullptr );
 
    // COMPLETAR: práctica 4: activar un material
-   // .....
+   
+   if (textura != nullptr) textura->activar();
+   else cauce->fijarEvalText(false);
+
+   assert(exp_pse > 1);
+
+   cauce->fijarParamsMIL(k_amb,k_dif,k_pse,exp_pse);
+
 
 }
 //**********************************************************************
@@ -206,7 +261,21 @@ void ColFuentesLuz::activar( )
    // COMPLETAR: práctica 4: activar una colección de fuentes de luz
    //   - crear un 'std::vector' con los colores y otro con las posiciones/direcciones,
    //   - usar el método 'fijarFuentesLuz' del cauce para activarlas
-   // .....
+   std::vector<glm::vec3> colores;
+   std::vector<glm::vec4> pos_dir;
+
+   for (unsigned i = 0; i < vpf.size(); i++)
+   {
+      colores.push_back(vpf[i]->color);
+
+      float x = cosf(radians(vpf[i]->lati))*cosf(radians(vpf[i]->longi));
+      float y = sinf(radians(vpf[i]->lati));
+      float z = cosf(radians(vpf[i]->lati))*sinf(radians(vpf[i]->longi));
+   
+      pos_dir.push_back(vec4(x,y,z,0.0));
+   }
+
+   cauce->fijarFuentesLuz(colores,pos_dir);
 
 }
 

@@ -102,6 +102,9 @@ void NodoGrafoEscena::visualizarGL(  )
    Cauce *          cauce           = apl->cauce ;           assert( cauce != nullptr );
    PilaMateriales * pila_materiales = apl->pila_materiales ; assert( pila_materiales != nullptr );
 
+   if (apl->iluminacion)
+      pila_materiales->push();
+
    // COMPLETAR: práctica 3: implementar la visualización del nodo
    //
    // Se deben de recorrer las entradas y llamar recursivamente de visualizarGL, pero 
@@ -117,7 +120,7 @@ void NodoGrafoEscena::visualizarGL(  )
    if (tieneColor()){
 
       cauce->pushColor();
-      cauce->fijarColor(leerColor());
+      cauce->fijarColor(leerColor()); 
    }
 
    // 2. Guardar copia de la matriz de modelado (con 'pushMM'), 
@@ -140,7 +143,12 @@ void NodoGrafoEscena::visualizarGL(  )
             cauce->compMM( *(entradas[i].matriz ) ); // 3.2
             break;
 
-         default:
+         case TipoEntNGE::material:
+            if (apl->iluminacion)
+               pila_materiales->activar(entradas[i].material);
+            break;
+
+         case TipoEntNGE::noInicializado:
             break;
       
       }
@@ -157,7 +165,6 @@ void NodoGrafoEscena::visualizarGL(  )
    }
 
 
-
    // COMPLETAR: práctica 4: añadir gestión de los materiales cuando la iluminación está activada    
    //
    // Si 'apl->iluminacion' es 'true', se deben de gestionar los materiales:
@@ -165,8 +172,8 @@ void NodoGrafoEscena::visualizarGL(  )
    //   1. al inicio, hacer 'push' de la pila de materiales (guarda material actual en la pila)
    //   2. si una entrada es de tipo material, activarlo usando a pila de materiales
    //   3. al finalizar, hacer 'pop' de la pila de materiales (restaura el material activo al inicio)
-
-   // ......
+   if (apl->iluminacion)
+      pila_materiales->pop();
 
 
 }
@@ -206,7 +213,10 @@ void NodoGrafoEscena::visualizarGeomGL(  )
             cauce->compMM( *(entradas[i].matriz ) );
             break;
 
-         default:
+         case TipoEntNGE::material:
+            break;
+            
+         case TipoEntNGE::noInicializado:
             break;
       }
 
@@ -239,7 +249,29 @@ void NodoGrafoEscena::visualizarNormalesGL(  )
    // - ignorar el color o identificador del nodo (se supone que el color ya está prefijado antes de la llamada)
    // - ignorar las entradas de tipo material, y la gestión de materiales (se usa sin iluminación)
 
-   // .......
+   cauce->pushMM();
+
+   for (unsigned i = 0; i < entradas.size(); i++)
+   {
+     
+      switch (entradas[i].tipo)
+      {
+         case TipoEntNGE::objeto:
+            entradas[i].objeto->visualizarNormalesGL();
+            break;
+
+         case TipoEntNGE::transformacion: 
+            cauce->compMM( *(entradas[i].matriz) );
+            break;
+
+         case TipoEntNGE::noInicializado: 
+         case TipoEntNGE::material:
+            break;
+      }
+      
+   }
+
+   cauce->popMM();
 
 }
 
@@ -654,3 +686,18 @@ void Coche::establecerGiroCoche(const float t_sec)
    *pm_pos_coche = rotate(radians(-10.0f*t_sec), vec3(0.0, 1.0, 0.0));
 }
 
+
+//-----------------------------------------------------------------------------------
+// PRÁCTICA 4
+// --> NodoCubo24
+//-----------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Clase 'NodoGrafoCubo24
+
+NodoGrafoCubo24::NodoGrafoCubo24() {
+
+   ponerNombre( std::string("Grafo Cubo24") );
+
+   agregar(new Material(new Textura("window-icon.jpg"), 0.2,0.4,0.4,20));
+   agregar(new Cubo24());
+}

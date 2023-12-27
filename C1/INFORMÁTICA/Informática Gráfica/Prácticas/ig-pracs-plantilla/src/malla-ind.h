@@ -219,6 +219,13 @@ class PoligonoNLados: public MallaInd
       PoligonoNLados(unsigned n);
 };
 
+// ---------------------------------------------------------------------
+
+class Cubo24 : public MallaInd
+{
+   public:
+      Cubo24();
+};
 
 
 
