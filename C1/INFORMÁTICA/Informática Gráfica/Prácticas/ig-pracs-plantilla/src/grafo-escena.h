@@ -77,6 +77,9 @@ class NodoGrafoEscena : public Objeto3D
    // COMPLETAR: práctica 3: definir variables y métodos privados del nodo
    std::vector<EntradaNGE> entradas;
 
+   // Práctica 5
+   bool centro_calculado = false;
+
    public:
 
    NodoGrafoEscena() ;
@@ -208,6 +211,52 @@ class Coche : public NodoGrafoEscena
 class NodoGrafoCubo24 : public NodoGrafoEscena{
    public:
       NodoGrafoCubo24();
+};
+
+// *****************************************************************
+// NodoDiscoP4
+
+class NodoDiscoP4 : public NodoGrafoEscena{
+   public:
+      NodoDiscoP4();
+};
+
+// *****************************************************************
+// GrafoEsferasP5
+
+class GrafoEsferasP5 : public NodoGrafoEscena{
+   public:
+      GrafoEsferasP5();
+};
+
+// *****************************************************************
+// MiEsferaE1
+
+class MiEsferaE1 : public NodoGrafoEscena{
+
+   protected:
+      unsigned fila, num_esfera;
+   public:
+      MiEsferaE1(unsigned i, unsigned j);
+      bool cuandoClick(const glm::vec3 & centro_wc);
+};
+
+// *****************************************************************
+// GrafoEsferasP5_2
+
+class GrafoEsferasP5_2 : public NodoGrafoEscena{
+   public:
+      GrafoEsferasP5_2();
+};
+
+// *****************************************************************
+// MiEsferaE1
+
+class MiEsferaE2 : public NodoGrafoEscena{
+
+   public:
+      MiEsferaE2();
+      bool cuandoClick(const glm::vec3 & centro_wc);
 };
 
 

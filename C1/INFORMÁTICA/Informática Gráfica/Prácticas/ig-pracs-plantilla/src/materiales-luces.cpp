@@ -72,9 +72,10 @@ void Textura::enviar()
 
    // Interpolación bilineal entre los 4 texels con centros
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-   // Interpolación bilineal
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+   
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 
    // Repetimos la textura en ambas coordenadas
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -119,6 +120,14 @@ void Textura::activar(  )
 TexturaXY::TexturaXY( const std::string & nom ):Textura(nom)
 {
    modo_gen_ct = mgct_coords_objeto;
+   coefs_s[0] = 1.0f;
+   coefs_s[1] = 0.0f;
+   coefs_s[2] = 0.0f;
+   coefs_s[3] = 0.0f;
+   coefs_t[0] = 0.0f;
+   coefs_t[1] = 1.0f;
+   coefs_t[2] = 0.0f;
+   coefs_t[3] = 0.0f;
 }
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
@@ -128,8 +137,15 @@ TexturaXY::TexturaXY( const std::string & nom ):Textura(nom)
 TexturaXZ::TexturaXZ( const std::string & nom ):Textura(nom)
 {
    modo_gen_ct = mgct_coords_objeto;
-   coefs_t[1] = 0.0;
-   coefs_t[2] = 1.0;
+   coefs_s[0] = 1.0f;
+   coefs_s[1] = 0.0f;
+   coefs_s[2] = 0.0f;
+   coefs_s[3] = 0.0f;
+   coefs_t[0] = 0.0f;
+   coefs_t[1] = 0.0f;
+   coefs_t[2] = 1.0f;
+   coefs_t[3] = 0.0f;
+ 
 }
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
@@ -268,9 +284,13 @@ void ColFuentesLuz::activar( )
    {
       colores.push_back(vpf[i]->color);
 
-      float x = cosf(radians(vpf[i]->lati))*cosf(radians(vpf[i]->longi));
+      float x = cosf(radians(vpf[i]->lati));
+      float y = sinf(radians(vpf[i]->lati))*cosf(radians(vpf[i]->longi));
+      float z = sinf(radians(vpf[i]->lati))*cosf(radians(vpf[i]->longi)); 
+      /* float x = cosf(radians(vpf[i]->lati))*cosf(radians(vpf[i]->lati));
       float y = sinf(radians(vpf[i]->lati));
-      float z = cosf(radians(vpf[i]->lati))*sinf(radians(vpf[i]->longi));
+      float z = cosf(radians(vpf[i]->lati))*sinf(radians(vpf[i]->longi)); */
+
    
       pos_dir.push_back(vec4(x,y,z,0.0));
    }

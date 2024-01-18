@@ -75,12 +75,13 @@ void MallaInd::calcularNormalesTriangulos()
       glm::vec3 a = vertices[triangulos[i][1]] - vertices[triangulos[i][0]];
       glm::vec3 b = vertices[triangulos[i][2]] - vertices[triangulos[i][0]];
 
-      glm::vec3 mc = glm::cross(b,a);
-      glm::vec3 nc = glm::vec3(0.0,0.0,0.0);
+      glm::vec3 mc = glm::cross(a,b);
+      glm::vec3 nc;
 
       if (glm::length(mc) != 0.0)
          nc = glm::normalize(mc);
-
+      else
+         nc = glm::vec3(0.0, 0.0, 0.0);
       nor_tri.push_back(nc);
    }
 
@@ -112,7 +113,7 @@ void MallaInd::calcularNormales()
 
    for (unsigned i = 0; i < nor_ver.size(); i++)
    {
-      if (nor_ver[i].length()!=0.0f) nor_ver[i] = glm::normalize(nor_ver[i]);
+      if (nor_ver[i].length()!=0.0f) nor_ver[i] = normalize(nor_ver[i]);
    }
 
 }
@@ -264,7 +265,7 @@ void MallaInd::visualizarNormalesGL(  )
 
    if (dvao_normales == nullptr)
    {
-      float a = 1.0f;
+      float a = 0.4f;
 
       for (unsigned i = 0; i < vertices.size(); i++)
       {
@@ -303,6 +304,18 @@ void MallaInd::visualizarModoSeleccionGL()
    // 3. Si tiene identificador: hacer pop del color, con 'popColor'.
    //
 
+   int id = leerIdentificador();
+
+   if (id != -1)
+   {
+      cauce->pushColor();
+      cauce->fijarColor(ColorDesdeIdent(id));
+   }
+
+   visualizarGeomGL();
+
+   if (id != -1) cauce->popColor();
+   
 }
 
 
@@ -364,17 +377,18 @@ Tetraedro::Tetraedro()
 : MallaInd( "tetraedro de 4 vértices")
 {
    vertices =
-   {
-      {+1.0,+1.0,+1.0}, // 0
-      {-1.0,-1.0,-1.0}, // 1
-      {-1.0,+1.0,-1.0}, // 2
-      {+1.0,-1.0,-1.0}  // 3
-   };
+   {  
+      { -1.0, -1.0, -1.0 }, // 0
+      { +1.0, -1.0, -1.0 }, // 1
+      { +0.0, +1.0, -1.0 }, // 2
+      { +0.0, +0.0, +1.0 }, // 3
+
+   } ;
 
    triangulos = 
    {
-      {0,1,2}, {0,2,3},
-      {0,3,1}, {1,2,3}
+      {0,1,2}, {0,1,3},
+      {1,2,3}, {0,2,3}
    };
 
    calcularNormales();
@@ -852,5 +866,38 @@ Cubo24::Cubo24()
 };
 
 
+// ****************************************************************************
+// Clase 'MallaDiscoP4' (EJERCICIO ADICIONAL 1- P4)
 
+MallaDiscoP4::MallaDiscoP4()
+{
+   ponerColor({1.0, 1.0, 1.0});
+   const unsigned ni = 23, nj = 31 ;
 
+   for( unsigned i= 0 ; i < ni ; i++ )
+      for( unsigned j= 0 ; j < nj ; j++ )
+      {
+         const float 
+            fi = float(i)/float(ni-1),
+            fj = float(j)/float(nj-1),
+            ai = 2.0*M_PI*fi,
+            x = fj * cos( ai ),
+            y = fj * sin( ai ),
+            z = 0.0 ;
+         vertices.push_back({ x, y, z });
+
+         // EJERCICIO 1
+         //cc_tt_ver.push_back({x,y});
+         // EJERCICIO 2
+         cc_tt_ver.push_back({fi,fj});
+      }
+
+   for( unsigned i= 0 ; i < ni-1 ; i++ )
+      for( unsigned j= 0 ; j < nj-1 ; j++ )
+      {
+         triangulos.push_back({ i*nj+j, i*nj+(j+1), (i+1)*nj+(j+1) });
+         triangulos.push_back({ i*nj+j, (i+1)*nj+(j+1), (i+1)*nj+j });
+      }
+
+   
+}

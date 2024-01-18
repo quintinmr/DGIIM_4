@@ -84,6 +84,11 @@ class Cauce
 
    // número total de atributos que gestiona este cauce (0->positions, 1->colors)
    static constexpr GLuint num_atribs = 2 ;
+
+   // EJERCICIO 1.7
+   void fijarRegionVisible( const float x0, const float x1,
+                            const float y0, const float y1,
+                            const float z0, const float z1 );
    
    protected: // ---------------------------
    

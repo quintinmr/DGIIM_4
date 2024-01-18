@@ -65,12 +65,30 @@ Escena::Escena()
    col_fuentes  = new Col2Fuentes();
    material_ini = new Material(0.4f,0.8f,0.0f,2.0f);
 
+   /** CÓMO FUNCIONAN LAS CÁMARAS
+   // crea una cámara, inicialmente en modo examinar, con el punto
+   // de atención en el origen, se especifica:
+   // * perspectiva_ini : true si es una camara perspectiva, false si es ortográfica
+   // * origen_ini      : punto de vista inicial (origen marco de cámara)
+   // * ratio_vp_ini    : alto del viewport dividido por el ancho del viewport
+   // * punto_aten_ini  : punto de atención
+   // * fovy_grad_ini   : si es perspectiva, la apertura de campo vertical, en grados
+
+   Camara3Modos( const bool perspectiva_ini,
+                 const Tupla3f & origen_ini, const float ratio_vp_ini,
+                 const Tupla3f & punto_aten_ini, const float fovy_grad_ini = 70.0 ) ;
+    */
 
    // COMPLETAR: práctica 5: añadir varias cámaras perspectiva y ortogonales al vector de cámaras de la escena
    //
    // Añadir sentencias 'push_back' para añadir varias cámaras al vector 'camaras'.
    // Eliminar este 'push_back' de la cámara orbital simple ('CamaraOrbitalSimple') por varias cámaras de 3 modos ('Camara3Modos')
-   camaras.push_back( new CamaraOrbitalSimple() );
+   //camaras.push_back( new CamaraOrbitalSimple() );
+
+   camaras.push_back(new Camara3Modos(true, vec3(5.0,0.0,0.0), 1.0, vec3(0.0,0.0,0.0), 90.0)); // FRONTAL
+   camaras.push_back(new Camara3Modos(false, vec3(0.0,0.0,5.0), 1.0,vec3(0.0,0.0,0.0))); // DE PERFIL
+   camaras.push_back(new Camara3Modos(true, vec3(0.0001,7.0,0.0), 4.0, vec3(0.0,0.0,0.0), 90.0));  // PLANTA
+   camaras.push_back(new Camara3Modos(true, vec3(7.0,7.0,7.0), 4.0, vec3(0.0,0.0,0.0), 90.0));  // ALEJARSE EN PERPECTIVA
 
 }
 // -----------------------------------------------------------------------------------------------
@@ -204,27 +222,31 @@ void Escena::visualizarGL_Seleccion(  )
    //       + fijar el viewport (con 'glViewport') usando el tamaño de la ventana (guardado en 'apl'), 
    //       + fijar el modo de polígonos a 'relleno', con 'glPolygonMode'
    //
-   // ........
-
+   glViewport(0, 0, apl->ventana_tam_x, apl->ventana_tam_y);
+   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
    // (2) Activar  y configurar el cauce:
    //      + Activar el cauce (con el método 'activar')
    //      + Desactivar iluminación y texturas en el cauce
    //      + Poner el color actual del cauce a '0' (por defecto los objetos no son seleccionables)
-   // ........
+   cauce->activar();
+   cauce->fijarEvalMIL(false);
+   cauce->fijarEvalText(false);
+   cauce->fijarColor(vec3(0.0,0.0,0.0));
 
 
    // (3) Limpiar el framebuffer (color y profundidad) con color (0,0,0) (para indicar que en ningún pixel hay nada seleccionable)
-   // ........
-
+   
+   glClearColor(0.0,0.0,0.0,1.0);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    // (4) Recuperar la cámara actual (con 'camaraActual') y activarla en el cauce, 
-   // ........
+   camaraActual()->activar(*cauce);
 
 
-   // (5) Recuperar (con 'objetoActual') el objeto raíz actual de esta escena y 
+   // (5) Recuperar (con 'objetoActual') el objeto90' raíz actual de esta escena y 
    //     visualizarlo con 'visualizarModoSeleccionGL'.
-   // ........
+   objetoActual()->visualizarModoSeleccionGL();
 
 }
 
@@ -403,6 +425,7 @@ Escena4::Escena4()
 
    objetos.push_back( new NodoGrafoCubo24());
    objetos.push_back( new LataPeones());
+   objetos.push_back( new NodoDiscoP4());
 }
 
 
@@ -417,8 +440,9 @@ Escena5::Escena5()
 {
    using namespace std;
    cout << "Creando objetos de la práctica 5." << endl;
-
-  
+   objetos.push_back( new VariasLataPeones());
+   objetos.push_back( new GrafoEsferasP5());
+   objetos.push_back( new GrafoEsferasP5_2());
 }
 
 

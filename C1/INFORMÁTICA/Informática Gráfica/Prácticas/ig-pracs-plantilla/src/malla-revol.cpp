@@ -257,6 +257,7 @@ Esfera::Esfera
    for (int i = 0; i < num_verts_per; i++){
       double alpha = (-M_PI / 2.0 + float(i) / (num_verts_per -1) * M_PI);
       perfil_Esfera.push_back(glm::vec3(cos(alpha), sin(alpha),0.0));
+
    }
    
 

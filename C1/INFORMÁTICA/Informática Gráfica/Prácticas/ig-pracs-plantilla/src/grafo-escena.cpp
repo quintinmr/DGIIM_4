@@ -264,8 +264,7 @@ void NodoGrafoEscena::visualizarNormalesGL(  )
             cauce->compMM( *(entradas[i].matriz) );
             break;
 
-         case TipoEntNGE::noInicializado: 
-         case TipoEntNGE::material:
+         default:
             break;
       }
       
@@ -298,7 +297,36 @@ void NodoGrafoEscena::visualizarModoSeleccionGL()
    // 5. Restaurar la matriz de modelado original (con 'popMM')   
    // 6. Si el identificador no es -1, restaurar el color previo del cauce (con 'popColor')
    //
-   // ........
+   
+   int id = leerIdentificador();
+
+   if (id != -1)
+   {
+      cauce->pushColor();
+      cauce->fijarColor(ColorDesdeIdent(id));
+   }
+
+   cauce->pushMM();
+
+   for (unsigned i = 0; i < entradas.size(); i++)
+   {
+      switch (entradas[i].tipo)
+      {
+      case TipoEntNGE::objeto:
+         entradas[i].objeto->visualizarModoSeleccionGL();
+         break;
+
+      case TipoEntNGE::transformacion:
+         cauce->compMM( *(entradas[i].matriz) );
+      
+      default:
+         break;
+      }
+   }
+
+   cauce->popMM();
+
+   if (id != -1) cauce->popColor();
 
 
 }
@@ -370,7 +398,37 @@ void NodoGrafoEscena::calcularCentroOC()
    // COMPLETAR: práctica 5: calcular y guardar el centro del nodo
    //    en coordenadas de objeto (hay que hacerlo recursivamente)
    //   (si el centro ya ha sido calculado, no volver a hacerlo)
-   // ........
+  
+   if (!centro_calculado)
+   {
+      mat4 matrix (1.0f);
+      vec3 centro (0.0,0.0,0.0);
+      float n_centros = 0;
+      
+      for (unsigned i = 0; i < entradas.size(); i++)
+      {
+         
+         switch (entradas[i].tipo)
+         {
+         case TipoEntNGE::objeto:
+            entradas[i].objeto->calcularCentroOC();
+            centro = centro + vec3(matrix*vec4(entradas[i].objeto->leerCentroOC(),1.0f));
+            n_centros++;
+            break;
+         
+         case TipoEntNGE::transformacion:
+            matrix = matrix * (*entradas[i].matriz);
+            break;
+         }
+       
+      }
+
+      centro = centro / n_centros;
+      ponerCentroOC(centro);
+      centro_calculado = true; 
+   }
+
+   else return;
 
 }
 // -----------------------------------------------------------------------------
@@ -393,20 +451,45 @@ bool NodoGrafoEscena::buscarObjeto
    // Se deben de dar estos pasos:
 
    // 1. calcula el centro del objeto, (solo la primera vez)
-   // ........
+   calcularCentroOC();
 
 
    // 2. si el identificador del nodo es el que se busca, ya está (terminar)
-   // ........
+   if (ident_busc == leerIdentificador())
+   {
+      centro_wc = leerCentroOC();
+
+      if (objeto == nullptr)
+         cout << "identificador con puntero asociado nulo" << endl;
+      
+      *objeto = this;
+
+      return true;
+   }
 
 
    // 3. El nodo no es el buscado: buscar recursivamente en los hijos
    //    (si alguna llamada para un sub-árbol lo encuentra, terminar y devolver 'true')
-   // ........
+   mat4 matrix = mmodelado;
 
+   for (unsigned i = 0; i < entradas.size(); i++)
+   {
+      switch (entradas[i].tipo)
+      {
+      case TipoEntNGE::objeto:
+         if(entradas[i].objeto->buscarObjeto(ident_busc, matrix, objeto, centro_wc)) return true;
+         break;
+
+      case TipoEntNGE::transformacion:
+         matrix = matrix * (*entradas[i].matriz);
+
+      default:
+         break;
+      }
+   }
 
    // ni este nodo ni ningún hijo es el buscado: terminar
-   return false ;
+   return false ; 
 }
 
 
@@ -700,4 +783,126 @@ NodoGrafoCubo24::NodoGrafoCubo24() {
 
    agregar(new Material(new Textura("window-icon.jpg"), 0.2,0.4,0.4,20));
    agregar(new Cubo24());
+}
+
+//-----------------------------------------------------------------------------------
+// PRÁCTICA 4
+// --> NodoDiscoP4 (EJERCICIO ADICIONAL)
+//-----------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Clase 'NodoDiscoP4
+
+NodoDiscoP4::NodoDiscoP4()
+{
+   ponerNombre("Nodo ejercicio adicional práctica 4, examen 27 enero");
+   agregar( new Material(new Textura("ea-textura-cuadricula.jpeg"), 0.2,0.4,0.4,20));
+   agregar( new MallaDiscoP4() );
+}
+
+//-----------------------------------------------------------------------------------
+// PRÁCTICA 5
+// --> GrafoEsferaP5 (EJERCICIO ADICIONAL 1)
+//-----------------------------------------------------------------------------------
+
+MiEsferaE1::MiEsferaE1(unsigned i, unsigned j)
+{
+   fila = i;
+   num_esfera = j;
+
+   agregar( new Esfera(50,50));
+}
+
+bool MiEsferaE1::cuandoClick(const glm::vec3 & centro_wc)
+{
+   std::cout << "Se ha seleccionado la esfera número " << num_esfera << " de la fila "<< fila << std::endl;
+   return true;
+}
+
+// -----------------------------------------------------------------------------
+// Clase 'NodoDiscoP4
+GrafoEsferasP5::GrafoEsferasP5()
+{
+   const unsigned
+      n_filas_esferas = 8,
+      n_esferas_x_fila = 5 ;
+   const float
+      e = 0.4/n_esferas_x_fila ;
+
+   agregar( scale(vec3( e,e,e )));
+   
+   for( unsigned i = 0 ; i < n_filas_esferas ; i++ )
+   {
+      NodoGrafoEscena * fila_esferas = new NodoGrafoEscena() ;
+   
+
+      for( unsigned j = 0 ; j < n_esferas_x_fila ; j++ )
+      {
+         MiEsferaE1 * esfera = new MiEsferaE1(i,j) ;
+         esfera->ponerIdentificador(n_filas_esferas*i+j+1);
+         fila_esferas->agregar( translate(vec3( 2.2, 0.0, 0.0 )));
+         fila_esferas->agregar( esfera );
+      }
+      agregar( fila_esferas );
+      agregar( translate(vec3( 0.0, 0.0, 5.0 )));
+   }
+}
+
+
+//-----------------------------------------------------------------------------------
+// PRÁCTICA 5
+// --> MiEsfera2 (EJERCICIO ADICIONAL 2)
+//-----------------------------------------------------------------------------------
+
+MiEsferaE2::MiEsferaE2()
+{
+
+   agregar( new Esfera(50,50));
+  
+
+}
+
+bool MiEsferaE2::cuandoClick(const glm::vec3 & centro_wc)
+{
+   
+   if (tieneColor())
+   {
+      if (leerColor() == vec3(1.0,1.0,1.0))
+         ponerColor(vec3(1.0,0.0,0.0));
+      else if (leerColor() == vec3(1.0,0.0,0.0))
+         ponerColor(vec3(1.0,1.0,1.0));
+   }
+
+   else ponerColor(vec3(1.0,0.0,0.0));
+   
+   return true;
+}
+
+
+GrafoEsferasP5_2::GrafoEsferasP5_2()
+{
+   const unsigned
+      n_filas_esferas = 8,
+      n_esferas_x_fila = 5 ;
+   const float e = 2.5/n_esferas_x_fila ;
+
+   agregar (scale(vec3( e, e, e )));
+
+   for( unsigned i = 0 ; i < n_filas_esferas ; i++ )
+   {
+      NodoGrafoEscena * fila_esferas = new NodoGrafoEscena() ;
+      fila_esferas->agregar( translate(vec3( 3.0, 0.0, 0.0 )));
+   
+
+      for( unsigned j = 0 ; j < n_esferas_x_fila ; j++ )
+      {
+         MiEsferaE2 * esfera = new MiEsferaE2() ;
+         esfera->ponerIdentificador(n_filas_esferas*i+j+1);
+         fila_esferas->agregar( translate(vec3( 2.5, 0.0, 0.0 )));
+         fila_esferas->agregar( esfera );
+      }
+
+   agregar( fila_esferas );
+   agregar( rotate( radians(360.0f/n_filas_esferas), vec3( 0.0, 1.0, 0.0 ))); 
+
+   }
 }

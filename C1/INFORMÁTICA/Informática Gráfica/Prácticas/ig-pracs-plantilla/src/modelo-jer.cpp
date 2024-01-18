@@ -21,6 +21,9 @@ MolinoAceite::MolinoAceite(float angle_alfarje_inic, float angle_rulos_inic, flo
     pos_palo_ini      = pos_palo_inic; 
 
     // Tolva
+    Textura * text_tolva = new Textura("tolva.jpg");
+    Material * mat_tolva = new Material( text_tolva,  0.1,1.0,3.0,20);
+    agregar ( mat_tolva );
     agregar( new Tolva()  );
 
     //Solera
@@ -115,8 +118,14 @@ void MolinoAceite::actualizarEstadoParametro(unsigned int iParam, const float t_
 
 Solera::Solera()
 {
+    unsigned ident_solera = 1;
+    Material * mat_solera =  new Material(0.1,0.8,0.1,10);
+
     agregar ( scale(vec3(4.0,1.0,4.0)) );
-    agregar ( new CiliMolino(50,50,vec3(0.5,0.5,0.5)) );
+    agregar (mat_solera );
+    agregar ( new CiliMolino(10,50,vec3(0.5,0.5,0.5)) );
+    ponerIdentificador(ident_solera);
+    ponerNombre("Solera");
 }
 
 //-------------------------------------------------------------------------------------------------------------------------
@@ -125,12 +134,20 @@ Solera::Solera()
 
 Alfarje::Alfarje(float angle_alfarje_inic)
 {
+    unsigned ident_alfarje = 2;
+    Textura  * text_alfarje = new TexturaXZ("alfarje.jpg");
+    Material * mat_alfarje = new Material( text_alfarje,  0.1,1.0,3.0,20);
+
     angle_alfarje_ini = angle_alfarje_inic;
+    agregar ( mat_alfarje) ;
     agregar ( translate(vec3(0.0,1.0,0.0)));
     agregar ( scale(vec3(4.3,0.3,4.3)));
     unsigned ind_rot = agregar(rotate(radians(angle_alfarje_ini), vec3(0.0, 1.0, 0.0)));
-    agregar ( new CiliMolino(200,200,vec3(0.3, 0.2, 0.1)) );
+    agregar ( new CiliMolino(10,70,vec3(0.3, 0.2, 0.1)) );
     rot_alfarje = leerPtrMatriz(ind_rot);  
+
+    ponerIdentificador(ident_alfarje);
+    ponerNombre("Alfarje");
 }
 
 void Alfarje::establecerRotacionAlfarje(float time)
@@ -179,7 +196,7 @@ CiliMolino::CiliMolino
 
    }
 
-   for ( int i = 0; i < num_verts_per; i++){
+    for ( int i = 0; i < num_verts_per; i++){
 
       for (unsigned int j = 0; j < nperfiles; j++){
 
@@ -189,7 +206,7 @@ CiliMolino::CiliMolino
           col_ver.push_back(color+vec3(0.1,0.1,0.1));
 
       }
-   }
+   } 
 
    inicializar(perfil_cili, nperfiles);
 
@@ -201,6 +218,8 @@ CiliMolino::CiliMolino
 
 Tolva::Tolva()
 {
+    unsigned ident_tolva = 3;
+
     vertices = 
     {
         {-0.5,1.5,+0.5},  //0
@@ -218,26 +237,49 @@ Tolva::Tolva()
         {+0.5,1.0,+0.5},  //9
         {-0.5,1.0,-0.5},  //10
         {+0.5,1.0,-0.5},  //11
+        
+    
 
     };
 
     triangulos =
     {
         
-        {0,6,4}, {0,6,2},
-        {1,5,3}, {3,5,7},
-        {0,1,4}, {1,4,5},
-        {2,6,3}, {3,6,7},
-        {8,2,10},{8,2,0},
-        {9,1,11},{11,1,3},
-        {8,9,9}
+        {0,1,4},{1,5,4},
+        {1,3,5},{3,7,5},
+        {3,2,6},{3,6,7},
+        {2,4,6},{2,0,4},
 
+        {8,9,0},{9,1,0},
+        {11,10,2},{11,2,3},
+        {9,11,1},{11,3,1},
+        {10,8,0},{10,0,2},
+        
+    };
+
+    cc_tt_ver=
+    {
+        {0.0,0.0},
+        {0.0,0.25},
+        {0.0,0.50},
+        {0.0,0.75},
+        {1.0,0.0},
+        {1.0,0.25},
+        {1.0,0.50},
+        {1.0,0.75},
+        {0.5,0.0},
+        {0.5,0.5},
+        {0.75,0.0},
+        {0.75,0.5},
     };
 
     for (unsigned i = 0; i < vertices.size(); i++)
-        col_ver.push_back(vec3(0.23, 0.31, 0.14));
+        col_ver.push_back(vec3(0.1, 0.2, 0.1));
 
+    calcularNormales();
 
+    ponerIdentificador(ident_tolva);
+    ponerNombre("Tolva");
 
 }
 
@@ -247,6 +289,11 @@ Tolva::Tolva()
 
 Rulo::Rulo(const vec3 traslacion, const vec3 escalado, const vector<RotationPair> rotaciones)
 {
+    
+    unsigned ident_rulo = 4;
+    Textura * text_rulo = new Textura("rulo.jpg");
+    Material * mat_rulo = new Material( text_rulo, 0.1,0.8,2.0,50);
+
     angle_rulo_inic = rotaciones[rotaciones.size()-1].angle;
     agregar( translate(traslacion) );
     agregar( scale(escalado) );
@@ -259,10 +306,13 @@ Rulo::Rulo(const vec3 traslacion, const vec3 escalado, const vector<RotationPair
     }
 
     unsigned ind_rot = agregar(rotate(radians(angle_rulo_inic), vec3(0.0, 1.0, 0.0)));
-
+    agregar ( mat_rulo );
     agregar( new ConoRulo(50,50) ); 
     
     rot_rulo = leerPtrMatriz(ind_rot);
+
+    ponerIdentificador(ident_rulo);
+    ponerNombre("Rulo");
 }
 
 void Rulo::establecerRotacionRulos(float time)
@@ -332,8 +382,6 @@ ConoRulo::ConoRulo
    inicializar(perfil_conorulo, nperfiles);
 
    
-   
-
 }
 
 //-------------------------------------------------------------------------------------------------------------------------
@@ -343,16 +391,23 @@ ConoRulo::ConoRulo
 PaloMolino::PaloMolino(float angle_palo_inic, vec3 pos_palo_inic)
 {
     
+    unsigned ident_palo = 5;
+    Textura * text_palo = new TexturaXZ("text-madera.jpg");
+    Material * mat_palo = new Material(text_palo , 0.1, 0.5, 1.0, 20);
     angle_palo_ini = angle_palo_inic;
     pos_palo_ini   = pos_palo_inic;
     unsigned int i = agregar( translate(pos_palo_ini) );
     unsigned int j = agregar( rotate(radians(angle_palo_ini), vec3(0.0,1.0,0.0)) );
 
+    agregar ( mat_palo );
     agregar( new Palo() );
 
     rot_palo = leerPtrMatriz(j);
 
     pos_palo = leerPtrMatriz(i);
+
+    ponerIdentificador(ident_palo);
+    ponerNombre("Palo");
 }
 
 void PaloMolino::establecerPosicionPalo(const vec3 pos)
@@ -431,12 +486,27 @@ Palo::Palo()
 
     triangulos=
     {
-        {0,1,3},{2,3,1},
-        {4,5,7},{6,7,5},
-        {0,4,1},{5,1,4},
-        {3,7,2},{6,2,7},
-        {4,0,7},{3,7,0},
-        {5,1,6},{2,6,1},
+        {0,3,4}, {3,7,4},
+        {3,2,7}, {2,6,7},
+        {2,1,5}, {2,5,6},
+        {1,0,4}, {1,4,5},
+        {0,3,2}, {0,2,1},
+        {4,7,6}, {4,6,5},
+        
+    };
+
+    cc_tt_ver=
+    {
+        {0.0,0.0},
+        {0.0,0.25},
+        {0.0,0.50},
+        {0.0,0.75},
+        {1.0,0.0},
+        {1.0,0.25},
+        {1.0,0.50},
+        {1.0,0.75},
+
+
     };
 
     
@@ -447,6 +517,6 @@ Palo::Palo()
         else 
            col_ver.push_back(vec3{0.5,0.5,0.5});
 
-
+    calcularNormales();
 
 }

@@ -227,6 +227,14 @@ class Cubo24 : public MallaInd
       Cubo24();
 };
 
+// ---------------------------------------------------------------------
+
+class MallaDiscoP4 : public MallaInd
+{
+   public:
+      MallaDiscoP4();
+};
+
 
 
 #endif

@@ -269,18 +269,15 @@ void DibujarPoligonoNOInd_TRIA(const unsigned n) {
         {
                 float theta = 2.0f*M_PI*(i)/n;
 
-                posiciones[9*i] = 0.0f;
+                posiciones[9*i]   = 0.0f;
                 posiciones[9*i+1] = 0.0f;
                 posiciones[9*i+2] = 0.0f;
             
-            
-
                 posiciones[9*i+3] = cosf(theta);
                 posiciones[9*i+4] = sinf(theta);
                 posiciones[9*i+5] = 0.0f;
 
                 theta = 2.0f*M_PI*(i+1)/n;
-
 
                 posiciones[9*i+6] = cosf(theta);
                 posiciones[9*i+7] = sinf(theta);
@@ -292,10 +289,11 @@ void DibujarPoligonoNOInd_TRIA(const unsigned n) {
 
         /* const GLfloat* posiciones = pos;
         const GLuint* indices = ind; */
-        const vector<vec3>   colores(n*3, {1.0f, 0.0f, 0.0f});
+        const vector<vec3> colores(n*3, {1.0f, 0.0f, 0.0f});
 
         vao_ind = new DescrVAO(cauce->num_atribs, new DescrVBOAtribs( cauce->ind_atrib_posiciones, GL_FLOAT, 3, num_verts, posiciones));
-        vao_ind->agregar( new DescrVBOAtribs( cauce->ind_atrib_colores, colores) ) ;
+        vao_ind->agregar( new DescrVBOAtribs( cauce->ind_atrib_colores, colores) );
+        
     }
 
     assert( glGetError() == GL_NO_ERROR );
@@ -428,27 +426,30 @@ void DibujarPoligonoAristas_Relleno_UNICO_VAO(const unsigned n)
             indices[i * 3 + 2] = (i + 1)%n + 1;
         }  
 
-        
-        /* const GLfloat* posiciones = pos;
-        const GLuint* indices = ind; */
-
-
-    /* if (vao_ind == nullptr)
-    {
         vao_ind = new DescrVAO(cauce->num_atribs, new DescrVBOAtribs( cauce->ind_atrib_posiciones, GL_FLOAT, 3, num_verts, posiciones));
+        vao_ind->agregar(new DescrVBOInds(GL_UNSIGNED_INT, num_inds, indices));
         
-    } */
 
-    for (unsigned i = 1; i <= n; i++) 
-        {
-            float theta = 2.0f*M_PI*i/n;
-            posiciones[3*i] = cosf(theta);
-            posiciones[3*i+1] = sinf(theta);
-            posiciones[3*i+2] = 0.0f;
-        }
     
-        
+    // dibujar relleno usando los colores del VAO
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    glVertexAttrib3f(cauce->ind_atrib_colores, 1.0,0.0,0.0);
+    vao_ind->draw( GL_TRIANGLES ); 
 
+    for (unsigned i = 0; i < n; i++)
+        {
+            // Índices para las aristas
+            indices[i] = 0;
+        }
+
+    for (unsigned i = 0; i < n; i++)
+        {
+            // Índices para las aristas
+            indices[i * 2] = i + 1;
+            indices[i * 2 + 1] = (i + 1) % n + 1;
+        }
+
+    vao_ind->agregar(new DescrVBOInds(GL_UNSIGNED_INT, num_inds, indices));
 
     // duibujar aristas usando los colores del VAO
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
@@ -456,17 +457,10 @@ void DibujarPoligonoAristas_Relleno_UNICO_VAO(const unsigned n)
     //vao_ind->draw(GL_LINE_LOOP);
     vao_ind->draw(GL_LINE_LOOP);
 
-    vao_ind->agregar(new DescrVBOInds(GL_UNSIGNED_INT, num_inds, indices));
-
 
     assert( glGetError() == GL_NO_ERROR );
 
-     // dibujar relleno usando los colores del VAO
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
-    glVertexAttrib3f(cauce->ind_atrib_colores, 1.0,0.0,0.0);
-    vao_ind->draw( GL_TRIANGLES ); 
-
-    assert( glGetError() == GL_NO_ERROR );
+     
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -589,7 +583,7 @@ void VisualizarFrame( )
     glDisable( GL_DEPTH_TEST );
 
     // Dibujar un triángulo, es una secuncia de vértice no indexada.
-    // DibujarTriangulo_NoInd();
+     DibujarTriangulo_NoInd();
     //DibujarPoligono_NoInd_LINES(6);  // ejercicio 1.1
     //DibujarPoligono_NoInd_LOOP(4);   // ejercicio 1.2
 
@@ -597,18 +591,18 @@ void VisualizarFrame( )
     //cauce->fijarUsarColorPlano( true );
 
     // dibujar triángulo indexado (rotado y luego desplazado) 
-    //cauce->pushMM();
-        //cauce->compMM( translate( vec3{ 0.4f, 0.1f, -0.1f}  ));
-        //cauce->compMM( rotate(  radians(23.0f), vec3{ 0.0f, 0.0f, 1.0f}   ));
-        //DibujarTriangulo_Ind();     // indexado
+    cauce->pushMM();
+        cauce->compMM( translate( vec3{ 0.4f, 0.1f, -0.1f}  ));
+        cauce->compMM( rotate(  radians(23.0f), vec3{ 0.0f, 0.0f, 1.0f}   ));
+        DibujarTriangulo_Ind();     // indexado
         //DibujarPoligonoInd(4);      // ejercicio 2.2
-        //DibujarPoligonoNOInd_TRIA(100);  // ejercicio 2.1
+        //DibujarPoligonoNOInd_TRIA(6);  // ejercicio 2.1
         //DibujarPoligonoAristas_Relleno(5);  // ejercicio 3
-        DibujarPoligonoAristas_Relleno_UNICO_VAO(5); // ejercicio 4
-    //cauce->popMM();
+        //DibujarPoligonoAristas_Relleno_UNICO_VAO(5); // ejercicio 4
+    cauce->popMM();
 
     // dibujar un triángulo usando vectores de GLM
-    //DibujarTriangulo_glm() ;
+    DibujarTriangulo_glm() ;
 
 
     // comprobar y limpiar variable interna de error

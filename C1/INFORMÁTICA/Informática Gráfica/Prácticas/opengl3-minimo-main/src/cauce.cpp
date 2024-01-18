@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
-
+#include "glincludes.h"
 #include "cauce.h"
 
 // ---------------------------------------------------------------------------------------------
@@ -299,5 +299,30 @@ void Cauce::popMM()
    mat_modelview = pila_mat_modelview[ pila_mat_modelview.size()-1 ] ;
    pila_mat_modelview.pop_back();
    glUniformMatrix4fv( loc_mat_modelview, 1, GL_FALSE, glm::value_ptr(mat_modelview) );
+}
+// --------------------------------------------------------------------------------------------
+// EJERCICIO 1.7
+void Cauce::fijarRegionVisible(const float x0, const float x1,
+                               const float y0, const float y1,
+                               const float z0, const float z1)
+{
+   float sx = 2/(x1-x0);
+   float sy = 2/(y1-y0);
+   float sz = 2/(z1-z0);
+
+   float cx = (x0+x1)/2;
+   float cy = (y0+y1)/2;
+   float cz = (z0+z1)/2;
+
+   const float matriz_proyeccion[16] = 
+   {
+      sx,0,0,-cx*sx,
+      0,sy,0,-cy*sy,
+      0,0,sz,-cz*sz,
+      0,0,0,1
+   };
+
+   glUniformMatrix4fv(loc_mat_proyeccion,1,GL_TRUE,matriz_proyeccion);
+  
 }
 // --------------------------------------------------------------------------------------------
