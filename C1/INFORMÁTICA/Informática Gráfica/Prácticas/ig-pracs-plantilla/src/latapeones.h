@@ -20,6 +20,7 @@ class PeonMadera : public NodoGrafoEscena
 {
     protected:
         glm::mat4 * pm_madera = nullptr;
+        unsigned contador = 1;
 
     public:
         PeonMadera();
@@ -30,6 +31,7 @@ class PeonBlanco : public NodoGrafoEscena
 {
     protected:
         glm::mat4 * pm_blanco = nullptr;
+        unsigned contador = 1;
 
     public:
         PeonBlanco();
@@ -40,6 +42,7 @@ class PeonNegro : public NodoGrafoEscena
 {
     protected:
         glm::mat4 * pm_negro = nullptr;
+        unsigned contador = 1;
 
     public:
         PeonNegro();

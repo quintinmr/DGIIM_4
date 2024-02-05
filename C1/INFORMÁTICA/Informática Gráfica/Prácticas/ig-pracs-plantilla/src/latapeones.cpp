@@ -97,7 +97,8 @@ void PeonMadera::actualizarEstadoParametro(const unsigned iParam, const float t_
 bool PeonMadera::cuandoClick(const glm::vec3 & centro_wc)
 {
        
-   *pm_madera = translate(vec3(0.0,0.0,3.0));
+   *pm_madera = translate(vec3(0.0,0.0,3.0*contador));
+    contador++;
 
    return true;
     
@@ -122,8 +123,8 @@ PeonBlanco::PeonBlanco()
 bool PeonBlanco::cuandoClick(const glm::vec3 & centro_wc)
 {
        
-   *pm_blanco = translate(vec3(0.0,0.0,3.0));
-
+   *pm_blanco = translate(vec3(0.0,0.0,3.0*contador));
+    contador++;
    return true;
     
 } 
@@ -146,8 +147,8 @@ PeonNegro::PeonNegro()
 bool PeonNegro::cuandoClick(const glm::vec3 & centro_wc)
 {
        
-   *pm_negro = translate(vec3(0.0,0.0,3.0));
-
+   *pm_negro = translate(vec3(0.0,0.0,3.0*contador));
+    contador++;
    return true;
     
 } 

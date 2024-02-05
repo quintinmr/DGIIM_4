@@ -652,12 +652,12 @@ RejillaY::RejillaY(unsigned m, unsigned n)
       }
    }
 
-  
-
    for (unsigned i = 0; i < m-1; i++ ){
       for (unsigned j = 0; j < n-1; j++){
-         triangulos.push_back({j+i*n, j+(i+1)*n, (j+1)+i*n});
-         triangulos.push_back({(j+1)+i*n,j+(1+i)*n,(j+1)+(i+1)*n});
+         
+         triangulos.push_back({i*n+j,(i+1)*n+(j+1),(i+1)*n+j});
+         triangulos.push_back({i*n+j,i*n+(j+1),(i+1)*n+(j+1)});
+
       }
    }
    
@@ -681,16 +681,26 @@ MallaTorre::MallaTorre( unsigned n )
       
    }
   
-   triangulos.push_back( {0,3,4} );
+   //triangulos.push_back( {0,3,4} );
 
-   for (unsigned j = 0; j < 4*n; j++){
+   for (unsigned j = 0; j < n; j++){
 
-         triangulos.push_back({j, j+1, 4+j });
-         triangulos.push_back({j+1, j+4, j+5});
+         triangulos.push_back({4*j,4*j+1,4*(j+1)});
+         triangulos.push_back({4*j+1,4*(j+1)+1,4*(j+1)});
+
+         triangulos.push_back({4*j+1,4*j+2,4*(j+1)+1});
+         triangulos.push_back({4*j+2,4*(j+1)+2,4*(j+1)+1});
+
+         triangulos.push_back({4*j+2,4*j+3,4*(j+1)+3});
+         triangulos.push_back({4*j+2,4*(j+1)+3,4*(j+1)+2});
+
+         triangulos.push_back({4*j+3,4*j,4*(j+1)});
+         triangulos.push_back({4*j+3,4*(j+1),4*(j+1)+3});
+
       
    }
 
-   triangulos.push_back( {4*n,4*(n-1)+3,4*n+3} );
+   //triangulos.push_back( {4*n,4*(n-1)+3,4*n+3} );
 
    calcularNormales();
 };

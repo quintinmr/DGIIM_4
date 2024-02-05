@@ -33,18 +33,18 @@ P1MallaCubo::P1MallaCubo()
    triangulos =
       {  
         {0,1,3}, {0,3,2}, // X-
-         {4,7,5}, {4,6,7}, // X+ (+4)
+         {5,4,7}, {4,6,7}, // X+ (+4)
 
          // TRIÁNGULOS CARA SUPERIOR
          {3,7,8}, {7,6,8},
          {2,3,8}, {6,2,8},
 
          // TRIÁNGULOS CARA INFERIOR
-         {1,5,9}, {5,4,0},
+         {1,5,9}, {5,4,9},
          {0,1,9}, {4,0,9},
 
          {4,0,2}, {4,2,6}, // Z-
-         {1,5,7}, {1,7,3}  // Z+ (+1)
+         {1,5,3}, {5,7,3}  // Z+ (+1)
 
       } ;
 
@@ -77,30 +77,31 @@ P2Rejilla::P2Rejilla
 
     assert(n>=2 and m>=2);
 
-    /* for (unsigned i = 0; i < m; i++)
+    for (unsigned i = 0; i < m; i++)
     {
         for (unsigned j = 0; j < n; j++)
         {
-            float x = 
-            vertices.push_back()
+            float factor = 1 + 3*float(i)/(m-1); 
+            vertices.push_back({factor*float(j)/(n-1), 0, 1.4*float(i)/(m-1)});
         }
-    }  */
+    }  
 
     for (unsigned i = 0; i < m-1; i++ ){
       for (unsigned j = 0; j < n-1; j++){
         if ((i+j) % 2 == 0) 
         {
-            triangulos.push_back({j+i*n, j+(i+1)*n, (j+1)+i*n});
-            triangulos.push_back({(j+1)+i*n,j+(1+i)*n,(j+1)+(i+1)*n});
+            triangulos.push_back({i*n+j, (i+1)*n+j, (i+1)*n+j+1});
+            triangulos.push_back({i*n+j, (i+1)*n+j+1, i*n+j+1});
         }
         else 
         {
-            triangulos.push_back({j+i*n, j+(i+1)*n, (j+1)+i*n});
-            triangulos.push_back({(j+1)+i*n,j+(1+i)*n,(j+1)+(i+1)*n});
+            triangulos.push_back({i*n+j, (i+1)*n+j, i*n+j+1});
+            triangulos.push_back({i*n+j+1, (i+1)*n+j, (i+1)*n+j+1});
         }
 
       }
    }
+
 
 }
 
@@ -196,8 +197,8 @@ void P3Caja::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
     {
     case 0:
         
-         *pm_hoja1 = rotate(radians(45.0f*sinf(2*M_PI*1*t_sec)), vec3(0.0,0.0,1.0));
-         *pm_hoja2 = rotate(radians(-45.0f*sinf(2*M_PI*1*t_sec)), vec3(0.0,0.0,1.0));
+        *pm_hoja1 = rotate(radians(90.0f*sinf(M_PI*1*t_sec)), vec3(0.0,0.0,1.0));
+        *pm_hoja2 = rotate(radians(-90.0f*sinf(M_PI*1*t_sec)), vec3(0.0,0.0,1.0));
 
         break;
     
