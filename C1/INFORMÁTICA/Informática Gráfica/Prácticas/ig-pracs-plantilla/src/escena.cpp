@@ -50,6 +50,8 @@
 #include "examen-ec-p45.h"
 #include "repaso-examen.h"
 
+#include "examen-extr-pracs.h"
+
 
 
 // -----------------------------------------------------------------------------------------------
@@ -347,7 +349,12 @@ Escena1::Escena1()
    //objetos.push_back( new P1MallaCubo() );
 
    // EJERCICIO 3 EXAMEN 20/11/2023
-   objetos.push_back( new P3Caja());
+   //objetos.push_back( new P3Caja());
+
+
+   // EJERCICIO 1 - EXAMEN 06/02/2024
+   objetos.push_back( new P1Malla());
+
 
    objetos.push_back( new Cubo() );
    objetos.push_back( new Tetraedro());
@@ -374,24 +381,29 @@ Escena2::Escena2()
 
    cout << "Creando objetos de la práctica  2." << endl;
 
+   // EJERCICIO 2 - EXAMEN 06/02/2024
+   objetos.push_back( new P2Fuente(30,50));
+   objetos.push_back( new P2Anillo(30,50,4));
+
+
    objetos.push_back( new Cilindro(10,50));
    objetos.push_back( new Cono(10,50));
    objetos.push_back( new Esfera(100,100));
    objetos.push_back( new PiramideEstrellaZ(8));
-   objetos.push_back( new RejillaY(4,5));
+   objetos.push_back( new RejillaY(10,30));
    objetos.push_back( new MallaTorre(5));
    objetos.push_back( new MallaPLY("ant.ply"));
    objetos.push_back( new Toro(32,64,3,0,1));
    objetos.push_back( new RelojArena(100,100));
    objetos.push_back( new MallaRevolPLY("peon.ply",100));
    objetos.push_back( new MallaRevolPLY("beethoven.ply",100));
-   objetos.push_back( new Semiesfera(50,50,2));
+   objetos.push_back( new Semiesfera(10,30,2));
    objetos.push_back( new SemiCilindroBarrido(10,30));
    objetos.push_back( new P2Rejilla(5,5));
 
    // Repaso
    objetos.push_back( new P2Barrido(20,20));
-   objetos.push_back( new P2BarridoX(5,5));
+   objetos.push_back( new P2BarridoX(20,20));
 
 
 
@@ -408,6 +420,9 @@ Escena3::Escena3()
 {
    using namespace std;
    cout << "Creando objetos de la práctica 3." << endl;
+
+   // EJERCICIO 2 - EXAMEN 06/02/2024
+   objetos.push_back( new P3Rotonda());
 
    // MODELO JERÁQUIRCO PROPIO: MOLINO DE ACEITE
    objetos.push_back( new MolinoAceite(60.0f,60.0f,30.0f,vec3(0.0,0.0,0.0)) );
@@ -432,6 +447,9 @@ Escena4::Escena4()
 {
    using namespace std;
    cout << "Creando objetos de la práctica 4." << endl;
+
+   // EXAMEN 4 EXAMEN 06/02/2024
+      objetos.push_back( new P4Rotonda());
 
    objetos.push_back( new NodoGrafoCubo24());
    objetos.push_back( new LataPeones());
@@ -462,15 +480,17 @@ Escena5::Escena5()
 {
    using namespace std;
    cout << "Creando objetos de la práctica 5." << endl;
+
+   objetos.push_back( new P5Rotonda());
    objetos.push_back( new VariasLataPeones());
    objetos.push_back( new GrafoEsferasP5());      // ADICIONAL 1
    objetos.push_back( new GrafoEsferasP5_2());    // ADICIONAL 2
+
 
    // EJERCICIO 5 EXAMEN ORDINARIA 2024
    objetos.push_back( new NodoUrbaP5("ventanas-tejado-2048x1024.jpg",5));
 
    // REPASO
-   objetos.push_back( new NodoTablero_BIS(1,2));
    objetos.push_back( new GrafoTableros_V1(5,5));
    objetos.push_back( new NodoBarrio(5,5));
    objetos.push_back( new NodoCruz());

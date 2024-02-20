@@ -305,39 +305,8 @@ bool Bola::cuandoClick(const glm::vec3 & centro_wc)
 Mesa::Mesa()
 {
     agregar( new NodoTablero());
-
-    NodoGrafoEscena * pata1 = new NodoGrafoEscena();
-    unsigned i = pata1->agregar(glm::rotate(glm::radians(0.0f), glm::vec3(0.0,1.0,0.0)));
-    pata1->agregar(glm::translate(glm::vec3(-1.5,-1.0,+0.8)));
-    pata1->agregar( new NodoPata(glm::vec3(0.0,0.0,0.0)));
-
-    pata1->agregar(glm::translate(glm::vec3(0.0,0.0,-1.6)));
-    pata1->agregar( new NodoPata(glm::vec3(0.0,0.0,0.0)));
-
-    pata1->agregar(glm::translate(glm::vec3(+3.5,0.0,0.0)));
-    pata1->agregar( new NodoPata(glm::vec3(0.0,0.0,0.0)));
-
-    pata1->agregar(glm::translate(glm::vec3(0.0,0.0,+1.6)));
-    pata1->agregar( new NodoPata(glm::vec3(0.0,0.0,0.0)));
-
-
-    agregar(pata1);
-
-    pm_pata = pata1->leerPtrMatriz(i);
-
-    NodoGrafoEscena * rej = new NodoGrafoEscena();
-    rej->agregar(glm::translate(glm::vec3(-0.5,1.1,-0.5)));
-    rej->agregar(new RejillaY(10,10));
-    agregar(rej);
     
-    ponerNombre("Bola encima de mesa");
-    agregar(glm::translate(glm::vec3(0.0,1.25, 0.0)));
-    bola = agregar( new Bola());
-    ponerIdentificador(1);
-
-    
-    
-    /* pata_1 = agregar( new NodoPata(glm::vec3(-1.5, -1.0, +0.8)));
+    pata_1 = agregar( new NodoPata(glm::vec3(-1.5, -1.0, +0.8)));
 
     pata_2 = agregar(new NodoPata(glm::vec3(-1.5,-1.0,-1.0)));
 
@@ -354,7 +323,7 @@ Mesa::Mesa()
     ponerNombre("Bola encima de mesa");
     agregar(glm::translate(glm::vec3(0.0,1.25, 0.0)));
     bola = agregar( new Bola());
-    ponerIdentificador(1); */
+    ponerIdentificador(1);
 }
 
 unsigned Mesa::leerNumParametros() const
@@ -373,18 +342,10 @@ void Mesa::actualizarEstadoParametro(const unsigned iParam, const float t_sec)
         break;
 
     case 1:
-        float a = (-3.0+0.0)/2;
-        float b = (0.0-(-3.0))/2;
-        float v = 1.0;
-        float point =a+(b+1)*sin(2*M_PI*v*t_sec);
-
-        *pm_pata = glm::translate(glm::vec3(0.0,point,0.0));
-
-        /* ((NodoPata*)(entradas[pata_1].objeto))->actualizarEstadoParametro(iParam-1,t_sec);
+        ((NodoPata*)(entradas[pata_1].objeto))->actualizarEstadoParametro(iParam-1,t_sec);
         ((NodoPata*)(entradas[pata_2].objeto))->actualizarEstadoParametro(iParam-1,t_sec);
         ((NodoPata*)(entradas[pata_3].objeto))->actualizarEstadoParametro(iParam-1,t_sec);
-        ((NodoPata*)(entradas[pata_4].objeto))->actualizarEstadoParametro(iParam-1,t_sec);  */
-
+        ((NodoPata*)(entradas[pata_4].objeto))->actualizarEstadoParametro(iParam-1,t_sec); 
         break;
     }
 }
@@ -408,15 +369,11 @@ NodoTablero_BIS::NodoTablero_BIS(const unsigned num_tablero, const unsigned num_
 
     pm_tablero = leerPtrMatriz(r);
 
-    ponerIdentificador(1);
-
 }
 
 bool NodoTablero_BIS::cuandoClick(const glm::vec3 & centro_wc)
 {
-    
-    *pm_tablero = glm::rotate(glm::radians(-90.0f*contador), glm::vec3(1.0,0.0,0.0));
-
+    *pm_tablero = glm::rotate(glm::radians(90.0f*contador), glm::vec3(1.0,0.0,0.0));
     contador++;
     std::cout << "Seleccionado tablero " << j << " de la fila "<< i << std::endl;
 
@@ -822,7 +779,7 @@ P2BarridoX::P2BarridoX(unsigned m, unsigned n)
 
     // En primer lugar, vamos a generar el perfil, punto a punto,
 
-    perfil.push_back(vec3(0.0,-1.0,0.0));
+    perfil.push_back(vec3(0.0,0.0,-1.0));
 
     for (unsigned i = 0; i < m; i++)
     {
@@ -895,7 +852,7 @@ P2BarridoX::P2BarridoX(unsigned m, unsigned n)
             // rotación de las normales
             float angle = M_PI*i/(n-1);
             float ratio_n = nor_vertices[j].x;
-            vec3 rotation(nor_vertices[j].x,ratio_n*cos(angle), ratio_n*sin(angle));
+            vec3 rotation(ratio_n*cos(angle), nor_vertices[j].y, ratio_n*sin(angle));
             
             if (rotation.length() != 0.0)
                 rotation = normalize(rotation);
@@ -1449,7 +1406,7 @@ void NodoDado::actualizarEstadoParametro(const unsigned iParam, const float t_se
     {
 
         *pm_dado = glm::rotate(glm::radians(-90.0f*sinf(2*M_PI*t_sec)),glm::vec3(0.0,0.0,1.0));
-        *dado = glm::translate(glm::vec3(1.0*cosf(2*M_PI*t_sec),0.0,0.0));
+        *dado = glm::translate(glm::vec3(0.5*sinf(2*M_PI*t_sec),0.0,0.0));
 
             
     }

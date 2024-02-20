@@ -57,7 +57,6 @@ class Mesa : public NodoGrafoEscena
 {
     protected:
         unsigned int num_params = 2;
-        glm::mat4 * pm_pata = nullptr;
         unsigned bola,pata_1,pata_2,pata_3,pata_4;
 
     public:

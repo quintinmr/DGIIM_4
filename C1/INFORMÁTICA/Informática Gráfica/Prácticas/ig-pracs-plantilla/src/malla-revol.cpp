@@ -296,9 +296,9 @@ Toro::Toro
 (
    const int num_verts_per,   //m
    const unsigned nperfiles,   //n
-   const float x,  // esta es el radio de dentro(el radio del agujero)
+   const float x,
    const float y,
-   const float radio_menor   // radio de como de fino o grueso es el toro
+   const float radio_menor
 )
 {
 
