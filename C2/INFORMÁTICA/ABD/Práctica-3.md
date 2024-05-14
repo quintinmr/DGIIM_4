@@ -19,14 +19,20 @@ Está basado en el modelo **cliente-servidor**. Esto es, incluye un servidor de 
 
 Destaca por ser **portable** (funciona en diferentes sistemas operativos), **flexible** y **escalable**, esto es, por ser capaz de poder adaptarse a las necesidades de las aplicaciones que lo usan, **compatible** con gran cantidad de lenguajes de programación, por tener alto **rendimiento** en cuanto a que permite recuperar los datos de forma rápida y eficiente y por ser **seguro** en cuanto a que garantiza el cifrado de los datos y ofrece opciones de autenticación [1].
 
+# Descripción de los identificadores que MySQL usa para cada objeto creado
+
+Los objetos que permite crear MySQL pueden ser la propia base de datos, tablas, índices, columnas, alias, vistas, procedimientos almacenados, tablaspaces, grupo de recursos, entre otros. Cada uno de ellos está identificado de forma unívoca por un **identificador**.
+
+
 
 # Referencias
 
+
+Información sobre MySQL
 [1] https://www.arsys.es/blog/mysql
 
 [2] https://hoplasoftware.com/mysql-sistema-de-gestion-de-bases-de-datos-relacionales/
 
+Identificadores
+[3] https://dev.mysql.com/doc/refman/8.3/en/identifiers.html 
 
-# Descripción de los identificadores que MySQL usa para cada objeto creado
-
-Los objetos que permite crear MySQL pueden ser la propia base de datos, tablas, índices, columnas, alias, vistas, procedimientos almacenados, tablaspaces, grupo de recursos, entre otros. Cada uno de ellos está identificado de forma unívoca por un **identificador**
