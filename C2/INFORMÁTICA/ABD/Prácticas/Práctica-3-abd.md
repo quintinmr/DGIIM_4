@@ -71,17 +71,26 @@ Por otra parte, para cada objeto almacenado existen unas tablas con información
 
 # Referencias
 
-Información sobre MySQL
+**Información sobre MySQL**
+
 [1] https://www.arsys.es/blog/mysql
+
 [2] https://hoplasoftware.com/mysql-sistema-de-gestion-de-bases-de-datos-relacionales/
 
-Identificadores
+**Identificadores**
+
 [3] https://dev.mysql.com/doc/refman/8.3/en/identifiers.html 
+
 [4] https://documentation.help/MySQL-5.0-es/ch09s02.html
+
 [5] https://dev.mysql.com/doc/refman/8.3/en/user-variables.html
+
 [6] https://dev.mysql.com/doc/refman/8.3/en/identifier-qualifiers.html
+
 [7] https://dev.mysql.com/doc/refman/8.3/en/identifier-case-sensitivity.html
 
-Almacenamiento de información
+**Almacenamiento de información**
+
 [8] https://dev.mysql.com/doc/refman/8.3/en/information-schema-introduction.html
+
 [9] https://rua.ua.es/dspace/bitstream/10045/36376/1/Catalogo_de_MySQL.pdf
