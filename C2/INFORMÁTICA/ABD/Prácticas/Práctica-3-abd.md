@@ -56,7 +56,46 @@ En Windows, sabemos que no hay distinción entre mayúsculas y minúsculas, por 
 
 Dentro de cada instancia de MySQL existe una base de datos denominada **INFORMATION_SCHEMA**, donde se almacena información sobre todos los objetos de todas las bases de datos que mantiene el servidor MySQL. Está constituída por tablas de solo lectura (en realidad vistas, por lo que no hay archivos asociados a ellas). [8]
 
-Algunos ejemplos de lo que almacena: información de la base de datos, descripción de tablas, información sobre cada columna, información sobre los índices, sobre permisos, etc.[9]
+Algunos ejemplos de lo que almacena: información de la base de datos, descripción de tablas, información sobre cada columna, información sobre las vistas, índices, sobre permisos, etc.[9]
+
+Presentamos a continuación algunas de las tablas mencionadas junto con la información que almacenan:
+
+> INFORMATION_SCHEMA.TABLES: almacena información de todas y cada una de las tablas que se encuentran en la base de datos. Sus campos son:
+* TABLE_CATALOG: catálogo al que pertenece la tabla
+* TABLE_SCHEMA: base de datos a la que pertenece la tabla
+* TABLE_NAME: nombre de la tabla
+* TABLE_TYPE: Si el objeto es una BASE TABLE o una VIEW.
+* ENGINE: Motor de almacenamiento utilizado por la tabla.
+* TABLE_ROWS: Número aproximado de filas en la tabla.
+* DATA_LENGTH y INDEX_LENGTH: Longitudes en bytes de los datos y los índices, respectivamente.
+
+> INFORMATION_SCHEMA.COLUMNS: información acerca de las columnas de las talbas
+* TABLE_SCHEMA: Esquema al que pertenece la tabla que contiene la columna.
+* TABLE_NAME: Nombre de la tabla que contiene la columna.
+* COLUMN_NAME: Nombre de la columna.
+* DATA_TYPE: Tipo de datos de la columna.
+* CHARACTER_MAXIMUM_LENGTH: Longitud máxima de caracteres para columnas de tipo cadena.
+* NUMERIC_PRECISION y NUMERIC_SCALE: Precisión y escala para columnas numéricas.
+
+> INFORMATION_SCHEMA.VIEWS: datos sobre las vistas en las bases de datos
+* TABLE_SCHEMA: Esquema al que pertenece la vista(nombre de la base de datos).
+* TABLE_NAME: Nombre de la vista.
+* VIEW_DEFINITION: Definición de la vista.
+* CHECK_OPTION: Restricciones aplicadas sobre las filas que se pueden modificar a través de la vista.
+* IS_UPDATABLE: Vista actualizable o no. [9]
+
+> INFORMATION_SCHEMA.INDEXES: aporta información sobre los índices
+* TABLE_SCHEMA: nombre de la base de datos.
+* TABLE_NAME: nombre de la tabla.
+* NON_UNIQUE: si el índice no es único.
+* INDEX_NAME: nombre del índice.
+* SEQ_IN_INDEX: orden del índice.
+* COLUMN_NAME: nombre de la columna a la que afecta.
+* CARDINALITY: cardinalidad del índice.
+* SUB_PART: parte que se ha indexado de la columna.
+* NULLABLE: si puede tener valores nulos
+* INDEX_TYPE: estructura del índice
+
 
 Por otra parte, para cada objeto almacenado existen unas tablas con información específica al tipo de objeto: la información que proporcinan las diversas declaraciones **SHOW** que admite MySQL (SHOW DATABASES, SHOW TABLES,...) y que equivale a la sentencia SELECT recuperando la información de **INFORMATION_SCHEMA**. No obstante, el SELECT en **INFORMATION_SCHEMA** tiene grandes ventajas frente a SHOW como pueden ser:
 
