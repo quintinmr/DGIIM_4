@@ -82,7 +82,7 @@ Presentamos a continuación algunas de las tablas mencionadas junto con la infor
 * TABLE_NAME: Nombre de la vista.
 * VIEW_DEFINITION: Definición de la vista.
 * CHECK_OPTION: Restricciones aplicadas sobre las filas que se pueden modificar a través de la vista.
-* IS_UPDATABLE: Vista actualizable o no. [9]
+* IS_UPDATABLE: Vista actualizable o no.
 
 > INFORMATION_SCHEMA.INDEXES: aporta información sobre los índices
 * TABLE_SCHEMA: nombre de la base de datos.
@@ -93,8 +93,8 @@ Presentamos a continuación algunas de las tablas mencionadas junto con la infor
 * COLUMN_NAME: nombre de la columna a la que afecta.
 * CARDINALITY: cardinalidad del índice.
 * SUB_PART: parte que se ha indexado de la columna.
-* NULLABLE: si puede tener valores nulos
-* INDEX_TYPE: estructura del índice
+* NULLABLE: si puede tener valores nulos.
+* INDEX_TYPE: estructura del índice. [9]
 
 
 Por otra parte, para cada objeto almacenado existen unas tablas con información específica al tipo de objeto: la información que proporcinan las diversas declaraciones **SHOW** que admite MySQL (SHOW DATABASES, SHOW TABLES,...) y que equivale a la sentencia SELECT recuperando la información de **INFORMATION_SCHEMA**. No obstante, el SELECT en **INFORMATION_SCHEMA** tiene grandes ventajas frente a SHOW como pueden ser:

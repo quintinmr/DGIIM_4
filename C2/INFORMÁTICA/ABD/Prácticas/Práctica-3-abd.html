@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Práctica-3-abd.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="pr%C3%A1ctica-3---cat%C3%A1logos-en-implementaciones-sgbdr"><strong>Práctica 3 - Catálogos en implementaciones SGBDR</strong></h1>
+<hr>
+<blockquote>
+<p>Quintín Mesa Romero</p>
+<p>Doble Grado en Ingeniería Informática y Matemáticas</p>
+<p>quintinmr@correo.ugr.es</p>
+</blockquote>
+<hr>
+<h1 id="descripci%C3%B3n-del-sistema-gestor-de-bases-de-datos">Descripción del sistema gestor de bases de datos</h1>
+<p>De entre todos los sistemas gestores de bases de datos que se mencionan en el enunciado de la práctica y entre los que no se ha hecho referencia, el único sobre el que tengo algo de conocimiento y con el que he trabajado ya previamente es <strong>MySQL</strong>, de ahí que haya elegido este y no otro. Otras de las razones por las que me he decantado por este SGBD es porque es muy utilizado en la industria, es muy popular, robusto y ha sido y es esencial para aplicaciones web, empresas y proyectos varios.</p>
+<p><img src="mysql.png" alt="mysql">[1]</p>
+<p>MySQL es un sistema gestor de bases de datos relacional de código abierto, que fue desarrollado por <strong>Oracle</strong>. Utiliza un modelo de bases de datos relacional, es decir, los datos están organizados en tablas que se relacionan entre sí. Permite almacenar, organizar y recuperar datos de forma eficiente, usando para ello lenguaje <strong>SQL</strong>. [1]</p>
+<p>Está basado en el modelo <strong>cliente-servidor</strong>. Esto es, incluye un servidor de bases de datos, y clientes que interactúan con la base de datos. [2]</p>
+<p>Destaca por ser <strong>portable</strong> (funciona en diferentes sistemas operativos), <strong>flexible</strong> y <strong>escalable</strong>, esto es, por ser capaz de poder adaptarse a las necesidades de las aplicaciones que lo usan, <strong>compatible</strong> con gran cantidad de lenguajes de programación, por tener alto <strong>rendimiento</strong> en cuanto a que permite recuperar los datos de forma rápida y eficiente y por ser <strong>seguro</strong> en cuanto a que garantiza el cifrado de los datos y ofrece opciones de autenticación. [1]</p>
+<h1 id="descripci%C3%B3n-de-los-identificadores-que-mysql-usa-para-cada-objeto-creado">Descripción de los identificadores que MySQL usa para cada objeto creado</h1>
+<p>Los objetos que permite crear MySQL como son la propia base de datos, tablas, índices, columnas, alias, vistas, procedimientos almacenados, tablaspaces, grupo de recursos, entre otros, cuentan con un <strong>identificador</strong> que coincide con el <strong>nombre</strong> de dichos ojetos.</p>
+<p>Así, para las tablas, por ejemplo, el identificador es el propio nombre de la tabla, que debe ser <strong>único</strong> dentro de la base de datos. Del mismo modo, para objetos como vistas, índices, etc., se utilizan identificadores únicos que se corresponden con el nombre que tienen asignado. [3]</p>
+<p>Los identificadores están sujetos a ciertas normas de <strong>sintaxis</strong>:</p>
+<ul>
+<li>Se almacenan usando Unicode (UTF8).</li>
+<li>La longitud máxima de los identificadores, en la mayoría de los casos es de 64 bytes, a excepción de Alias (255) y Compound Statemente Label (16).</li>
+<li>No deben contener el caracter 0 o un byte con valor 255, y no deberían terminar con espacio.</li>
+<li>Pueden estar entrecomillados o no. En caso de que el identificador sea una palabra reservada contenga caracteres especiales, es obligatorio el entrecomillado (' <strong>`</strong> '). [4]</li>
+</ul>
+<p>No pueden utilizarse directamente como identificadores o parte de identificadores las variables de usuario (destinadas a proporcionar valores de datos y son propias de la sesión), como en contextos en los que se espera un nombre de tabla o de base de datos o como una palabra reservada como SELECT.</p>
+<p>Otra de las características de los identificadores es que pueden ser calificados o no calificados. Se permitirá un nombre no calificado cuando su interpretación sea inequívoca. Un nombre calificado incluye mínimo un calificador que esclarece el contexto interpretativo.
+Pongamos un ejemplo que ilustre esto:</p>
+<blockquote>
+<p>Esta sentencia crea una tabla usando un nombre no calificado, table1:</p>
+</blockquote>
+<pre class="hljs"><code><div> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> table1 (i <span class="hljs-type">INT</span>);
+</div></code></pre>
+<blockquote>
+<p>Como table1 no incluye ningun calificador que especifique una base de datos concreta en la que se ha de crear, la sentencia crea dicha tabla en la base de datos por defecto. Si no hubiera base de datos por defecto, se produce un error. Entonces, se debería de escribir la siguiente sentencia que crea la tabla usando el nombre calificado db1.table1:</p>
+</blockquote>
+<pre class="hljs"><code><div> <span class="hljs-keyword">CREATE</span> <span class="hljs-keyword">TABLE</span> db1.table1 (i <span class="hljs-type">INT</span>);
+</div></code></pre>
+<p>Así, se crea la tabla en la base de datos db1, sin tener en cuenta si hay base de datos por defecto o no. [6]</p>
+<p>Por otra parte, en MySQL, las bases de datos no son más que directorios dentro del directorio de datos, en el que cada tabla se corresponde a al menos un archivo dentro del directorio de la base de datos. Es por ello que la sensibilidad a las mayúsculas y minúsculas del S.O que haya por debajo, es importante de cara a la sensibilidad a las mayúsculas y minúsculas que haya en los identificadores.
+En Windows, sabemos que no hay distinción entre mayúsculas y minúsculas, por lo que tampoco hay dicha distinción en los nombres.Lo mismo pasa con macOS. No ocurre lo mismo en los sistemas operativos Unix. [7]</p>
+<h1 id="descripci%C3%B3n-de-las-estructuras-que-almacenan-informaci%C3%B3n-en-el-cat%C3%A1logo-de-mysql">Descripción de las estructuras que almacenan información en el catálogo de MySQL</h1>
+<p>Dentro de cada instancia de MySQL existe una base de datos denominada <strong>INFORMATION_SCHEMA</strong>, donde se almacena información sobre todos los objetos de todas las bases de datos que mantiene el servidor MySQL. Está constituída por tablas de solo lectura (en realidad vistas, por lo que no hay archivos asociados a ellas). [8]</p>
+<p>Algunos ejemplos de lo que almacena: información de la base de datos, descripción de tablas, información sobre cada columna, información sobre las vistas, índices, sobre permisos, etc.[9]</p>
+<p>Presentamos a continuación algunas de las tablas mencionadas junto con la información que almacenan:</p>
+<blockquote>
+<p>INFORMATION_SCHEMA.TABLES: almacena información de todas y cada una de las tablas que se encuentran en la base de datos. Sus campos son:</p>
+</blockquote>
+<ul>
+<li>TABLE_CATALOG: catálogo al que pertenece la tabla</li>
+<li>TABLE_SCHEMA: base de datos a la que pertenece la tabla</li>
+<li>TABLE_NAME: nombre de la tabla</li>
+<li>TABLE_TYPE: Si el objeto es una BASE TABLE o una VIEW.</li>
+<li>ENGINE: Motor de almacenamiento utilizado por la tabla.</li>
+<li>TABLE_ROWS: Número aproximado de filas en la tabla.</li>
+<li>DATA_LENGTH y INDEX_LENGTH: Longitudes en bytes de los datos y los índices, respectivamente.</li>
+</ul>
+<blockquote>
+<p>INFORMATION_SCHEMA.COLUMNS: información acerca de las columnas de las talbas</p>
+</blockquote>
+<ul>
+<li>TABLE_SCHEMA: Esquema al que pertenece la tabla que contiene la columna.</li>
+<li>TABLE_NAME: Nombre de la tabla que contiene la columna.</li>
+<li>COLUMN_NAME: Nombre de la columna.</li>
+<li>DATA_TYPE: Tipo de datos de la columna.</li>
+<li>CHARACTER_MAXIMUM_LENGTH: Longitud máxima de caracteres para columnas de tipo cadena.</li>
+<li>NUMERIC_PRECISION y NUMERIC_SCALE: Precisión y escala para columnas numéricas.</li>
+</ul>
+<blockquote>
+<p>INFORMATION_SCHEMA.VIEWS: datos sobre las vistas en las bases de datos</p>
+</blockquote>
+<ul>
+<li>TABLE_SCHEMA: Esquema al que pertenece la vista(nombre de la base de datos).</li>
+<li>TABLE_NAME: Nombre de la vista.</li>
+<li>VIEW_DEFINITION: Definición de la vista.</li>
+<li>CHECK_OPTION: Restricciones aplicadas sobre las filas que se pueden modificar a través de la vista.</li>
+<li>IS_UPDATABLE: Vista actualizable o no.</li>
+</ul>
+<blockquote>
+<p>INFORMATION_SCHEMA.INDEXES: aporta información sobre los índices</p>
+</blockquote>
+<ul>
+<li>TABLE_SCHEMA: nombre de la base de datos.</li>
+<li>TABLE_NAME: nombre de la tabla.</li>
+<li>NON_UNIQUE: si el índice no es único.</li>
+<li>INDEX_NAME: nombre del índice.</li>
+<li>SEQ_IN_INDEX: orden del índice.</li>
+<li>COLUMN_NAME: nombre de la columna a la que afecta.</li>
+<li>CARDINALITY: cardinalidad del índice.</li>
+<li>SUB_PART: parte que se ha indexado de la columna.</li>
+<li>NULLABLE: si puede tener valores nulos.</li>
+<li>INDEX_TYPE: estructura del índice. [9]</li>
+</ul>
+<p>Por otra parte, para cada objeto almacenado existen unas tablas con información específica al tipo de objeto: la información que proporcinan las diversas declaraciones <strong>SHOW</strong> que admite MySQL (SHOW DATABASES, SHOW TABLES,...) y que equivale a la sentencia SELECT recuperando la información de <strong>INFORMATION_SCHEMA</strong>. No obstante, el SELECT en <strong>INFORMATION_SCHEMA</strong> tiene grandes ventajas frente a SHOW como pueden ser:</p>
+<ul>
+<li>
+<p>Todo el acceso se realiza en tablas, por lo que se ajusta bien a las reglas de Codd.</p>
+</li>
+<li>
+<p>Se utiliza la sintaxis de la declaración SELECT y solo necesitas aprender algunos nombres de tabla y columna.</p>
+</li>
+<li>
+<p>El implementador no necesita preocuparse por agregar palabras clave.</p>
+</li>
+<li>
+<p>Puedes filtrar, ordenar, concatenar y transformar los resultados de las consultas de INFORMATION_SCHEMA en el formato que tu aplicación necesite, como una estructura de datos o una representación de texto para analizar. [8]</p>
+</li>
+</ul>
+<h1 id="referencias">Referencias</h1>
+<p><strong>Información sobre MySQL</strong></p>
+<p>[1] https://www.arsys.es/blog/mysql</p>
+<p>[2] https://hoplasoftware.com/mysql-sistema-de-gestion-de-bases-de-datos-relacionales/</p>
+<p><strong>Identificadores</strong></p>
+<p>[3] https://dev.mysql.com/doc/refman/8.3/en/identifiers.html</p>
+<p>[4] https://documentation.help/MySQL-5.0-es/ch09s02.html</p>
+<p>[5] https://dev.mysql.com/doc/refman/8.3/en/user-variables.html</p>
+<p>[6] https://dev.mysql.com/doc/refman/8.3/en/identifier-qualifiers.html</p>
+<p>[7] https://dev.mysql.com/doc/refman/8.3/en/identifier-case-sensitivity.html</p>
+<p><strong>Almacenamiento de información</strong></p>
+<p>[8] https://dev.mysql.com/doc/refman/8.3/en/information-schema-introduction.html</p>
+<p>[9] https://rua.ua.es/dspace/bitstream/10045/36376/1/Catalogo_de_MySQL.pdf</p>
+
+</body>
+</html>
