@@ -1,0 +1,44 @@
+<Schema name="Palencia">
+  <Cube name="Padr&#243;n" visible="true" description="Palencia" cache="true" enabled="true">
+    <Table name="fact_padron" schema="public">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="cuando_key" highCardinality="false" name="Cu&#225;ndo" description="Palencia">
+      <Hierarchy name="Jerarqu&#237;a Decenio" visible="true" hasAll="true" primaryKey="cuando_key" description="Palencia">
+        <Table name="dim_cuando" schema="public">
+        </Table>
+        <Level name="Decenio" visible="true" column="decenio" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Periodo" visible="true" column="periodo" type="String" internalType="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="donde_key" highCardinality="false" name="D&#243;nde" description="Palencia">
+      <Hierarchy name="Geograf&#237;a" visible="true" hasAll="true" primaryKey="donde_key" description="Palencia">
+        <Table name="dim_donde" schema="public">
+        </Table>
+        <Level name="Provincia" visible="true" column="provincia" type="String" uniqueMembers="true" levelType="Regular" hideMemberIf="Never" description="Palencia">
+          <Property name="Comunidad Aut&#243;noma" column="comunidad_autonoma" type="String" description="Palencia">
+          </Property>
+        </Level>
+        <Level name="Comarca" visible="true" column="comarca" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" description="Palencia">
+        </Level>
+        <Level name="Municipio" visible="true" column="municipio" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never" description="Palencia">
+          <Property name="C&#243;digo" column="cod_municipio" type="String" description="Palencia">
+          </Property>
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Measure name="Mujeres" column="mujeres" datatype="Integer" aggregator="sum" description="Palencia" visible="true">
+    </Measure>
+    <Measure name="Hombres" column="hombres" datatype="Integer" aggregator="sum" description="Palencia" visible="true">
+    </Measure>
+    <Measure name="Superficie_Ha" column="superficie_ha" datatype="Numeric" aggregator="sum" description="Palencia" visible="true">
+    </Measure>
+    <CalculatedMember name="Habitantes" description="Palencia" formula="[Measures].[Mujeres]+[Measures].[Hombres]" dimension="Measures" visible="true">
+    </CalculatedMember>
+    <CalculatedMember name="Densidad Ha" description="Palencia" formula="[Measures].[Habitantes] / [Measures].[Superficie_Ha]" dimension="Measures" visible="true">
+    </CalculatedMember>
+    <CalculatedMember name="Densidad Km2" description="Palencia" formula="[Measures].[Densidad Ha] * 0.01" dimension="Measures" visible="true">
+    </CalculatedMember>
+  </Cube>
+</Schema>
