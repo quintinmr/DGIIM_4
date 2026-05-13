@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lección 1 — Teorema de Cauchy-Peano | Ecuaciones Diferenciales II</title>
+
+<!-- KaTeX -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+
+<!-- Chart.js for interactive plots -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+  :root {
+    --bg: #fafaf8;
+    --bg-card: #ffffff;
+    --text: #1a1a2e;
+    --text-muted: #555;
+    --accent: #2d5aa0;
+    --accent2: #c0392b;
+    --accent3: #27ae60;
+    --border: #ddd;
+    --shadow: 0 2px 12px rgba(0,0,0,.08);
+    --radius: 10px;
+    --nav-bg: #1a1a2e;
+  }
+  [data-theme="dark"] {
+    --bg: #0f0f1a;
+    --bg-card: #1c1c2e;
+    --text: #e0e0e0;
+    --text-muted: #aaa;
+    --accent: #5b9bd5;
+    --accent2: #e74c3c;
+    --accent3: #2ecc71;
+    --border: #333;
+    --shadow: 0 2px 12px rgba(0,0,0,.4);
+    --nav-bg: #0a0a14;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.75;
+    font-size: 17px;
+    transition: background .3s, color .3s;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:1000;
+    background: var(--nav-bg);
+    color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 56px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  }
+  nav .brand { font-weight: 700; font-size: 1.1rem; letter-spacing: .5px; }
+  nav .brand span { color: var(--accent); }
+  nav .nav-links { display:flex; gap:6px; align-items:center; flex-wrap: wrap; }
+  nav .nav-links a {
+    color: #ccc; text-decoration:none; font-size:.82rem; padding:6px 10px;
+    border-radius:6px; transition: background .2s, color .2s;
+  }
+  nav .nav-links a:hover, nav .nav-links a.active { background: rgba(255,255,255,.12); color:#fff; }
+  #themeToggle {
+    background:none; border:1px solid #555; color:#ccc; padding:5px 10px;
+    border-radius:6px; cursor:pointer; font-size:.85rem;
+  }
+  #themeToggle:hover { border-color: #aaa; color:#fff; }
+
+  /* ===== SIDEBAR TOC (desktop) ===== */
+  .layout { display:flex; margin-top:56px; }
+  .sidebar {
+    position: fixed; top:56px; left:0; bottom:0; width:280px;
+    overflow-y: auto; background: var(--bg-card); border-right:1px solid var(--border);
+    padding: 20px 16px; font-size: .88rem;
+    transition: transform .3s;
+  }
+  .sidebar h3 { font-size:.95rem; color:var(--accent); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px; }
+  .sidebar ul { list-style:none; }
+  .sidebar li { margin-bottom: 4px; }
+  .sidebar a {
+    display:block; padding:6px 10px; color:var(--text-muted); text-decoration:none;
+    border-radius: 6px; border-left: 3px solid transparent; transition: all .2s;
+  }
+  .sidebar a:hover { background: rgba(45,90,160,.08); color:var(--accent); border-left-color: var(--accent); }
+  .sidebar a.active { background: rgba(45,90,160,.12); color:var(--accent); border-left-color: var(--accent); font-weight:600; }
+  .sidebar .sub { padding-left: 16px; font-size:.84rem; }
+
+  .main { margin-left:280px; flex:1; padding:40px 48px 80px; max-width:960px; }
+
+  @media(max-width:1024px) {
+    .sidebar { transform: translateX(-100%); z-index:999; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left:0; padding:28px 18px 60px; }
+    #menuBtn { display:inline-block !important; }
+  }
+  #menuBtn { display:none; background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; margin-right:10px; }
+
+  /* ===== CONTENT ===== */
+  h1 { font-size:2.1rem; color:var(--accent); margin-bottom:8px; border-bottom:3px solid var(--accent); padding-bottom:8px; }
+  h2 { font-size:1.55rem; color:var(--accent); margin:48px 0 16px; border-left:4px solid var(--accent); padding-left:14px; }
+  h3 { font-size:1.2rem; color:var(--accent2); margin:32px 0 12px; }
+  p { margin-bottom: 14px; text-align: justify; }
+
+  /* Theorem / Definition / Lemma boxes */
+  .box {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 26px;
+    margin: 24px 0;
+    border-left: 5px solid var(--accent);
+    position: relative;
+  }
+  .box.theorem { border-left-color: var(--accent); }
+  .box.definition { border-left-color: #8e44ad; }
+  .box.lemma { border-left-color: var(--accent3); }
+  .box.example { border-left-color: #e67e22; }
+  .box.proof { border-left-color: #95a5a6; background: rgba(0,0,0,.02); }
+  .box.remark { border-left-color: #f39c12; }
+  .box.corollary { border-left-color: #1abc9c; }
+  .box .label {
+    display:inline-block; font-weight:700; font-size:.85rem; text-transform:uppercase;
+    letter-spacing:1px; margin-bottom:8px; padding:2px 10px; border-radius:4px;
+  }
+  .box.theorem .label { background:rgba(45,90,160,.12); color:var(--accent); }
+  .box.definition .label { background:rgba(142,68,173,.12); color:#8e44ad; }
+  .box.lemma .label { background:rgba(39,174,96,.12); color:var(--accent3); }
+  .box.example .label { background:rgba(230,126,34,.12); color:#e67e22; }
+  .box.proof .label { background:rgba(149,165,166,.15); color:#7f8c8d; }
+  .box.remark .label { background:rgba(243,156,18,.12); color:#f39c12; }
+  .box.corollary .label { background:rgba(26,188,156,.12); color:#1abc9c; }
+
+  /* Collapsible proof */
+  .collapsible-toggle {
+    cursor:pointer; user-select:none; display:flex; align-items:center; gap:8px;
+  }
+  .collapsible-toggle .arrow { transition: transform .3s; display:inline-block; }
+  .collapsible-toggle.open .arrow { transform: rotate(90deg); }
+  .collapsible-content {
+    max-height:0; overflow:hidden; transition: max-height .5s ease;
+  }
+  .collapsible-content.open { max-height: 12000px; }
+
+  /* Interactive sections */
+  .interactive {
+    background: linear-gradient(135deg, rgba(45,90,160,.06), rgba(39,174,96,.06));
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 24px 0;
+    border: 1px solid var(--border);
+  }
+  .interactive h4 { color: var(--accent3); margin-bottom:12px; font-size:1.05rem; }
+  .interactive canvas { max-width:100%; margin:12px 0; }
+  .interactive .controls { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin:12px 0; }
+  .interactive label { font-size:.9rem; color:var(--text-muted); }
+  .interactive input[type=range] { width:180px; }
+  .interactive select, .interactive button {
+    padding:6px 14px; border-radius:6px; border:1px solid var(--border);
+    background:var(--bg-card); color:var(--text); font-size:.9rem; cursor:pointer;
+  }
+  .interactive button { background:var(--accent); color:#fff; border:none; font-weight:600; }
+  .interactive button:hover { opacity:.9; }
+  .interactive .output { font-family: 'Fira Code', monospace; font-size:.9rem; color:var(--accent); margin-top:8px; }
+
+  /* Steps / numbered */
+  .steps { counter-reset: step; }
+  .steps .step {
+    counter-increment: step;
+    padding-left: 40px; position:relative; margin-bottom:20px;
+  }
+  .steps .step::before {
+    content: counter(step);
+    position:absolute; left:0; top:2px;
+    width:28px; height:28px; border-radius:50%;
+    background:var(--accent); color:#fff; font-weight:700; font-size:.85rem;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* Diagram containers */
+  .diagram {
+    text-align:center; margin:20px 0;
+  }
+  .diagram canvas { border:1px solid var(--border); border-radius:var(--radius); }
+  .diagram svg { max-width:100%; }
+
+  /* Progress bar */
+  #progress {
+    position:fixed; top:56px; left:0; right:0; height:3px; z-index:999;
+    background: transparent;
+  }
+  #progress .bar { height:100%; background: linear-gradient(90deg, var(--accent), var(--accent3)); width:0%; transition: width .1s; }
+
+  /* Scroll spy highlight */
+  section { scroll-margin-top: 80px; }
+
+  /* Tooltip */
+  .tooltip {
+    position:relative; border-bottom:1px dashed var(--accent); cursor:help; color:var(--accent);
+  }
+  .tooltip .tip-text {
+    visibility:hidden; opacity:0; position:absolute; bottom:125%;
+    left:50%; transform:translateX(-50%);
+    background:var(--nav-bg); color:#fff; padding:8px 14px;
+    border-radius:6px; font-size:.82rem; white-space:nowrap;
+    transition: opacity .2s; z-index:100; pointer-events:none;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3);
+  }
+  .tooltip:hover .tip-text { visibility:visible; opacity:1; }
+
+  /* Footer */
+  footer { text-align:center; padding:30px; color:var(--text-muted); font-size:.85rem; border-top:1px solid var(--border); margin-top:60px; }
+
+  /* Katex display tweaks */
+  .katex-display { margin: 16px 0 !important; overflow-x:auto; overflow-y:hidden; }
+
+  /* Print */
+  @media print {
+    nav, .sidebar, #progress, #themeToggle, #menuBtn { display:none !important; }
+    .main { margin-left:0; padding:20px; }
+    .collapsible-content { max-height:none !important; }
+  }
+
+  /* Animations */
+  .fade-in { animation: fadeIn .6s ease-out; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Quiz */
+  .quiz { background: var(--bg-card); border-radius:var(--radius); padding:20px 24px; margin:20px 0; border:2px solid var(--border); }
+  .quiz h4 { color: var(--accent2); margin-bottom:12px; }
+  .quiz .option { display:block; padding:8px 14px; margin:4px 0; border-radius:6px; cursor:pointer; border:1px solid var(--border); transition: background .2s; }
+  .quiz .option:hover { background: rgba(45,90,160,.08); }
+  .quiz .option.correct { background: rgba(39,174,96,.2); border-color: var(--accent3); }
+  .quiz .option.wrong { background: rgba(192,57,43,.15); border-color: var(--accent2); }
+  .quiz .feedback { margin-top:10px; font-weight:600; }
+
+  /* Timeline */
+  .timeline { position:relative; padding-left:30px; margin:20px 0; }
+  .timeline::before { content:''; position:absolute; left:12px; top:0; bottom:0; width:3px; background:var(--accent); border-radius:2px; }
+  .timeline .tl-item { position:relative; margin-bottom:24px; }
+  .timeline .tl-item::before {
+    content:''; position:absolute; left:-24px; top:6px;
+    width:14px; height:14px; border-radius:50%; background:var(--accent);
+    border:3px solid var(--bg);
+  }
+  .timeline .tl-item h4 { font-size:1rem; color:var(--accent); }
+  .timeline .tl-item p { font-size:.92rem; color:var(--text-muted); }
+
+  ul.plain { list-style: disc; padding-left:24px; margin:10px 0; }
+  ul.plain li { margin-bottom:6px; }
+
+  .highlight { background: rgba(45,90,160,.08); padding:2px 6px; border-radius:4px; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  @media(max-width:768px) { .two-col { grid-template-columns:1fr; } }
+</style>
+</head>
+
+<body>
+<!-- NAV -->
+<nav>
+  <div style="display:flex;align-items:center;">
+    <button id="menuBtn" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+    <div class="brand">ED II — <span>Lección 1</span></div>
+  </div>
+  <div class="nav-links">
+    <a href="#motivacion">Motivación</a>
+    <a href="#pvi">PVI</a>
+    <a href="#cauchy-peano">Cauchy-Peano</a>
+    <a href="#eq-integral">Ec. Integral</a>
+    <a href="#demo">Demostración</a>
+    <a href="#unicidad">Unicidad</a>
+    <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+  </div>
+</nav>
+
+<div id="progress"><div class="bar" id="progressBar"></div></div>
+
+<div class="layout">
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <h3>📑 Índice</h3>
+  <ul>
+    <li><a href="#motivacion">0. Motivación física</a></li>
+    <li class="sub"><a href="#particula">Partícula en un fluido</a></li>
+    <li class="sub"><a href="#ej-fisicos">Ejemplos físicos</a></li>
+    <li><a href="#pvi">1. Problema de valores iniciales</a></li>
+    <li class="sub"><a href="#dominio">Dominio y campo</a></li>
+    <li class="sub"><a href="#solucion-def">Definición de solución</a></li>
+    <li class="sub"><a href="#ej-pvi">Ejemplos de PVI</a></li>
+    <li><a href="#cauchy-peano">2. Teorema de Cauchy-Peano</a></li>
+    <li class="sub"><a href="#enunciado-cp">Enunciado</a></li>
+    <li class="sub"><a href="#significado">Significado</a></li>
+    <li><a href="#eq-integral">3. Ecuación integral de Volterra</a></li>
+    <li class="sub"><a href="#equivalencia">Equivalencia PVI ⟺ EIV</a></li>
+    <li class="sub"><a href="#dominio-banda">Dominio tipo banda</a></li>
+    <li><a href="#demo">4. Demostración del Teorema</a></li>
+    <li class="sub"><a href="#aprox">Soluciones aproximadas</a></li>
+    <li class="sub"><a href="#arzela">Arzelà-Ascoli</a></li>
+    <li class="sub"><a href="#equicont">Equicontinuidad</a></li>
+    <li class="sub"><a href="#convergencia">Convergencia uniforme</a></li>
+    <li class="sub"><a href="#paso-limite">Paso al límite</a></li>
+    <li><a href="#unicidad">5. Unicidad de solución</a></li>
+    <li class="sub"><a href="#ej-no-unic">Ejemplo de no unicidad</a></li>
+    <li class="sub"><a href="#lipschitz">Condición de Lipschitz</a></li>
+    <li class="sub"><a href="#unicidad-local">Unicidad local y global</a></li>
+    <li><a href="#quiz-section">6. Autoevaluación</a></li>
+  </ul>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- ============================================================ -->
+<!-- SECTION 0: MOTIVACIÓN -->
+<!-- ============================================================ -->
+<section id="motivacion" class="fade-in">
+<h1>Lección 1 — Teorema de Cauchy-Peano</h1>
+<p style="color:var(--text-muted); font-size:.95rem;">Ecuaciones Diferenciales II · Grado en Matemáticas</p>
+
+<h2 id="particula">0. Motivación: Partícula en un fluido</h2>
+
+<p>Consideramos el movimiento de una partícula en una región del espacio, por ejemplo un fluido (el agua de un río o el aire). Llamemos $\Omega$ a la región del espacio y supongamos un subconjunto abierto $\Omega \subseteq \mathbb{R}^3$.</p>
+
+<p>Un <strong>campo de velocidades</strong> asigna a cada punto $p \in \Omega$ y a cada instante $t$ un vector velocidad:</p>
+
+$$V : \mathbb{R} \times \Omega \longrightarrow \mathbb{R}^3, \quad (t, p) \mapsto V(t, p)$$
+
+<p>Si la partícula se encuentra en la posición $p(t)$ en el instante $t$, su velocidad debe coincidir con el campo:</p>
+
+$$p'(t) = V(t, \, p(t))$$
+
+<p>Escribiendo $V = (u, v, w)$ y $p(t) = (x(t), y(t), z(t))$, llegamos al <strong>sistema de ecuaciones diferenciales ordinarias</strong>:</p>
+
+$$\begin{cases} x' = u(t, x, y, z) \\ y' = v(t, x, y, z) \\ z' = w(t, x, y, z) \end{cases}$$
+
+<div class="box remark">
+  <div class="label">Observación</div>
+  <p>Estamos suponiendo que las incógnitas $x = x(t)$, $y = y(t)$, $z = z(t)$ son funciones derivables, y que la ecuación se satisface para todo instante $t$ en cierto intervalo. En la forma compacta escribimos $\dot{x} = X(t, x)$ donde $x$ es vectorial.</p>
+</div>
+
+<h3 id="ej-fisicos">Campos de velocidades: ejemplos</h3>
+
+<div class="two-col">
+<div class="box example">
+  <div class="label">Ejemplo 1 — Campo constante</div>
+  <p>$V(t,p) = (c, 0, 0)$ con $c \in \mathbb{R}$ constante (campo estacionario, independiente de $t$).</p>
+  <p>Ecuaciones: $x' = c,\; y' = 0,\; z' = 0$</p>
+  <p>Solución: $x(t) = ct + x_0$, movimiento rectilíneo uniforme en la dirección $x$.</p>
+  <p>Las <strong>líneas de corriente</strong> son rectas horizontales en el plano $z = z_0$.</p>
+</div>
+<div class="box example">
+  <div class="label">Ejemplo 2 — Campo vertical (oscilador)</div>
+  <p>$V(t, x_1, x_2) = (-x_2, x_1)$ en $\mathbb{R}^2$.</p>
+  <p>Ecuaciones: $x_1' = -x_2,\; x_2' = x_1$, es decir $x_1'' + x_1 = 0$.</p>
+  <p>Solución general: $x_1(t) = c_1 \cos t + c_2 \sin t$.</p>
+  <p>Las órbitas son <strong>circunferencias</strong> centradas en el origen.</p>
+</div>
+</div>
+
+<!-- Interactive: Field Visualization -->
+<div class="interactive" id="field-viz">
+  <h4>🔬 Visualización interactiva: Campos de velocidades</h4>
+  <div class="controls">
+    <label>Campo:
+      <select id="fieldSelect">
+        <option value="constant">Constante (c, 0)</option>
+        <option value="rotation" selected>Rotación (-x₂, x₁)</option>
+        <option value="source">Fuente (x₁, x₂)</option>
+        <option value="saddle">Silla (x₁, −x₂)</option>
+      </select>
+    </label>
+    <button onclick="drawField()">Dibujar campo</button>
+  </div>
+  <canvas id="fieldCanvas" width="500" height="500" style="background:#fff; border-radius:8px;"></canvas>
+  <p class="output" id="fieldInfo">Selecciona un campo y pulsa "Dibujar".</p>
+</div>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 1: PROBLEMA DE VALORES INICIALES -->
+<!-- ============================================================ -->
+<section id="pvi">
+<h2>1. Problema de Valores Iniciales (PVI)</h2>
+
+<h3 id="dominio">Dominio y campo de velocidades</h3>
+
+<p>Consideramos un conjunto $D$ abierto y conexo (dominio) de $\mathbb{R} \times \mathbb{R}^d$. Los puntos de $D$ son de la forma $(t, x)$ con $t \in \mathbb{R}$ y $x \in \mathbb{R}^d$.</p>
+
+<p>Un <strong>campo de velocidades</strong> es una función continua:</p>
+
+$$X : D \longrightarrow \mathbb{R}^d, \quad (t, x) \mapsto X(t, x)$$
+
+<p>Suponemos que la dimensión $d \geq 1$ es arbitraria.</p>
+
+<div class="box definition">
+  <div class="label">Definición — Problema de Cauchy (PVI)</div>
+  <p>Dado $(t_0, x_0) \in D$, el <strong>problema de valores iniciales</strong> (o <strong>problema de Cauchy</strong>) consiste en encontrar una función derivable $x: I \to \mathbb{R}^d$ definida en un intervalo $I$ que contenga a $t_0$ en su interior, tal que:</p>
+  $$(PC) \quad \begin{cases} x'(t) = X(t, x(t)), & \forall\, t \in I \\[4pt] x(t_0) = x_0 & \end{cases}$$
+</div>
+
+<h3 id="solucion-def">Definición de solución</h3>
+
+<div class="box definition">
+  <div class="label">Definición — Solución del PVI</div>
+  <p>Sea $I \subseteq \mathbb{R}$ un intervalo con $t_0 \in \mathring{I}$. Decimos que $x: I \to \mathbb{R}^d$ es <strong>solución</strong> del PVI si:</p>
+  <ol style="padding-left:20px;">
+    <li>$x$ es <strong>continua</strong> en $I$ (de hecho, derivable).</li>
+    <li>$(t, x(t)) \in D$ para todo $t \in I$.</li>
+    <li>$x'(t) = X(t, x(t))$ para todo $t \in I$.</li>
+    <li>$x(t_0) = x_0$.</li>
+  </ol>
+</div>
+
+<div class="box remark">
+  <div class="label">Nota importante</div>
+  <p>No hay que confundir el <strong>dominio</strong> $D \subseteq \mathbb{R} \times \mathbb{R}^d$ (del campo de velocidades) con una <strong>solución</strong> $x: I \to \mathbb{R}^d$ (una curva en $\mathbb{R}^d$ parametrizada por el tiempo).</p>
+</div>
+
+<h3 id="ej-pvi">Ejemplos de PVI</h3>
+
+<div class="box example">
+  <div class="label">Ejemplo 1 — Singularidad</div>
+  <p>¿Es $x(t) = \frac{1}{1-t}$ solución de $x' = x^2$?</p>
+  <p>En este caso $d = 1$, $D = \mathbb{R} \times \mathbb{R}$, $X(t,x) = x^2$. La función $x(t) = \frac{1}{1-t}$ es derivable en $\mathbb{R} \setminus \{1\}$ y cumple $x'(t) = \frac{1}{(1-t)^2} = x(t)^2$.</p>
+  <p>Definimos las soluciones maximales:</p>
+  $$x_+(t) = \frac{1}{1-t}, \quad t \in \,]{-\infty}, 1[, \qquad x_-(t) = \frac{1}{1-t}, \quad t \in \,]1, +\infty[$$
+  <p>Son soluciones distintas, cada una en su intervalo maximal.</p>
+</div>
+
+<div class="box example">
+  <div class="label">Ejemplo 2 — Discontinuidad en el campo</div>
+  <p>¿Es $x(t) = |t|$ solución de $x' = \text{sgn}(t)$?</p>
+  <p>La función $|t|$ no es derivable en $t=0$. Si eliminamos la discontinuidad del campo en $t=0$ y tomamos $D = \mathbb{R} \times\, ]0, +\infty[$, entonces $x_+(t) = t$ en $]0,+\infty[$ sí es solución.</p>
+  <p>Podemos considerar $D_- = \mathbb{R} \times\, ]{-\infty}, 0[$ con $x_-(t) = -t$.</p>
+</div>
+
+<!-- Interactive: PVI solver -->
+<div class="interactive">
+  <h4>🧮 Simulador: Resolución numérica de un PVI</h4>
+  <p>Resuelve numéricamente $x' = f(t, x)$ con $x(t_0) = x_0$ usando el método de Euler.</p>
+  <div class="controls">
+    <label>$f(t,x)$:
+      <select id="pviFunc">
+        <option value="x2">x²</option>
+        <option value="sinx">sin(x)</option>
+        <option value="tx">t·x</option>
+        <option value="sqrt" selected>√|x|</option>
+        <option value="neg_x">−x</option>
+      </select>
+    </label>
+    <label>$x_0$: <input type="number" id="pviX0" value="1" step="0.1" style="width:60px"></label>
+    <label>$t_0$: <input type="number" id="pviT0" value="0" step="0.1" style="width:60px"></label>
+    <label>$h$: <input type="range" id="pviH" min="0.001" max="0.1" step="0.001" value="0.01"><span id="pviHval">0.01</span></label>
+    <button onclick="solvePVI()">Resolver</button>
+  </div>
+  <canvas id="pviCanvas" width="600" height="350"></canvas>
+</div>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 2: TEOREMA DE CAUCHY-PEANO -->
+<!-- ============================================================ -->
+<section id="cauchy-peano">
+<h2>2. Teorema de Cauchy-Peano</h2>
+
+<h3 id="enunciado-cp">Enunciado del Teorema</h3>
+
+<div class="box theorem" style="border-left-width:6px;">
+  <div class="label">Teorema de Cauchy-Peano (Existencia)</div>
+  <p>Sea $X: D \to \mathbb{R}^d$ un campo de velocidades <strong>continuo</strong> definido en un dominio abierto $D \subseteq \mathbb{R} \times \mathbb{R}^d$. Dado cualquier $(t_0, x_0) \in D$, <strong>existe</strong> al menos una solución del problema de valores iniciales</p>
+  $$(PC) \quad x' = X(t, x), \qquad x(t_0) = x_0,$$
+  <p>definida en algún intervalo $I$ que contiene a $t_0$ en su interior.</p>
+</div>
+
+<h3 id="significado">Significado e interpretación</h3>
+
+<div class="box remark">
+  <div class="label">Interpretación física</div>
+  <p>El teorema garantiza que si un campo de velocidades es continuo y colocamos una partícula en una posición $x_0$ en el instante $t_0$, entonces la partícula se mueve por algún tiempo. Es un resultado <strong>local</strong>: no nos dice cuánto tiempo; solo que existe un intervalo $I$ alrededor de $t_0$.</p>
+</div>
+
+<p>Aspectos clave del teorema:</p>
+<ul class="plain">
+  <li><strong>Hipótesis mínima</strong>: solo se pide continuidad de $X$. No se pide derivabilidad ni Lipschitz.</li>
+  <li><strong>Existencia</strong>, no unicidad: con solo continuidad puede haber varias soluciones (veremos un ejemplo).</li>
+  <li><strong>Resultado local</strong>: la solución existe en algún intervalo alrededor de $t_0$, que puede ser pequeño.</li>
+</ul>
+
+<p>Demostraremos el teorema tras un considerable trabajo previo. Primero, reformulamos el problema en forma integral.</p>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 3: ECUACIÓN INTEGRAL DE VOLTERRA -->
+<!-- ============================================================ -->
+<section id="eq-integral">
+<h2>3. Ecuación Integral de Volterra</h2>
+
+<h3 id="equivalencia">Equivalencia PVI ⟺ Ecuación integral</h3>
+
+<p>Consideramos la <strong>ecuación integral de Volterra</strong>:</p>
+
+$$(EIV) \quad x(t) = x_0 + \int_{t_0}^{t} X(s, x(s))\, ds$$
+
+<div class="box definition">
+  <div class="label">Definición — Solución de la EIV</div>
+  <p>Dado un intervalo $I$ que contiene a $t_0$ en su interior, decimos que $x: I \to \mathbb{R}^d$ es solución de la EIV si:</p>
+  <ol style="padding-left:20px;">
+    <li>$x$ es continua en $I$.</li>
+    <li>$(t, x(t)) \in D$ para todo $t \in I$.</li>
+    <li>Se cumple la identidad $(EIV)$ para todo $t \in I$.</li>
+  </ol>
+</div>
+
+<div class="box lemma">
+  <div class="label">Lema — Equivalencia</div>
+  <p>Una función $x: I \to \mathbb{R}^d$ es solución del PVI $(PC)$ si y solo si es solución de la ecuación integral $(EIV)$.</p>
+</div>
+
+<div class="collapsible-toggle" onclick="toggleProof(this)">
+  <span class="arrow">▶</span> <strong>Demostración</strong>
+</div>
+<div class="collapsible-content">
+<div class="box proof">
+  <div class="label">Demostración</div>
+  <p><strong>$(PC) \Rightarrow (EIV)$:</strong> Si $x$ es solución del PVI, entonces $x'(s) = X(s, x(s))$ para todo $s \in I$. Integrando entre $t_0$ y $t$:</p>
+  $$\int_{t_0}^{t} x'(s)\, ds = \int_{t_0}^{t} X(s, x(s))\, ds$$
+  <p>Por el Teorema Fundamental del Cálculo (Barrow):</p>
+  $$x(t) - x(t_0) = \int_{t_0}^{t} X(s, x(s))\, ds$$
+  <p>Como $x(t_0) = x_0$, obtenemos la $(EIV)$.</p>
+
+  <p><strong>$(EIV) \Rightarrow (PC)$:</strong> Si $x$ cumple la $(EIV)$, como $X$ es continua y $x$ es continua, la función $s \mapsto X(s, x(s))$ es continua. Por el Teorema Fundamental del Cálculo, $F(t) = \int_{t_0}^{t} X(s,x(s))\,ds$ es de clase $C^1$ y $F'(t) = X(t, x(t))$.</p>
+  <p>Luego $x(t) = x_0 + F(t)$ es derivable y $x'(t) = F'(t) = X(t, x(t))$.</p>
+  <p>Además, $x(t_0) = x_0 + \int_{t_0}^{t_0} X(s,x(s))\,ds = x_0 + 0 = x_0$. $\square$</p>
+</div>
+</div>
+
+<div class="box remark">
+  <div class="label">Operador de Volterra</div>
+  <p>Es útil definir el operador $F: C(I, \mathbb{R}^d) \to C(I, \mathbb{R}^d)$ por:</p>
+  $$F(x)(t) = x_0 + \int_{t_0}^{t} X(s, x(s))\, ds$$
+  <p>Entonces la $(EIV)$ se escribe como un <strong>punto fijo</strong>: $x = F(x)$. Este punto de vista es central en la teoría.</p>
+</div>
+
+<h3 id="dominio-banda">Trabajo en un dominio tipo banda</h3>
+
+<p>Para la demostración del teorema, trabajaremos en un dominio compacto de tipo "banda" contenido en $D$.</p>
+
+<div class="box definition">
+  <div class="label">Rectángulo compacto $R$</div>
+  <p>Fijamos $(t_0, x_0) \in D$ y elegimos $\rho, \beta > 0$ tales que el rectángulo:</p>
+  $$R = \{(t,x) \in \mathbb{R} \times \mathbb{R}^d : |t - t_0| \leq \rho, \; \|x - x_0\| \leq \beta\}$$
+  <p>está contenido en $D$. Como $X$ es continua y $R$ es compacto, $X$ está acotado en $R$:</p>
+  $$M = \max_{(t,x) \in R} \|X(t,x)\| < +\infty$$
+  <p>Definimos $\alpha = \min\!\left(\rho, \;\frac{\beta}{M}\right)$ y el intervalo $I = [t_0 - \alpha, \; t_0 + \alpha]$.</p>
+</div>
+
+<!-- Interactive diagram of the rectangle -->
+<div class="interactive">
+  <h4>📐 Diagrama interactivo: Rectángulo $R$ y banda de soluciones</h4>
+  <div class="controls">
+    <label>$\rho$: <input type="range" id="rhoSlider" min="0.5" max="3" step="0.1" value="2"><span id="rhoVal">2</span></label>
+    <label>$\beta$: <input type="range" id="betaSlider" min="0.5" max="3" step="0.1" value="1.5"><span id="betaVal">1.5</span></label>
+    <label>$M$: <input type="range" id="mSlider" min="0.5" max="5" step="0.1" value="2"><span id="mVal">2</span></label>
+    <button onclick="drawRectangle()">Actualizar</button>
+  </div>
+  <canvas id="rectCanvas" width="600" height="400" style="background:#fff; border-radius:8px;"></canvas>
+  <p class="output" id="rectInfo"></p>
+</div>
+
+<p>La elección de $\alpha = \min(\rho, \beta/M)$ es crucial: garantiza que cualquier función continua $\varphi: I \to \mathbb{R}^d$ con $\|\varphi(t) - x_0\| \leq M|t - t_0|$ permanece dentro del rectángulo $R$. En efecto:</p>
+
+$$\|\varphi(t) - x_0\| \leq M |t - t_0| \leq M \alpha \leq M \cdot \frac{\beta}{M} = \beta$$
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 4: DEMOSTRACIÓN -->
+<!-- ============================================================ -->
+<section id="demo">
+<h2>4. Demostración del Teorema de Cauchy-Peano</h2>
+
+<p>La demostración se estructura en <strong>tres etapas</strong>:</p>
+
+<div class="timeline">
+  <div class="tl-item"><h4>Etapa 1: Construcción de soluciones aproximadas</h4>
+    <p>Para cada $\varepsilon > 0$ construimos funciones continuas $x_\varepsilon: I \to \mathbb{R}^d$ que "casi" satisfacen la ecuación integral.</p>
+  </div>
+  <div class="tl-item"><h4>Etapa 2: Selección de una sucesión convergente</h4>
+    <p>Usando el Teorema de Arzelà-Ascoli, extraemos una subsucesión que converge uniformemente a una función $x$.</p>
+  </div>
+  <div class="tl-item"><h4>Etapa 3: Paso al límite</h4>
+    <p>Verificamos que $x$ satisface la ecuación integral de Volterra, y por tanto es solución del PVI.</p>
+  </div>
+</div>
+
+<h3 id="aprox">Etapa 1: Soluciones aproximadas ($\varepsilon$-soluciones)</h3>
+
+<p>A partir de ahora suponemos $I = [a, b]$ con $a = t_0 - \alpha$, $b = t_0 + \alpha$, $X$ continuo y acotado por $M$ en $R$.</p>
+
+<div class="box definition">
+  <div class="label">Definición — $\varepsilon$-solución aproximada</div>
+  <p>Dado $\varepsilon > 0$ (con $\varepsilon < \alpha$), una <strong>$\varepsilon$-solución aproximada</strong> es una función continua $x_\varepsilon : I \to \mathbb{R}^d$ que cumple:</p>
+  $$\left\| x_\varepsilon(t) - x_0 - \int_{t_0}^{t} X(s, x_\varepsilon(s))\, ds \right\| \leq M\varepsilon, \quad \forall\, t \in I$$
+</div>
+
+<p><strong>Construcción explícita:</strong> Fijamos $\varepsilon > 0$ y subdividimos el intervalo $[t_0, b]$ en trozos de longitud $\varepsilon$:</p>
+$$t_0 < t_0 + \varepsilon < t_0 + 2\varepsilon < \cdots < b$$
+
+<div class="steps">
+  <div class="step">
+    <strong>En $[t_0 - \varepsilon, t_0 + \varepsilon]$:</strong> Definimos $x_\varepsilon(t) = x_0$ para $t \in [t_0 - \varepsilon, t_0]$ y construimos:
+    $$x_\varepsilon(t) = x_0 + \int_{t_0}^{t} X(s, x_\varepsilon(s))\,ds, \quad t \in [t_0, t_0 + \varepsilon]$$
+    Pero usamos un "retraso": en $[t_0, t_0+\varepsilon]$, integramos con el valor $X(s, x_0)$ (valor en el punto de partida).
+  </div>
+  <div class="step">
+    <strong>En $[t_0 + \varepsilon, t_0 + 2\varepsilon]$:</strong>
+    $$x_\varepsilon(t) = x_\varepsilon(t_0 + \varepsilon) + \int_{t_0+\varepsilon}^{t} X(s, x_\varepsilon(s-\varepsilon))\,ds$$
+    Usamos el valor retrasado $x_\varepsilon(s - \varepsilon)$ que ya conocemos del paso anterior.
+  </div>
+  <div class="step">
+    <strong>Iteramos</strong> sucesivamente hasta cubrir todo $I$. En cada subintervalo $[t_0 + k\varepsilon, t_0 + (k+1)\varepsilon]$, la integral usa valores de $x_\varepsilon$ calculados en el subintervalo anterior.
+  </div>
+</div>
+
+<p>De manera análoga se construye para $t < t_0$. La idea fundamental es que, como usamos el valor <em>retrasado</em> $x_\varepsilon(s - \varepsilon)$, <strong>no hay circularidad</strong> en la definición.</p>
+
+<div class="box lemma">
+  <div class="label">Propiedades de las $\varepsilon$-soluciones</div>
+  <p>Para cada $\varepsilon > 0$ con $\varepsilon < \alpha = \min(\rho, \beta/M)$:</p>
+  <ol style="padding-left:20px;">
+    <li>$\|x_\varepsilon(t) - x_0\| \leq M|t - t_0| \leq M\alpha \leq \beta$ para todo $t \in I$ (la solución permanece en $R$).</li>
+    <li>$\|x_\varepsilon(t) - x_\varepsilon(s)\| \leq M|t - s|$ para todos $t, s \in I$ (Lipschitz con constante $M$).</li>
+  </ol>
+</div>
+
+<div class="collapsible-toggle" onclick="toggleProof(this)">
+  <span class="arrow">▶</span> <strong>Demostración de las propiedades</strong>
+</div>
+<div class="collapsible-content">
+<div class="box proof">
+  <div class="label">Demostración</div>
+  <p><strong>(i)</strong> Si $t \in [t_0 - \varepsilon, t_0 + \varepsilon]$, $\|x_\varepsilon(t) - x_0\| = 0$ o bien $\|x_\varepsilon(t) - x_0\| = \left\|\int_{t_0}^{t} X(s, x_0)\,ds\right\| \leq M|t - t_0|$.</p>
+  <p>Procedemos por inducción sobre los subintervalos. Si ya sabemos que $\|x_\varepsilon(s) - x_0\| \leq M|s - t_0|$ para $s \in [t_0, t_0 + k\varepsilon]$, entonces para $t \in [t_0 + k\varepsilon, t_0 + (k+1)\varepsilon]$:</p>
+  $$\|x_\varepsilon(t) - x_0\| \leq \|x_\varepsilon(t_0+k\varepsilon) - x_0\| + \left\|\int_{t_0+k\varepsilon}^{t} X(s, x_\varepsilon(s-\varepsilon))\,ds\right\|$$
+  $$\leq M \cdot k\varepsilon + M(t - t_0 - k\varepsilon) = M(t - t_0)$$
+  <p><strong>(ii)</strong> La desigualdad de Lipschitz se deduce de manera análoga, pues $\|X\| \leq M$ en $R$:</p>
+  $$\|x_\varepsilon(t) - x_\varepsilon(s)\| = \left\|\int_{s}^{t} X(u, x_\varepsilon(\cdot))\,du\right\| \leq M|t-s| \quad \square$$
+</div>
+</div>
+
+<!-- Interactive: epsilon-approximate solutions -->
+<div class="interactive">
+  <h4>⚡ Visualización: Soluciones $\varepsilon$-aproximadas</h4>
+  <p>Observa cómo las soluciones aproximadas convergen a la solución exacta al reducir $\varepsilon$.</p>
+  <div class="controls">
+    <label>Ecuación: $x' = -x$, $x(0) = 1$</label>
+    <label>$\varepsilon$: <input type="range" id="epsSlider" min="0.05" max="1" step="0.05" value="0.5"><span id="epsVal">0.50</span></label>
+    <button onclick="drawApprox()">Dibujar</button>
+  </div>
+  <canvas id="approxCanvas" width="600" height="350"></canvas>
+</div>
+
+<h3 id="arzela">Etapa 2: Teorema de Arzelà-Ascoli</h3>
+
+<p>Necesitamos extraer una subsucesión convergente de las $\{x_\varepsilon\}$. Para ello usamos conceptos fundamentales del Análisis.</p>
+
+<h4>Convergencia uniforme</h4>
+
+<div class="box definition">
+  <div class="label">Definición — Convergencia uniforme</div>
+  <p>Sea $I$ un intervalo y $f_n : I \to \mathbb{R}^d$ una sucesión de funciones. Decimos que $\{f_n\}$ <strong>converge uniformemente</strong> a $f: I \to \mathbb{R}^d$ si:</p>
+  $$\forall\, \varepsilon > 0, \; \exists\, N \in \mathbb{N}: \quad \|f_n(t) - f(t)\| < \varepsilon \quad \forall\, n \geq N, \; \forall\, t \in I$$
+  <p>Lo crucial es que $N$ <strong>no depende de $t$</strong> (a diferencia de la convergencia puntual).</p>
+</div>
+
+<div class="box remark">
+  <div class="label">Convergencia uniforme vs puntual</div>
+  <p>En la convergencia <strong>puntual</strong>, para cada $t$ fijo existe $N = N(t)$. En la <strong>uniforme</strong>, el mismo $N$ vale para todos los $t \in I$.</p>
+  <p>La convergencia uniforme <strong>conserva la continuidad</strong>: si cada $f_n$ es continua y $f_n \to f$ uniformemente, entonces $f$ es continua. La convergencia puntual <strong>no</strong> conserva necesariamente la continuidad.</p>
+</div>
+
+<div class="box example">
+  <div class="label">Ejemplo — Convergencia puntual pero no uniforme</div>
+  <p>$f_n : [0, 1] \to \mathbb{R}$, $f_n(t) = t^n$.</p>
+  <p>Converge puntualmente a $f(t) = \begin{cases} 0 & \text{si } t \in [0,1) \\ 1 & \text{si } t = 1 \end{cases}$</p>
+  <p>El límite es <strong>discontinuo</strong>, luego la convergencia no es uniforme.</p>
+</div>
+
+<!-- Interactive: uniform vs pointwise convergence -->
+<div class="interactive">
+  <h4>📊 Convergencia uniforme vs puntual</h4>
+  <div class="controls">
+    <label>Sucesión:
+      <select id="convSeq">
+        <option value="tn">fₙ(t) = tⁿ (puntual, no uniforme)</option>
+        <option value="sin_n">fₙ(t) = sin(t)/n (uniforme)</option>
+        <option value="n_exp">fₙ(t) = nt·e⁻ⁿᵗ (puntual, no uniforme)</option>
+      </select>
+    </label>
+    <label>n: <input type="range" id="convN" min="1" max="50" step="1" value="5"><span id="convNVal">5</span></label>
+    <button onclick="drawConvergence()">Dibujar</button>
+  </div>
+  <canvas id="convCanvas" width="600" height="300"></canvas>
+</div>
+
+<h4 id="equicont">Equicontinuidad</h4>
+
+<p>Para aplicar Arzelà-Ascoli necesitamos un concepto más fuerte que la simple continuidad uniforme:</p>
+
+<div class="box definition">
+  <div class="label">Definición — Equicontinuidad</div>
+  <p>Una familia de funciones $\{f_n : I \to \mathbb{R}^d\}_{n \in \mathbb{N}}$ es <strong>equicontinua</strong> si:</p>
+  $$\forall\, \varepsilon > 0, \;\exists\, \delta > 0: \quad \|f_n(t) - f_n(s)\| < \varepsilon \quad \forall\, |t-s| < \delta, \;\forall\, n \in \mathbb{N}$$
+  <p>El $\delta$ es <strong>independiente de $n$</strong> y de los puntos $t, s$.</p>
+</div>
+
+<div class="box remark">
+  <div class="label">Intuición geométrica</div>
+  <p>Que una familia sea equicontinua significa que todas las funciones de la familia tienen el "mismo grado de continuidad". Un mismo $\delta$ controla la oscilación de <em>todas</em> las funciones simultáneamente.</p>
+  <p>En nuestro caso, las $\varepsilon$-soluciones satisfacen $\|x_\varepsilon(t) - x_\varepsilon(s)\| \leq M|t-s|$, así que son <strong>Lipschitz con la misma constante $M$</strong> → son equicontinuas (basta tomar $\delta = \varepsilon_0 / M$).</p>
+</div>
+
+<div class="box example">
+  <div class="label">Ejemplo — Familia Lipschitz equicontinua</div>
+  <p>$g_n: [0,1] \to \mathbb{R}$, $g_n(t) = \sin(nt)/n$.</p>
+  <p>$|g_n(t) - g_n(s)| = \frac{|\sin(nt) - \sin(ns)|}{n} \leq \frac{n|t-s|}{n} = |t-s|$.</p>
+  <p>La familia es equicontinua (Lipschitz con constante $L=1$) y acotada ($|g_n| \leq 1$).</p>
+</div>
+
+<div class="box example">
+  <div class="label">Ejemplo — Familia NO equicontinua</div>
+  <p>$g_n: [0,1] \to \mathbb{R}$, $g_n(t) = \sin(n^2 t)$.</p>
+  <p>Para $t = 0$ y $s = \pi/(2n^2)$: $|g_n(s) - g_n(0)| = 1$ pero $|s - 0| = \pi/(2n^2) \to 0$.</p>
+  <p>No puede existir un $\delta$ uniforme en $n$ → no equicontinua.</p>
+</div>
+
+<div class="box definition">
+  <div class="label">Definición — Familia uniformemente acotada</div>
+  <p>$\{f_n\}$ es <strong>uniformemente acotada</strong> (o <em>acotada en conjunto</em>) si:</p>
+  $$\exists\, M > 0: \quad \|f_n(t)\| \leq M \quad \forall\, t \in I, \; \forall\, n \in \mathbb{N}$$
+</div>
+
+<p>Ahora podemos enunciar el resultado fundamental:</p>
+
+<div class="box theorem" style="border-left-width:6px;">
+  <div class="label">Teorema de Arzelà-Ascoli</div>
+  <p>Sea $I$ un intervalo <strong>cerrado y acotado</strong> y $\{f_n : I \to \mathbb{R}^d\}$ una sucesión de funciones que es:</p>
+  <ol style="padding-left:20px;">
+    <li><strong>Uniformemente acotada</strong>: $\exists\, M > 0$: $\|f_n(t)\| \leq M$ $\forall\, t, n$.</li>
+    <li><strong>Equicontinua</strong>.</li>
+  </ol>
+  <p>Entonces existe una <strong>subsucesión</strong> $\{f_{n_k}\}$ que converge uniformemente en $I$ a una función continua $f: I \to \mathbb{R}^d$.</p>
+</div>
+
+<div class="box remark">
+  <div class="label">Nota</div>
+  <p>La condición de que $I$ sea cerrado y acotado (compacto) es esencial. La conclusión del ejemplo $f_n(t) = t^n$ en $[0,1]$ muestra que acotación sin equicontinuidad no basta. Y el ejemplo $g_n(t) = \sin(n^2 t)$ muestra que equicontinuidad es necesaria.</p>
+</div>
+
+<div class="collapsible-toggle" onclick="toggleProof(this)">
+  <span class="arrow">▶</span> <strong>Demostración del Teorema de Arzelà-Ascoli (esquema)</strong>
+</div>
+<div class="collapsible-content">
+<div class="box proof">
+  <div class="label">Demostración (esquema diagonal de Cantor)</div>
+  <p><strong>Paso 1:</strong> Elegimos un subconjunto numerable denso $D_0 = \{t_1, t_2, t_3, \ldots\} \subseteq I$.</p>
+  <p><strong>Paso 2:</strong> Para $t_1$: La sucesión $\{f_n(t_1)\}$ está acotada en $\mathbb{R}^d$, así que por Bolzano-Weierstrass existe una parcial $\{f_{\sigma_1(n)}\}$ tal que $f_{\sigma_1(n)}(t_1)$ converge.</p>
+  <p><strong>Paso 3:</strong> Para $t_2$: De la parcial anterior, extraemos otra parcial $\{f_{\sigma_2(n)}\}$ tal que $f_{\sigma_2(n)}(t_2)$ también converge.</p>
+  <p><strong>Iteramos</strong> para $t_3, t_4, \ldots$ obteniendo un esquema:</p>
+  $$\begin{array}{c}
+  f_{\sigma_1(1)}, f_{\sigma_1(2)}, f_{\sigma_1(3)}, \ldots \\
+  f_{\sigma_2(1)}, f_{\sigma_2(2)}, f_{\sigma_2(3)}, \ldots \\
+  f_{\sigma_3(1)}, f_{\sigma_3(2)}, f_{\sigma_3(3)}, \ldots \\
+  \vdots
+  \end{array}$$
+  <p>donde cada fila es subsucesión de la anterior y converge en $t_1, \ldots, t_k$.</p>
+  <p><strong>Paso diagonal:</strong> La sucesión diagonal $g_n = f_{\sigma_n(n)}$ es, a partir de cierto momento, subsucesión de todas las filas. Por tanto $g_n(t_k)$ converge para todo $k$.</p>
+  <p><strong>Paso 4:</strong> De la convergencia en $D_0$ (denso) más la equicontinuidad, se deduce la convergencia uniforme en todo $I$:</p>
+  <p>Dado $\varepsilon > 0$, por equicontinuidad tomamos $\delta > 0$ con $\|f_n(t) - f_n(s)\| < \varepsilon/3$ si $|t-s|<\delta$ y para todo $n$. Como $I$ compacto, lo cubrimos con finitos puntos $s_1, \ldots, s_p \in D_0$ con $|t - s_j| < \delta$ para algún $j$. Para cada $s_j$, existe $N_j$: $\|g_n(s_j) - g_m(s_j)\| < \varepsilon/3$ si $n, m > N_j$. Tomando $N = \max(N_1, \ldots, N_p)$:</p>
+  $$\|g_n(t) - g_m(t)\| \leq \|g_n(t) - g_n(s_j)\| + \|g_n(s_j) - g_m(s_j)\| + \|g_m(s_j) - g_m(t)\| < \varepsilon$$
+  <p>Por Cauchy uniforme, $\{g_n\}$ converge uniformemente. $\square$</p>
+</div>
+</div>
+
+<h3 id="convergencia">Aplicación a nuestro problema</h3>
+
+<p>Las $\varepsilon$-soluciones $\{x_\varepsilon\}_{\varepsilon > 0}$ satisfacen:</p>
+<ul class="plain">
+  <li><strong>Acotación uniforme</strong>: $\|x_\varepsilon(t)\| \leq \|x_0\| + M\alpha$ para todo $t \in I$.</li>
+  <li><strong>Equicontinuidad</strong>: $\|x_\varepsilon(t) - x_\varepsilon(s)\| \leq M|t-s|$ (Lipschitz con constante $M$).</li>
+</ul>
+
+<p>Tomando una sucesión $\varepsilon_n \to 0$ y aplicando Arzelà-Ascoli, existe una subsucesión $\{x_{\varepsilon_{n_k}}\}$ que <strong>converge uniformemente</strong> a una función continua $x : I \to \mathbb{R}^d$.</p>
+
+<h3 id="paso-limite">Etapa 3: Paso al límite</h3>
+
+<p>Debemos probar que el límite $x(t)$ satisface la ecuación integral de Volterra.</p>
+
+<p>Partimos de la desigualdad que cumple cada $\varepsilon$-solución:</p>
+$$\left\|x_{\varepsilon}(t) - x_0 - \int_{t_0}^{t} X(s, x_\varepsilon(s))\,ds\right\| \leq M\varepsilon$$
+
+<p>Haciendo $\varepsilon = \varepsilon_{n_k} \to 0$ y usando la convergencia uniforme $x_{\varepsilon_{n_k}} \to x$:</p>
+
+$$\left\|x(t) - x_0 - \int_{t_0}^{t} X(s, x(s))\,ds\right\| = 0$$
+
+<div class="collapsible-toggle" onclick="toggleProof(this)">
+  <span class="arrow">▶</span> <strong>Justificación del paso al límite bajo la integral</strong>
+</div>
+<div class="collapsible-content">
+<div class="box proof">
+  <div class="label">Demostración</div>
+  <p>Escribimos $h_n(s) = X(s, x_{\varepsilon_n}(s))$ y $h(s) = X(s, x(s))$.</p>
+  <p>Como $X$ es continua y $x_{\varepsilon_n} \to x$ uniformemente, se tiene $h_n(s) \to h(s)$ para cada $s$.</p>
+  <p>Además, $\|h_n(s)\| \leq M$ (constante, pues $(s, x_{\varepsilon_n}(s)) \in R$).</p>
+  <p>Por el <strong>Teorema de Convergencia Dominada</strong> (Lebesgue) — o simplemente por convergencia uniforme en el compacto $I$:</p>
+  $$\int_{t_0}^{t} h_n(s)\,ds \longrightarrow \int_{t_0}^{t} h(s)\,ds$$
+  <p>Combinando con $x_{\varepsilon_n}(t) \to x(t)$, obtenemos:</p>
+  $$x(t) = x_0 + \int_{t_0}^{t} X(s, x(s))\,ds \quad \forall\, t \in I$$
+  <p>Luego $x$ es solución de la $(EIV)$ y, por la equivalencia, del PVI. $\square$</p>
+</div>
+</div>
+
+<div class="box remark">
+  <div class="label">Resumen de la demostración</div>
+  <p>La demostración usa tres ingredientes fundamentales:</p>
+  <ol style="padding-left:20px;">
+    <li><strong>Construcción de aproximaciones</strong>: las $\varepsilon$-soluciones (método de Euler retrasado).</li>
+    <li><strong>Compacidad</strong>: el Teorema de Arzelà-Ascoli extrae una subsucesión convergente.</li>
+    <li><strong>Paso al límite</strong>: la continuidad de $X$ y la convergencia dominada permiten pasar al límite en la integral.</li>
+  </ol>
+</div>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 5: UNICIDAD -->
+<!-- ============================================================ -->
+<section id="unicidad">
+<h2>5. Unicidad de solución</h2>
+
+<h3 id="ej-no-unic">Un ejemplo de no unicidad</h3>
+
+<p>El Teorema de Cauchy-Peano solo garantiza <strong>existencia</strong>. Con solo continuidad, la unicidad puede fallar:</p>
+
+<div class="box example" style="border-left-width:6px;">
+  <div class="label">Ejemplo clásico — No unicidad</div>
+  <p>Consideremos el PVI en $D = \mathbb{R} \times \mathbb{R}$:</p>
+  $$x' = \sqrt{|x|}, \qquad x(0) = 0$$
+  <p>El campo $X(t,x) = \sqrt{|x|}$ es continuo pero <strong>no Lipschitz</strong> en $x = 0$.</p>
+  <p>Las siguientes funciones son <strong>todas</strong> soluciones:</p>
+  $$x(t) \equiv 0, \qquad x(t) = \frac{1}{4}(t-c)^2 \text{ para } t \geq c, \quad x(t) = 0 \text{ para } t < c$$
+  <p>para cualquier $c \geq 0$. También:</p>
+  $$y(t) = -\frac{1}{4}(t-c)^2 \text{ para } t \geq c, \qquad y(t) = 0 \text{ para } t < c$$
+  <p>¡Hay <strong>infinitas soluciones</strong>! La partícula en el campo $\sqrt{|x|}$ puede quedarse en $x=0$ un tiempo arbitrario antes de moverse.</p>
+</div>
+
+<!-- Interactive: non-uniqueness -->
+<div class="interactive">
+  <h4>🔀 Visualización: No unicidad para $x' = \sqrt{|x|}$, $x(0) = 0$</h4>
+  <p>Ajusta el parámetro $c \geq 0$ para ver diferentes soluciones del mismo PVI.</p>
+  <div class="controls">
+    <label>$c$: <input type="range" id="cSlider" min="0" max="3" step="0.1" value="0"><span id="cVal">0.00</span></label>
+    <label>Signo:
+      <select id="signSelect">
+        <option value="pos">Positiva</option>
+        <option value="neg">Negativa</option>
+        <option value="zero">x ≡ 0</option>
+      </select>
+    </label>
+    <button onclick="drawNonUnique()">Dibujar</button>
+  </div>
+  <canvas id="nonUniqueCanvas" width="600" height="300"></canvas>
+</div>
+
+<h3 id="lipschitz">Condición de Lipschitz</h3>
+
+<p>Para obtener unicidad, necesitamos una condición adicional sobre el campo $X$:</p>
+
+<div class="box definition">
+  <div class="label">Definición — Lipschitz en la variable $x$</div>
+  <p>Decimos que $X: D \to \mathbb{R}^d$ es <strong>localmente Lipschitz en $x$</strong> si para cada punto $(t_0, x_0) \in D$ existe un entorno $U$ de $(t_0, x_0)$ y una constante $L > 0$ tales que:</p>
+  $$\|X(t, x_1) - X(t, x_2)\| \leq L \|x_1 - x_2\| \quad \forall\, (t, x_1), (t, x_2) \in U$$
+</div>
+
+<div class="box lemma">
+  <div class="label">Lema 2 — Campos $C^1$ son Lipschitz</div>
+  <p>Si $X \in C^1(D, \mathbb{R}^d)$, entonces $X$ es localmente Lipschitz en $x$.</p>
+</div>
+
+<div class="collapsible-toggle" onclick="toggleProof(this)">
+  <span class="arrow">▶</span> <strong>Demostración</strong>
+</div>
+<div class="collapsible-content">
+<div class="box proof">
+  <div class="label">Demostración</div>
+  <p>Para el caso $d = 1$: dado $(t_0, x_0) \in D$, tomamos un rectángulo compacto $R$ centrado en $(t_0, x_0)$ contenido en $D$. Definimos:</p>
+  $$L = \max_{(t,x) \in R} \left|\frac{\partial X}{\partial x}(t,x)\right|$$
+  <p>Por el Teorema del Valor Medio, para $(t, x_1), (t, x_2) \in R$:</p>
+  $$|X(t, x_1) - X(t, x_2)| = \left|\frac{\partial X}{\partial x}(t, \xi)\right| |x_1 - x_2| \leq L|x_1 - x_2|$$
+  <p>Para $d > 1$: se usa la versión del TVM para funciones vectoriales en conjuntos convexos. Si $x_1, x_2 \in \mathbb{R}^d$ y $R$ es convexo:</p>
+  $$\|X(t, x_1) - X(t, x_2)\| \leq L \|x_1 - x_2\|, \quad L = \max_{(t,x)\in R} \left\|\frac{\partial X}{\partial x}(t,x)\right\|$$
+  <p>donde $\frac{\partial X}{\partial x}$ es la matriz jacobiana $d \times d$. $\square$</p>
+</div>
+</div>
+
+<div class="box remark">
+  <div class="label">Nota sobre el TVM vectorial</div>
+  <p>El Teorema del Valor Medio clásico ($f(b) - f(a) = f'(c)(b-a)$) <strong>no vale</strong> para funciones $F: \mathbb{R} \to \mathbb{R}^d$. Contraejemplo: $F(x) = (\cos x, \sin x)$, $F(2\pi) - F(0) = 0$ pero $F'(x) \neq 0$.</p>
+  <p>Lo que sí vale es la <strong>desigualdad</strong>: $\|F(b) - F(a)\| \leq \max_{s \in [a,b]} \|F'(s)\| \cdot |b-a|$. Para funciones de $\mathbb{R}^d$ en $\mathbb{R}^d$ con dominio convexo:</p>
+  $$\|F(x) - F(y)\| \leq \sup_{\xi \in [x,y]} \|DF(\xi)\| \cdot \|x - y\|$$
+</div>
+
+<h3 id="unicidad-local">Unicidad local y global</h3>
+
+<div class="box definition">
+  <div class="label">Definición — Unicidad local</div>
+  <p>Decimos que hay <strong>unicidad local</strong> para el PVI $x' = X(t,x)$, $x(t_0) = x_0$ si, dadas dos soluciones $x_1: I_1 \to \mathbb{R}^d$ y $x_2: I_2 \to \mathbb{R}^d$ con $x_1(t_0) = x_2(t_0) = x_0$, existe un intervalo $J \subseteq I_1 \cap I_2$ con $t_0 \in J$ tal que $x_1(t) = x_2(t)$ para todo $t \in J$.</p>
+</div>
+
+<div class="box lemma">
+  <div class="label">Lema 1 — Unicidad local implica global</div>
+  <p>Si hay unicidad local para todo $(t_0, x_0) \in D$, entonces hay <strong>unicidad global</strong>: dadas dos soluciones $x_1: I_1 \to \mathbb{R}^d$ y $x_2: I_2 \to \mathbb{R}^d$ con $x_1(t_0) = x_2(t_0) = x_0$, se cumple $x_1(t) = x_2(t)$ para todo $t \in I_1 \cap I_2$.</p>
+</div>
+
+<div class="collapsible-toggle" onclick="toggleProof(this)">
+  <span class="arrow">▶</span> <strong>Demostración (unicidad local ⟹ global)</strong>
+</div>
+<div class="collapsible-content">
+<div class="box proof">
+  <div class="label">Demostración</div>
+  <p>Definimos el conjunto:</p>
+  $$\mathcal{Y} = \{t \in I_1 \cap I_2 : x_1(t) = x_2(t)\}$$
+  <p>Tiene tres propiedades como subconjunto de $I_1 \cap I_2$:</p>
+  <ol style="padding-left:20px;">
+    <li><strong>No vacío</strong>: $t_0 \in \mathcal{Y}$ pues $x_1(t_0) = x_2(t_0) = x_0$.</li>
+    <li><strong>Cerrado</strong> en $I_1 \cap I_2$: por continuidad de $x_1 - x_2$, el conjunto donde $x_1(t) = x_2(t)$ es cerrado.</li>
+    <li><strong>Abierto</strong> en $I_1 \cap I_2$: dado $t^* \in \mathcal{Y}$, definimos $x^* = x_1(t^*) = x_2(t^*)$. Por unicidad local del PVI $x' = X(t,x)$, $x(t^*) = x^*$, las soluciones $x_1$ y $x_2$ coinciden en un entorno de $t^*$. Luego $t^*$ es interior a $\mathcal{Y}$.</li>
+  </ol>
+  <p>Como $I_1 \cap I_2$ es conexo (intervalo) y $\mathcal{Y}$ es no vacío, cerrado y abierto, $\mathcal{Y} = I_1 \cap I_2$. $\square$</p>
+</div>
+</div>
+
+<div class="box lemma">
+  <div class="label">Lema 3 — Lipschitz implica unicidad local</div>
+  <p>Si $X$ es localmente Lipschitz en $x$ en un entorno de $(t_0, x_0)$, entonces hay unicidad local para el PVI.</p>
+</div>
+
+<div class="collapsible-toggle" onclick="toggleProof(this)">
+  <span class="arrow">▶</span> <strong>Demostración (Lipschitz ⟹ unicidad)</strong>
+</div>
+<div class="collapsible-content">
+<div class="box proof">
+  <div class="label">Demostración (argumento de Gronwall)</div>
+  <p>Sea $L$ la constante de Lipschitz en un entorno $U$ de $(t_0, x_0)$. Sean $x_1, x_2$ dos soluciones con $x_1(t_0) = x_2(t_0) = x_0$. Tomamos $J = [t_0 - \gamma, t_0 + \gamma]$ suficientemente pequeño para que $(t, x_i(t)) \in U$ para $t \in J$, $i = 1, 2$.</p>
+  <p>Elegimos $\gamma$ lo bastante pequeño para que $L\gamma < 1$.</p>
+  <p>Definimos $m = \max_{t \in J} \|x_1(t) - x_2(t)\|$.</p>
+  <p>De la ecuación integral:</p>
+  $$x_1(t) - x_2(t) = \int_{t_0}^{t} \big[X(s, x_1(s)) - X(s, x_2(s))\big]\,ds$$
+  <p>Tomando normas y usando Lipschitz:</p>
+  $$\|x_1(t) - x_2(t)\| \leq \int_{t_0}^{t} L\|x_1(s) - x_2(s)\|\,ds \leq L \cdot m \cdot |t - t_0| \leq L \gamma \cdot m$$
+  <p>Haciendo $t = T$ donde se alcanza el máximo:</p>
+  $$m \leq L\gamma \cdot m$$
+  <p>Como $L\gamma < 1$, la única posibilidad es $m = 0$, es decir $x_1(t) = x_2(t)$ en $J$. $\square$</p>
+</div>
+</div>
+
+<p>Combinando los lemas obtenemos:</p>
+
+<div class="box theorem" style="border-left-width:6px;">
+  <div class="label">Teorema de Existencia y Unicidad (Cauchy-Lipschitz / Picard-Lindelöf)</div>
+  <p>Si $X: D \to \mathbb{R}^d$ es continuo y <strong>localmente Lipschitz en $x$</strong> (por ejemplo, $X \in C^1$), entonces para cada $(t_0, x_0) \in D$ el PVI</p>
+  $$x' = X(t,x), \qquad x(t_0) = x_0$$
+  <p>tiene <strong>una y solo una</strong> solución maximal.</p>
+</div>
+
+<div class="box remark">
+  <div class="label">Comparativa</div>
+  <div class="two-col">
+    <div>
+      <h4 style="color:var(--accent)">Cauchy-Peano</h4>
+      <ul class="plain">
+        <li>Hipótesis: $X$ continuo</li>
+        <li>Conclusión: <strong>Existencia</strong></li>
+        <li>Herramienta: Arzelà-Ascoli</li>
+      </ul>
+    </div>
+    <div>
+      <h4 style="color:var(--accent2)">Cauchy-Lipschitz</h4>
+      <ul class="plain">
+        <li>Hipótesis: $X$ continuo + Lipschitz en $x$</li>
+        <li>Conclusión: <strong>Existencia + Unicidad</strong></li>
+        <li>Herramienta: Contracciones / Gronwall</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Interactive comparison -->
+<div class="interactive">
+  <h4>🔍 Explorador: ¿Lipschitz o no?</h4>
+  <p>Elige un campo y comprueba si es Lipschitz en $x$ en un punto.</p>
+  <div class="controls">
+    <label>Campo:
+      <select id="lipField">
+        <option value="x2">X(t,x) = x² (Lipschitz local, C¹)</option>
+        <option value="sqrtx" selected>X(t,x) = √|x| (NO Lipschitz en x=0)</option>
+        <option value="sinx">X(t,x) = sin(x) (Lipschitz global, L=1)</option>
+        <option value="x13">X(t,x) = |x|^(1/3) (NO Lipschitz en x=0)</option>
+      </select>
+    </label>
+  </div>
+  <div id="lipResult" class="output"></div>
+</div>
+
+<div class="box example">
+  <div class="label">Ejemplo — Unicidad para $x' = x^2$</div>
+  <p>$X(t,x) = x^2$ es $C^1$ (y por tanto Lipschitz local). El PVI $x' = x^2$, $x(0) = 1$ tiene <strong>solución única</strong> $x(t) = \frac{1}{1-t}$ en $]{-\infty}, 1[$.</p>
+  <p>Observemos que $\frac{\partial X}{\partial x} = 2x$. En cualquier compacto la derivada está acotada: Lipschitz local.</p>
+</div>
+
+<div class="box example">
+  <div class="label">Ejemplo — El oscilador armónico</div>
+  <p>Sistema $x_1' = -x_2$, $x_2' = x_1$ con $(x_1(0), x_2(0)) = (1, -1)$.</p>
+  <p>El campo $X(t, x_1, x_2) = (-x_2, x_1)$ es lineal, por tanto $C^\infty$ y globalmente Lipschitz. Solución única: $x_1(t) = \cos t - \sin t$, $x_2(t) = -\cos t - \sin t$. Definida para todo $t \in \mathbb{R}$.</p>
+</div>
+
+</section>
+
+<!-- ============================================================ -->
+<!-- SECTION 6: QUIZ -->
+<!-- ============================================================ -->
+<section id="quiz-section">
+<h2>6. Autoevaluación</h2>
+
+<div class="quiz" id="q1">
+  <h4>Pregunta 1</h4>
+  <p>¿Cuál es la hipótesis principal del Teorema de Cauchy-Peano?</p>
+  <div class="option" onclick="checkQuiz(this,'q1',false)">a) Que $X$ sea de clase $C^1$</div>
+  <div class="option" onclick="checkQuiz(this,'q1',true)">b) Que $X$ sea continuo en $D$</div>
+  <div class="option" onclick="checkQuiz(this,'q1',false)">c) Que $X$ sea Lipschitz en $x$</div>
+  <div class="option" onclick="checkQuiz(this,'q1',false)">d) Que $X$ sea acotado globalmente</div>
+  <div class="feedback" id="q1-fb"></div>
+</div>
+
+<div class="quiz" id="q2">
+  <h4>Pregunta 2</h4>
+  <p>¿Qué garantiza el Teorema de Cauchy-Peano?</p>
+  <div class="option" onclick="checkQuiz(this,'q2',false)">a) Existencia y unicidad de solución</div>
+  <div class="option" onclick="checkQuiz(this,'q2',true)">b) Solo existencia de al menos una solución</div>
+  <div class="option" onclick="checkQuiz(this,'q2',false)">c) Existencia de solución global (en todo $\mathbb{R}$)</div>
+  <div class="option" onclick="checkQuiz(this,'q2',false)">d) Unicidad de solución</div>
+  <div class="feedback" id="q2-fb"></div>
+</div>
+
+<div class="quiz" id="q3">
+  <h4>Pregunta 3</h4>
+  <p>¿Cuáles son las hipótesis del Teorema de Arzelà-Ascoli?</p>
+  <div class="option" onclick="checkQuiz(this,'q3',false)">a) Convergencia puntual y continuidad</div>
+  <div class="option" onclick="checkQuiz(this,'q3',true)">b) Acotación uniforme y equicontinuidad</div>
+  <div class="option" onclick="checkQuiz(this,'q3',false)">c) Convergencia uniforme y derivabilidad</div>
+  <div class="option" onclick="checkQuiz(this,'q3',false)">d) Acotación puntual y continuidad uniforme</div>
+  <div class="feedback" id="q3-fb"></div>
+</div>
+
+<div class="quiz" id="q4">
+  <h4>Pregunta 4</h4>
+  <p>El PVI $x' = \sqrt{|x|}$, $x(0)=0$ tiene:</p>
+  <div class="option" onclick="checkQuiz(this,'q4',false)">a) Exactamente una solución</div>
+  <div class="option" onclick="checkQuiz(this,'q4',false)">b) Exactamente dos soluciones</div>
+  <div class="option" onclick="checkQuiz(this,'q4',true)">c) Infinitas soluciones</div>
+  <div class="option" onclick="checkQuiz(this,'q4',false)">d) Ninguna solución</div>
+  <div class="feedback" id="q4-fb"></div>
+</div>
+
+<div class="quiz" id="q5">
+  <h4>Pregunta 5</h4>
+  <p>¿Qué papel juega $\alpha = \min(\rho, \beta/M)$ en la demostración?</p>
+  <div class="option" onclick="checkQuiz(this,'q5',false)">a) Es la constante de Lipschitz</div>
+  <div class="option" onclick="checkQuiz(this,'q5',true)">b) Determina el intervalo temporal $I$ en el que se garantiza la existencia, asegurando que la solución permanezca en el rectángulo $R$</div>
+  <div class="option" onclick="checkQuiz(this,'q5',false)">c) Es la cota superior de $X$</div>
+  <div class="option" onclick="checkQuiz(this,'q5',false)">d) Es el error de la aproximación</div>
+  <div class="feedback" id="q5-fb"></div>
+</div>
+
+<div class="quiz" id="q6">
+  <h4>Pregunta 6</h4>
+  <p>¿Qué condición adicional (además de continuidad) se necesita para obtener unicidad?</p>
+  <div class="option" onclick="checkQuiz(this,'q6',false)">a) Que $X$ sea acotado</div>
+  <div class="option" onclick="checkQuiz(this,'q6',false)">b) Que $D$ sea convexo</div>
+  <div class="option" onclick="checkQuiz(this,'q6',true)">c) Que $X$ sea localmente Lipschitz en $x$</div>
+  <div class="option" onclick="checkQuiz(this,'q6',false)">d) Que $X$ sea diferenciable en $t$</div>
+  <div class="feedback" id="q6-fb"></div>
+</div>
+
+<div class="quiz" id="q7">
+  <h4>Pregunta 7</h4>
+  <p>En la demostración del Teorema de Arzelà-Ascoli, ¿qué técnica se usa para extraer subsucesiones convergentes?</p>
+  <div class="option" onclick="checkQuiz(this,'q7',false)">a) El Lema de Zorn</div>
+  <div class="option" onclick="checkQuiz(this,'q7',true)">b) El argumento diagonal de Cantor</div>
+  <div class="option" onclick="checkQuiz(this,'q7',false)">c) El Teorema de Hahn-Banach</div>
+  <div class="option" onclick="checkQuiz(this,'q7',false)">d) El Teorema de Baire</div>
+  <div class="feedback" id="q7-fb"></div>
+</div>
+
+</section>
+
+<!-- Resumen visual -->
+<section id="resumen">
+<h2>Mapa conceptual de la Lección</h2>
+<div style="overflow-x:auto;">
+<svg viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg" style="max-width:100%; font-family:sans-serif;">
+  <!-- Boxes -->
+  <rect x="320" y="10" width="260" height="50" rx="10" fill="#2d5aa0" opacity=".9"/>
+  <text x="450" y="42" text-anchor="middle" fill="#fff" font-weight="bold" font-size="15">Problema de Cauchy (PVI)</text>
+
+  <rect x="60" y="110" width="220" height="50" rx="10" fill="#8e44ad" opacity=".85"/>
+  <text x="170" y="142" text-anchor="middle" fill="#fff" font-size="13">Ecuación Integral de Volterra</text>
+
+  <rect x="620" y="110" width="220" height="50" rx="10" fill="#e67e22" opacity=".85"/>
+  <text x="730" y="142" text-anchor="middle" fill="#fff" font-size="13">Motivación Física</text>
+
+  <rect x="20" y="220" width="200" height="50" rx="10" fill="#27ae60" opacity=".85"/>
+  <text x="120" y="252" text-anchor="middle" fill="#fff" font-size="13">Sol. Aproximadas (ε-sol.)</text>
+
+  <rect x="260" y="220" width="180" height="50" rx="10" fill="#27ae60" opacity=".85"/>
+  <text x="350" y="252" text-anchor="middle" fill="#fff" font-size="13">Arzelà-Ascoli</text>
+
+  <rect x="480" y="220" width="180" height="50" rx="10" fill="#27ae60" opacity=".85"/>
+  <text x="570" y="252" text-anchor="middle" fill="#fff" font-size="13">Paso al límite</text>
+
+  <rect x="270" y="330" width="260" height="55" rx="10" fill="#c0392b" opacity=".9"/>
+  <text x="400" y="355" text-anchor="middle" fill="#fff" font-weight="bold" font-size="15">Teorema de Cauchy-Peano</text>
+  <text x="400" y="375" text-anchor="middle" fill="#fff" font-size="12">(Existencia de solución)</text>
+
+  <rect x="620" y="330" width="220" height="55" rx="10" fill="#1abc9c" opacity=".85"/>
+  <text x="730" y="355" text-anchor="middle" fill="#fff" font-size="13">Unicidad: Lipschitz</text>
+  <text x="730" y="375" text-anchor="middle" fill="#fff" font-size="12">Cauchy-Lipschitz</text>
+
+  <!-- Arrows -->
+  <defs><marker id="ah" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#888"/></marker></defs>
+  <line x1="380" y1="60" x2="220" y2="110" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="510" y1="60" x2="670" y2="110" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="170" y1="160" x2="120" y2="220" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="170" y1="160" x2="340" y2="220" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="170" y1="160" x2="540" y2="220" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="120" y1="270" x2="350" y2="330" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="350" y1="270" x2="380" y2="330" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="570" y1="270" x2="440" y2="330" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+  <line x1="530" y1="358" x2="620" y2="358" stroke="#888" stroke-width="2" marker-end="url(#ah)"/>
+</svg>
+</div>
+</section>
+
+<footer>
+  <p>Lección 1 — Ecuaciones Diferenciales II · Grado en Matemáticas</p>
+  <p>Página creada como material de estudio interactivo · 2026</p>
+</footer>
+
+</main>
+</div>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ============================================================ -->
+<script>
+// ===== THEME =====
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.getAttribute('data-theme') === 'dark';
+  body.setAttribute('data-theme', isDark ? '' : 'dark');
+  document.getElementById('themeToggle').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('theme', isDark ? 'light' : 'dark');
+}
+if (localStorage.getItem('theme') === 'dark') {
+  document.body.setAttribute('data-theme', 'dark');
+  document.getElementById('themeToggle').textContent = '☀️';
+}
+
+// ===== PROGRESS BAR =====
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+});
+
+// ===== SCROLL SPY =====
+const sections = document.querySelectorAll('section[id]');
+const sidebarLinks = document.querySelectorAll('.sidebar a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      sidebarLinks.forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`.sidebar a[href="#${e.target.id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-80px 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// ===== COLLAPSIBLE PROOFS =====
+function toggleProof(el) {
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('open');
+}
+
+// ===== QUIZ =====
+function checkQuiz(el, qid, correct) {
+  const quiz = document.getElementById(qid);
+  if (quiz.dataset.answered) return;
+  quiz.dataset.answered = true;
+  const fb = document.getElementById(qid + '-fb');
+  if (correct) {
+    el.classList.add('correct');
+    fb.textContent = '✅ ¡Correcto!';
+    fb.style.color = '#27ae60';
+  } else {
+    el.classList.add('wrong');
+    fb.textContent = '❌ Incorrecto. Revisa la sección correspondiente.';
+    fb.style.color = '#c0392b';
+    // highlight correct
+    const opts = quiz.querySelectorAll('.option');
+    opts.forEach(o => { if (!o.classList.contains('wrong')) {
+      // find correct by re-checking onclick
+    }});
+  }
+}
+
+// ===== SLIDERS =====
+document.querySelectorAll('input[type=range]').forEach(s => {
+  const span = s.nextElementSibling;
+  if (span && span.tagName === 'SPAN') {
+    s.addEventListener('input', () => { span.textContent = parseFloat(s.value).toFixed(2); });
+  }
+});
+
+// ===== FIELD VISUALIZATION =====
+function drawField() {
+  const canvas = document.getElementById('fieldCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  // Background
+  ctx.fillStyle = document.body.getAttribute('data-theme') === 'dark' ? '#1c1c2e' : '#fff';
+  ctx.fillRect(0, 0, w, h);
+
+  const type = document.getElementById('fieldSelect').value;
+  const cx = w/2, cy = h/2, scale = 40;
+
+  // Grid
+  ctx.strokeStyle = '#ddd'; ctx.lineWidth = 0.5;
+  for (let i = -6; i <= 6; i++) {
+    ctx.beginPath(); ctx.moveTo(cx + i*scale, 0); ctx.lineTo(cx + i*scale, h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, cy + i*scale); ctx.lineTo(w, cy + i*scale); ctx.stroke();
+  }
+  // Axes
+  ctx.strokeStyle = '#888'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
+
+  function field(x, y) {
+    switch(type) {
+      case 'constant': return [1, 0];
+      case 'rotation': return [-y, x];
+      case 'source': return [x, y];
+      case 'saddle': return [x, -y];
+    }
+  }
+
+  const step = 1.2;
+  for (let xi = -5.5; xi <= 5.5; xi += step) {
+    for (let yi = -5.5; yi <= 5.5; yi += step) {
+      let [vx, vy] = field(xi, yi);
+      const mag = Math.sqrt(vx*vx + vy*vy);
+      if (mag < 0.001) continue;
+      const len = Math.min(mag, 2) * 12;
+      vx = vx/mag * len; vy = vy/mag * len;
+
+      const px = cx + xi*scale, py = cy - yi*scale;
+      const ex = px + vx, ey = py - vy;
+
+      // Color by magnitude
+      const hue = Math.max(0, 240 - mag*40);
+      ctx.strokeStyle = `hsl(${hue},70%,50%)`;
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(ex, ey); ctx.stroke();
+
+      // Arrowhead
+      const angle = Math.atan2(-(vy), vx);
+      ctx.beginPath();
+      ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - 5*Math.cos(angle - 0.4), ey + 5*Math.sin(angle - 0.4));
+      ctx.lineTo(ex - 5*Math.cos(angle + 0.4), ey + 5*Math.sin(angle + 0.4));
+      ctx.closePath(); ctx.fill();
+    }
+  }
+
+  // Draw a trajectory
+  ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  let tx = 2, ty = 0.5;
+  ctx.moveTo(cx + tx*scale, cy - ty*scale);
+  for (let i = 0; i < 500; i++) {
+    const dt = 0.02;
+    const [vx, vy] = field(tx, ty);
+    tx += vx*dt; ty += vy*dt;
+    if (Math.abs(tx)>6 || Math.abs(ty)>6) break;
+    ctx.lineTo(cx + tx*scale, cy - ty*scale);
+  }
+  ctx.stroke();
+
+  // Start point
+  ctx.fillStyle = '#c0392b';
+  ctx.beginPath(); ctx.arc(cx + 2*scale, cy - 0.5*scale, 5, 0, 2*Math.PI); ctx.fill();
+
+  const names = {constant:'Constante (c,0)',rotation:'Rotación (-x₂,x₁)',source:'Fuente (x₁,x₂)',saddle:'Silla (x₁,−x₂)'};
+  document.getElementById('fieldInfo').textContent = `Campo: ${names[type]}. En rojo: una trayectoria desde (2, 0.5).`;
+}
+drawField();
+
+// ===== PVI SOLVER =====
+function solvePVI() {
+  const funcName = document.getElementById('pviFunc').value;
+  const x0 = parseFloat(document.getElementById('pviX0').value);
+  const t0 = parseFloat(document.getElementById('pviT0').value);
+  const h = parseFloat(document.getElementById('pviH').value);
+
+  function f(t, x) {
+    switch(funcName) {
+      case 'x2': return x*x;
+      case 'sinx': return Math.sin(x);
+      case 'tx': return t*x;
+      case 'sqrt': return Math.sqrt(Math.abs(x));
+      case 'neg_x': return -x;
+    }
+  }
+
+  const ts = [], xs = [];
+  let t = t0, x = x0;
+  for (let i = 0; i < 500; i++) {
+    ts.push(t); xs.push(x);
+    if (Math.abs(x) > 100) break;
+    x = x + h * f(t, x);
+    t = t + h;
+  }
+
+  const canvas = document.getElementById('pviCanvas');
+  if (window.pviChart) window.pviChart.destroy();
+  window.pviChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: ts.map(v=>v.toFixed(2)),
+      datasets: [{
+        label: `x(t) — Euler con h=${h.toFixed(3)}`,
+        data: xs, borderColor: '#2d5aa0', borderWidth: 2,
+        pointRadius: 0, fill: false, tension: 0.1
+      }]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        x: { title: {display:true, text:'t'}, ticks:{maxTicksLimit:12} },
+        y: { title: {display:true, text:'x(t)'} }
+      },
+      plugins: { legend: {display:true} }
+    }
+  });
+}
+solvePVI();
+
+// ===== RECTANGLE DIAGRAM =====
+function drawRectangle() {
+  const rho = parseFloat(document.getElementById('rhoSlider').value);
+  const beta = parseFloat(document.getElementById('betaSlider').value);
+  const M = parseFloat(document.getElementById('mSlider').value);
+  const alpha = Math.min(rho, beta/M);
+
+  document.getElementById('rhoVal').textContent = rho.toFixed(1);
+  document.getElementById('betaVal').textContent = beta.toFixed(1);
+  document.getElementById('mVal').textContent = M.toFixed(1);
+
+  const canvas = document.getElementById('rectCanvas');
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+  ctx.fillStyle = document.body.getAttribute('data-theme') === 'dark' ? '#1c1c2e' : '#fff';
+  ctx.fillRect(0, 0, w, h);
+
+  const cx = w/2, cy = h/2;
+  const sx = 80, sy = 60; // scale
+
+  // Rectangle R
+  ctx.fillStyle = 'rgba(45,90,160,0.1)';
+  ctx.strokeStyle = '#2d5aa0'; ctx.lineWidth = 2;
+  ctx.fillRect(cx - rho*sx, cy - beta*sy, 2*rho*sx, 2*beta*sy);
+  ctx.strokeRect(cx - rho*sx, cy - beta*sy, 2*rho*sx, 2*beta*sy);
+
+  // Interval I
+  ctx.fillStyle = 'rgba(39,174,96,0.15)';
+  ctx.fillRect(cx - alpha*sx, cy - beta*sy, 2*alpha*sx, 2*beta*sy);
+  ctx.strokeStyle = '#27ae60'; ctx.lineWidth = 2; ctx.setLineDash([5,5]);
+  ctx.strokeRect(cx - alpha*sx, cy - beta*sy, 2*alpha*sx, 2*beta*sy);
+  ctx.setLineDash([]);
+
+  // Cone (slope M lines)
+  ctx.strokeStyle = 'rgba(192,57,43,0.6)'; ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(cx - alpha*sx, cy + M*alpha*sy);
+  ctx.lineTo(cx, cy);
+  ctx.lineTo(cx + alpha*sx, cy + M*alpha*sy);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx - alpha*sx, cy - M*alpha*sy);
+  ctx.lineTo(cx, cy);
+  ctx.lineTo(cx + alpha*sx, cy - M*alpha*sy);
+  ctx.stroke();
+
+  // Fill cone
+  ctx.fillStyle = 'rgba(192,57,43,0.06)';
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx + alpha*sx, cy - M*alpha*sy);
+  ctx.lineTo(cx + alpha*sx, cy + M*alpha*sy);
+  ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(cx - alpha*sx, cy - M*alpha*sy);
+  ctx.lineTo(cx - alpha*sx, cy + M*alpha*sy);
+  ctx.closePath(); ctx.fill();
+
+  // Axes
+  ctx.strokeStyle = '#888'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(30, cy); ctx.lineTo(w-30, cy); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx, 20); ctx.lineTo(cx, h-20); ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = '#333'; ctx.font = '13px sans-serif';
+  ctx.fillText('t₀', cx-10, cy+20);
+  ctx.fillText('x₀', cx+8, cy-5);
+  ctx.fillText('t', w-25, cy+18);
+  ctx.fillText('x', cx+8, 25);
+
+  ctx.fillStyle = '#2d5aa0'; ctx.font = 'bold 12px sans-serif';
+  ctx.fillText(`R: ρ=${rho.toFixed(1)}, β=${beta.toFixed(1)}`, cx-rho*sx+5, cy-beta*sy-8);
+
+  ctx.fillStyle = '#27ae60';
+  ctx.fillText(`I: α=min(ρ,β/M)=${alpha.toFixed(2)}`, cx-alpha*sx+5, cy+beta*sy+18);
+
+  ctx.fillStyle = '#c0392b';
+  ctx.fillText(`Cono pendiente M=${M.toFixed(1)}`, cx+5, cy + M*alpha*sy/2);
+
+  // Point (t0,x0)
+  ctx.fillStyle = '#c0392b';
+  ctx.beginPath(); ctx.arc(cx, cy, 5, 0, 2*Math.PI); ctx.fill();
+
+  document.getElementById('rectInfo').textContent =
+    `α = min(${rho.toFixed(1)}, ${beta.toFixed(1)}/${M.toFixed(1)}) = min(${rho.toFixed(1)}, ${(beta/M).toFixed(2)}) = ${alpha.toFixed(2)}. La solución permanece en R si ||x(t)−x₀|| ≤ M|t−t₀| ≤ M·α ≤ β.`;
+}
+drawRectangle();
+
+// ===== EPSILON-APPROXIMATE SOLUTIONS =====
+function drawApprox() {
+  const eps = parseFloat(document.getElementById('epsSlider').value);
+  document.getElementById('epsVal').textContent = eps.toFixed(2);
+
+  // Solve x' = -x, x(0) = 1 with epsilon-delay
+  const T = 4, dt = 0.01;
+  const n = Math.floor(T / dt);
+  const ts = [], exact = [], approx = [];
+
+  // Exact solution
+  for (let i = 0; i <= n; i++) {
+    const t = i*dt;
+    ts.push(t.toFixed(2));
+    exact.push(Math.exp(-t));
+  }
+
+  // Epsilon-approximate (Euler with delay eps)
+  const xarr = new Array(n+1);
+  xarr[0] = 1;
+  for (let i = 1; i <= n; i++) {
+    const t = i*dt;
+    const delayIdx = Math.max(0, Math.round((t - eps)/dt));
+    const xdelayed = xarr[delayIdx];
+    xarr[i] = xarr[i-1] + dt * (-xdelayed);
+  }
+  for (let i = 0; i <= n; i++) approx.push(xarr[i]);
+
+  const canvas = document.getElementById('approxCanvas');
+  if (window.approxChart) window.approxChart.destroy();
+  window.approxChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: ts,
+      datasets: [
+        { label: 'Exacta: e⁻ᵗ', data: exact, borderColor: '#27ae60', borderWidth: 2.5, pointRadius:0, fill:false },
+        { label: `ε-aproximada (ε=${eps.toFixed(2)})`, data: approx, borderColor: '#c0392b', borderWidth: 2, borderDash:[5,3], pointRadius:0, fill:false }
+      ]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        x: { title:{display:true,text:'t'}, ticks:{maxTicksLimit:10} },
+        y: { title:{display:true,text:'x(t)'} }
+      }
+    }
+  });
+}
+drawApprox();
+
+// ===== CONVERGENCE VISUALIZATION =====
+function drawConvergence() {
+  const type = document.getElementById('convSeq').value;
+  const n = parseInt(document.getElementById('convN').value);
+  document.getElementById('convNVal').textContent = n;
+
+  const N = 200;
+  const ts = [], fns = [], limits = [];
+
+  for (let i = 0; i <= N; i++) {
+    const t = i/N;
+    ts.push(t.toFixed(3));
+    switch(type) {
+      case 'tn':
+        fns.push(Math.pow(t, n));
+        limits.push(t === 1 ? 1 : 0);
+        break;
+      case 'sin_n':
+        fns.push(Math.sin(t) / n);
+        limits.push(0);
+        break;
+      case 'n_exp':
+        fns.push(n * t * Math.exp(-n * t));
+        limits.push(0);
+        break;
+    }
+  }
+
+  const canvas = document.getElementById('convCanvas');
+  if (window.convChart) window.convChart.destroy();
+  window.convChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: ts,
+      datasets: [
+        { label: `f_${n}(t)`, data: fns, borderColor: '#2d5aa0', borderWidth: 2, pointRadius:0, fill:false },
+        { label: 'Límite f(t)', data: limits, borderColor: '#c0392b', borderWidth: 2, borderDash:[6,3], pointRadius:0, fill:false }
+      ]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        x: { title:{display:true,text:'t ∈ [0,1]'}, ticks:{maxTicksLimit:10} },
+        y: { title:{display:true,text:'f(t)'}, suggestedMin:-0.1 }
+      }
+    }
+  });
+}
+drawConvergence();
+
+// ===== NON-UNIQUENESS =====
+function drawNonUnique() {
+  const c = parseFloat(document.getElementById('cSlider').value);
+  const sign = document.getElementById('signSelect').value;
+  document.getElementById('cVal').textContent = c.toFixed(2);
+
+  const T = 5, dt = 0.02;
+  const ts = [], sol = [], zero = [];
+
+  for (let t = 0; t <= T; t += dt) {
+    ts.push(t.toFixed(2));
+    zero.push(0);
+    if (sign === 'zero') {
+      sol.push(0);
+    } else if (t < c) {
+      sol.push(0);
+    } else {
+      const val = 0.25 * (t - c) * (t - c);
+      sol.push(sign === 'pos' ? val : -val);
+    }
+  }
+
+  const canvas = document.getElementById('nonUniqueCanvas');
+  if (window.nuChart) window.nuChart.destroy();
+  window.nuChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: ts,
+      datasets: [
+        { label: 'x ≡ 0', data: zero, borderColor: '#27ae60', borderWidth: 2, borderDash:[5,3], pointRadius:0, fill:false },
+        { label: `Solución (c=${c.toFixed(1)})`, data: sol, borderColor: '#c0392b', borderWidth: 2.5, pointRadius:0, fill:false }
+      ]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        x: { title:{display:true,text:'t'}, ticks:{maxTicksLimit:10} },
+        y: { title:{display:true,text:'x(t)'}, suggestedMin:-3, suggestedMax:3 }
+      }
+    }
+  });
+}
+drawNonUnique();
+
+// ===== LIPSCHITZ EXPLORER =====
+function updateLipschitz() {
+  const type = document.getElementById('lipField').value;
+  const el = document.getElementById('lipResult');
+  const info = {
+    x2: `<strong>X(t,x) = x²</strong><br>∂X/∂x = 2x, acotado en cualquier compacto → <span style="color:#27ae60">✅ Lipschitz local</span>.<br>Consecuencia: el PVI x′=x², x(t₀)=x₀ tiene solución <strong>única</strong> (local).`,
+    sqrtx: `<strong>X(t,x) = √|x|</strong><br>Para x>0: ∂X/∂x = 1/(2√x) → ∞ cuando x→0 → <span style="color:#c0392b">❌ NO Lipschitz en x=0</span>.<br>Consecuencia: puede haber <strong>infinitas soluciones</strong> por (0,0).`,
+    sinx: `<strong>X(t,x) = sin(x)</strong><br>|sin(x₁)−sin(x₂)| ≤ |x₁−x₂| (L=1) → <span style="color:#27ae60">✅ Lipschitz global</span>.<br>Consecuencia: solución <strong>única</strong> para cualquier condición inicial.`,
+    x13: `<strong>X(t,x) = |x|^(1/3)</strong><br>Para x>0: ∂X/∂x = 1/(3x^{2/3}) → ∞ cuando x→0 → <span style="color:#c0392b">❌ NO Lipschitz en x=0</span>.<br>Consecuencia: posible no unicidad por x=0.`
+  };
+  el.innerHTML = info[type];
+}
+document.getElementById('lipField').addEventListener('change', updateLipschitz);
+updateLipschitz();
+
+// ===== CLOSE SIDEBAR ON LINK CLICK (mobile) =====
+sidebarLinks.forEach(a => a.addEventListener('click', () => {
+  if (window.innerWidth < 1024) document.querySelector('.sidebar').classList.remove('open');
+}));
+</script>
+
+</body>
+</html>
